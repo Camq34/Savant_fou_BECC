@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savant Fou - Niveau 1</title>
+    <title>Savant Fou - Niveau 7 - FINAL</title>
     <style>
         * {
             margin: 0;
@@ -26,19 +26,19 @@
         }
 
         canvas {
-            border: 3px solid #00ff00;
+            border: 3px solid #ff00ff;
             background-color: #000;
             display: block;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.7);
         }
 
         #ui {
-            color: #00ff00;
+            color: #ff00ff;
             margin-top: 20px;
             font-size: 16px;
             background-color: #111;
             padding: 15px;
-            border: 2px solid #00ff00;
+            border: 2px solid #ff00ff;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 10px;
@@ -55,15 +55,17 @@
         }
 
         h1 {
-            color: #00ff00;
+            color: #ff00ff;
             margin-bottom: 10px;
             font-size: 28px;
+            text-shadow: 0 0 15px #ff00ff;
         }
 
         .subtitle {
-            color: #00ccff;
+            color: #ff0099;
             margin-bottom: 15px;
             font-size: 14px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -71,20 +73,19 @@
     <div id="gameContainer">
         <h1 id="levelTitle">Savant Fou</h1>
         <p class="subtitle" id="levelDesc"></p>
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <canvas id="gameCanvas" width="1200" height="900"></canvas>
         <div id="ui">
             <div class="stat">❤️ PV: <span id="hp">100</span>/100</div>
             <div class="stat">⚔️ EXP: <span id="exp">0</span></div>
             <div class="stat">💰 SCORE: <span id="score">0</span></div>
             <div class="stat">🌊 VAGUE: <span id="wave">1</span></div>
-            <div class="info">Flèches/WASD = Déplacement | Clic/ESPACE = Attaquer</div>
+            <div class="info">⚠️ DERNIER NIVEAU - BONNE CHANCE ⚠️</div>
         </div>
     </div>
 
     <script src="levels.js"></script>
     <script src="game.js"></script>
     <script>
-        // Mettre à jour le titre et description
         document.getElementById('levelTitle').textContent = 'Niveau ' + LEVEL_NUMBER + ': ' + LEVEL_CONFIG.name;
         document.getElementById('levelDesc').textContent = LEVEL_CONFIG.description;
     </script>

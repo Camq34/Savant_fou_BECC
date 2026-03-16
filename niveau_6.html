@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savant Fou - Niveau 1</title>
+    <title>Savant Fou - Niveau 6</title>
     <style>
         * {
             margin: 0;
@@ -71,7 +71,7 @@
     <div id="gameContainer">
         <h1 id="levelTitle">Savant Fou</h1>
         <p class="subtitle" id="levelDesc"></p>
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <canvas id="gameCanvas" width="1200" height="800"></canvas>
         <div id="ui">
             <div class="stat">❤️ PV: <span id="hp">100</span>/100</div>
             <div class="stat">⚔️ EXP: <span id="exp">0</span></div>
@@ -84,7 +84,6 @@
     <script src="levels.js"></script>
     <script src="game.js"></script>
     <script>
-        // Mettre à jour le titre et description
         document.getElementById('levelTitle').textContent = 'Niveau ' + LEVEL_NUMBER + ': ' + LEVEL_CONFIG.name;
         document.getElementById('levelDesc').textContent = LEVEL_CONFIG.description;
     </script>
