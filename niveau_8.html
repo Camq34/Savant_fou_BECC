@@ -5,132 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Savant Fou - Niveau 8</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            width: 100vw;
-            height: 100vh;
-            background-color: #000;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #gameContainer {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            max-width: 1280px;
-            max-height: 800px;
-            aspect-ratio: 16 / 10;
-        }
-
-        canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.7), inset 0 0 30px rgba(0, 255, 0, 0.2);
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-
-        .gameInfo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 10;
-            font-size: 12px;
-        }
-
-        h1 {
-            color: #00ff00;
-            font-size: 16px;
-            margin: 0;
-            text-shadow: 0 0 10px #00ff00;
-        }
-
-        .subtitle {
-            color: #00ccff;
-            font-size: 11px;
-            margin: 3px 0 0 0;
-        }
-
-        #loadingText {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ffff00;
-            font-size: 13px;
-            z-index: 10;
-            text-shadow: 0 0 5px #ffff00;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { width: 100vw; height: 100vh; background: #000; font-family: Arial, sans-serif; overflow: hidden; }
+        #gameContainer { position: relative; width: 100%; height: 100%; }
+        #levelTitle { position: absolute; top: 10px; left: 10px; z-index: 50; color: #00ff00; font-weight: bold; text-shadow: 0 0 6px #00ff00; }
+        #levelDesc { position: absolute; top: 36px; left: 10px; z-index: 50; color: #00ccff; text-shadow: 0 0 6px #00ccff; }
+        #loadingText { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 50; color: #ffff00; }
     </style>
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
-        <div class="gameInfo">
-            <h1 id="levelTitle">Savant Fou</h1>
-            <p class="subtitle" id="levelDesc"></p>
-        </div>
-        <div id="loadingText">⏳ Chargement...</div>
-    </div>
+    <div id="gameContainer"></div>
+    <div id="levelTitle">Savant Fou</div>
+    <div id="levelDesc"></div>
+    <div id="loadingText">⏳ Chargement...</div>
 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <script src="levels.js"></script>
     <script src="maps.js"></script>
-    <script src="assets.js"></script>
-    <script src="game.js"></script>
-    <script src="tutoriel.js"></script>
+    <script src="scenes.js"></script>
+    <script src="entities.js"></script>
+    <script src="gameScene.js"></script>
+    <script src="config.js"></script>
     <script>
-        const canvas = document.getElementById('gameCanvas');
-        const container = document.getElementById('gameContainer');
-        
-        function resizeCanvas() {
-            const rect = container.getBoundingClientRect();
-            canvas.width = Math.floor(rect.width);
-            canvas.height = Math.floor(rect.height);
+        function getLevelNumberFromURL() {
+            const m = window.location.pathname.match(/niveau_(\d+)/);
+            return m ? parseInt(m[1]) : 1;
         }
-
-        window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
-        
-        async function start() {
-            resizeCanvas();
-            updateCanvasDimensions();
-            
-            document.getElementById('levelTitle').textContent = '🎮 SAVANT FOU - Niveau ' + LEVEL_NUMBER;
-            document.getElementById('levelDesc').textContent = MAP_CONFIG.name;
-            
-            await assetManager.loadAllAssets();
-            const jeu = new Jeu();
-            document.getElementById('loadingText').style.display = 'none';
-            
-            const tutoriel = new TutorielUI(jeu);
-            const stats = new StatsAffichage(jeu);
-            const inventaire = new InventaireAffichage(jeu);
-            
-            jeu.addUIElement(tutoriel);
-            jeu.addUIElement(stats);
-            jeu.addUIElement(inventaire);
-            
-            tutoriel.show('🎮 Niveau ' + LEVEL_NUMBER + ' !', '#00ff00', 2000);
-            setTimeout(() => tutoriel.show('Éliminez 10 vagues pour progresser!', '#ffff00', 3000), 2500);
-            
-            jeu.lancer();
-        }
-        
-        start().catch(err => {
-            console.error('Erreur:', err);
-            document.getElementById('loadingText').textContent = '❌ Erreur';
-        });
+        const levelNum = getLevelNumberFromURL();
+        const mapConfig = getMapConfig(levelNum);
+        document.getElementById('levelTitle').textContent = '🎮 SAVANT FOU - Niveau ' + levelNum;
+        document.getElementById('levelDesc').textContent = mapConfig ? mapConfig.name : '';
+        window.addEventListener('load', () => { document.getElementById('loadingText').style.display = 'none'; });
     </script>
 </body>
 </html>
