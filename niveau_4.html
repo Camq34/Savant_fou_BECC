@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -12,80 +12,125 @@
         }
 
         body {
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background-color: #1a1a1a;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
         }
 
         #gameContainer {
-            text-align: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 1280px;
+            max-height: 800px;
+            aspect-ratio: 16 / 10;
         }
 
         canvas {
-            border: 3px solid #00ff00;
-            background-color: #000;
+            width: 100%;
+            height: 100%;
             display: block;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-        }
-
-        #ui {
-            color: #00ff00;
-            margin-top: 20px;
-            font-size: 16px;
-            background-color: #111;
-            padding: 15px;
             border: 2px solid #00ff00;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.7), inset 0 0 30px rgba(0, 255, 0, 0.2);
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
 
-        .stat {
-            padding: 8px;
-        }
-
-        .info {
-            grid-column: 1 / -1;
+        .gameInfo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
             font-size: 12px;
-            color: #888;
         }
 
         h1 {
             color: #00ff00;
-            margin-bottom: 10px;
-            font-size: 28px;
+            font-size: 16px;
+            margin: 0;
+            text-shadow: 0 0 10px #00ff00;
         }
 
         .subtitle {
             color: #00ccff;
-            margin-bottom: 15px;
-            font-size: 14px;
+            font-size: 11px;
+            margin: 3px 0 0 0;
+        }
+
+        #loadingText {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffff00;
+            font-size: 13px;
+            z-index: 10;
+            text-shadow: 0 0 5px #ffff00;
         }
     </style>
 </head>
 <body>
     <div id="gameContainer">
-        <h1 id="levelTitle">Savant Fou</h1>
-        <p class="subtitle" id="levelDesc"></p>
-        <canvas id="gameCanvas" width="1000" height="800"></canvas>
-        <div id="ui">
-            <div class="stat">❤️ PV: <span id="hp">100</span>/100</div>
-            <div class="stat">⚔️ EXP: <span id="exp">0</span></div>
-            <div class="stat">💰 SCORE: <span id="score">0</span></div>
-            <div class="stat">🌊 VAGUE: <span id="wave">1</span></div>
-            <div class="info">Flèches/WASD = Déplacement | Clic/ESPACE = Attaquer</div>
+        <canvas id="gameCanvas"></canvas>
+        <div class="gameInfo">
+            <h1 id="levelTitle">Savant Fou</h1>
+            <p class="subtitle" id="levelDesc"></p>
         </div>
+        <div id="loadingText">⏳ Chargement...</div>
     </div>
 
     <script src="levels.js"></script>
+    <script src="maps.js"></script>
+    <script src="assets.js"></script>
     <script src="game.js"></script>
+    <script src="tutoriel.js"></script>
     <script>
-        document.getElementById('levelTitle').textContent = 'Niveau ' + LEVEL_NUMBER + ': ' + LEVEL_CONFIG.name;
-        document.getElementById('levelDesc').textContent = LEVEL_CONFIG.description;
+        const canvas = document.getElementById('gameCanvas');
+        const container = document.getElementById('gameContainer');
+        
+        function resizeCanvas() {
+            const rect = container.getBoundingClientRect();
+            canvas.width = Math.floor(rect.width);
+            canvas.height = Math.floor(rect.height);
+        }
+
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+        
+        async function start() {
+            resizeCanvas();
+            updateCanvasDimensions();
+            
+            document.getElementById('levelTitle').textContent = '🎮 SAVANT FOU - Niveau ' + LEVEL_NUMBER;
+            document.getElementById('levelDesc').textContent = MAP_CONFIG.name;
+            
+            await assetManager.loadAllAssets();
+            const jeu = new Jeu();
+            document.getElementById('loadingText').style.display = 'none';
+            
+            const tutoriel = new TutorielUI(jeu);
+            const stats = new StatsAffichage(jeu);
+            const inventaire = new InventaireAffichage(jeu);
+            
+            jeu.addUIElement(tutoriel);
+            jeu.addUIElement(stats);
+            jeu.addUIElement(inventaire);
+            
+            tutoriel.show('🎮 Niveau ' + LEVEL_NUMBER + ' !', '#00ff00', 2000);
+            setTimeout(() => tutoriel.show('Éliminez 10 vagues pour progresser!', '#ffff00', 3000), 2500);
+            
+            jeu.lancer();
+        }
+        
+        start().catch(err => {
+            console.error('Erreur:', err);
+            document.getElementById('loadingText').textContent = '❌ Erreur';
+        });
     </script>
 </body>
 </html>

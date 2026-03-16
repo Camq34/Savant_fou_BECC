@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savant Fou - Menu Principal</title>
+    <title>Savant Fou - Niveau 1</title>
     <style>
         * {
             margin: 0;
@@ -12,130 +12,97 @@
         }
 
         body {
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            font-family: 'Arial', sans-serif;
         }
 
-        .menu-container {
-            text-align: center;
-            max-width: 600px;
+        #gameContainer {
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .gameInfo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            font-size: 12px;
         }
 
         h1 {
             color: #00ff00;
-            font-size: 48px;
-            text-shadow: 0 0 20px #00ff00;
-            margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite;
+            font-size: 16px;
+            margin: 0;
+            text-shadow: 0 0 10px #00ff00;
         }
 
         .subtitle {
-            color: #ffff00;
-            font-size: 18px;
-            margin-bottom: 40px;
-        }
-
-        .levels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .level-btn {
-            padding: 20px;
-            border: 2px solid #00ff00;
-            background-color: #001a00;
-            color: #00ff00;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .level-btn:hover {
-            background-color: #003300;
-            box-shadow: 0 0 20px #00ff00;
-            transform: scale(1.05);
-        }
-
-        .level-number {
-            font-size: 28px;
-        }
-
-        .level-name {
-            font-size: 12px;
             color: #00ccff;
-        }
-
-        .difficulty {
             font-size: 11px;
+            margin: 3px 0 0 0;
+        }
+
+        #loadingText {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             color: #ffff00;
-        }
-
-        .info-box {
-            border: 2px solid #00ff00;
-            background-color: #001a00;
-            padding: 20px;
-            margin: 20px 0;
-            color: #00ff00;
-            border-radius: 5px;
-        }
-
-        .footer {
-            color: #888;
-            margin-top: 30px;
-            font-size: 12px;
-        }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 20px #00ff00; }
-            50% { text-shadow: 0 0 40px #00ff00; }
+            font-size: 13px;
+            z-index: 10;
+            text-shadow: 0 0 5px #ffff00;
         }
     </style>
 </head>
 <body>
-    <div class="menu-container">
-        <h1>⚔️ SAVANT FOU ⚔️</h1>
-        <p class="subtitle">7 Niveaux de Cauchemar</p>
-
-        <div class="info-box">
-            <p>Contrôles: Flèches/WASD = Déplacement | Clic = Tirer | ESPACE = Tirer Aléatoire</p>
+    <div id="gameContainer">
+        <div class="gameInfo">
+            <h1 id="levelTitle">Savant Fou</h1>
+            <p class="subtitle" id="levelDesc"></p>
         </div>
-
-        <div class="levels-grid" id="levelsContainer"></div>
-
-        <div class="footer">
-            © 2026 Savant Fou - Version 1.0
-        </div>
+        <div id="loadingText">⏳ Chargement...</div>
     </div>
 
+    <!-- Phaser CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+
+    <!-- Charger les configs -->
     <script src="levels.js"></script>
+    <script src="maps.js"></script>
+
+    <!-- Charger les classes Phaser -->
+    <script src="config.js"></script>
+    <script src="entities.js"></script>
+    <script src="scenes.js"></script>
+    <script src="gameScene.js"></script>
+
     <script>
-        // Générer les boutons des niveaux
-        const container = document.getElementById('levelsContainer');
-        
-        for (let i = 1; i <= 7; i++) {
-            const level = LEVELS[i];
-            const btn = document.createElement('a');
-            btn.href = `niveau_${i}.html`;
-            btn.className = 'level-btn';
-            btn.innerHTML = `
-                <span class="level-number">Niveau ${i}</span>
-                <span class="level-name">${level.name}</span>
-                <span class="difficulty">⭐ x${level.difficulte}</span>
-            `;
-            container.appendChild(btn);
+        // Forcer le niveau 1 pour index.html
+        if (!window.LEVEL_NUMBER) {
+            Object.defineProperty(window, 'LEVEL_NUMBER', {
+                get: function() { return 1; }
+            });
         }
+
+        // Mettre à jour le titre du niveau
+        window.addEventListener('load', () => {
+            const levelNum = 1;
+            const mapConfig = getMapConfig(levelNum);
+            document.getElementById('levelTitle').textContent = '🎮 SAVANT FOU - Niveau ' + levelNum;
+            document.getElementById('levelDesc').textContent = mapConfig.name;
+        });
     </script>
 </body>
 </html>

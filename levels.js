@@ -103,6 +103,23 @@ const LEVELS = {
         ennemisHp: 60,
         ennemisColor: "#ff0099",
         difficulte: 4,
+        isFinalLevel: false,
+        nextLevel: 8
+    },
+
+    8: {
+        name: "Laboratoire du Chaudron",
+        description: "Combinez vos ingrédients pour obtenir la Potion de l'Immortalité!",
+        mapWidth: 512,
+        mapHeight: 384,
+        backgroundColor: "#2a0845",
+        gridColor: "#550088",
+        ennemisInitiaux: 0,
+        ennemisVitesse: 0,
+        ennemisHp: 0,
+        ennemisColor: "#000000",
+        difficulte: 0,
+        isCraftingLevel: true,
         isFinalLevel: true,
         nextLevel: null
     }
