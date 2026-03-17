@@ -22,9 +22,14 @@ export default class accueil extends Phaser.Scene {
   preload() {
     // tous les assets du jeu sont placés dans le sous-répertoire src/assets/
     this.load.image('img_materiaux', 'assets/terrain_d2_70.jpg');
+    this.load.image('img_items', 'assets/items.jpg');
     this.load.tilemapTiledJSON('map_accueil', 'assets/Map/map_Accueil.tmj');
     this.load.image("img_porte_orange", "assets/porteORANGE999.png");
-    this.load.spritesheet("img_perso", "src/assets/savant2.png", {
+    this.load.spritesheet("img_perso_droite", "src/assets/savant2.png", {
+      frameWidth: 100,
+      frameHeight: 450
+    });
+    this.load.spritesheet("img_perso_gauche", "src/assets/savant2gauche.png", {
       frameWidth: 100,
       frameHeight: 450
     });
@@ -117,15 +122,19 @@ export default class accueil extends Phaser.Scene {
     //this.physics.add.collider(player, groupe_plateformes);
   }
 
-  /***********************************************************************/
-  /** FONCTION UPDATE 
+
 /***********************************************************************/
+/** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
+/***********************************************************************/
+    update() {
+        const speed = 150;
+        const jumpPower = 300;
+        let vx = 0;
 
-  update() {
-    
-  
+        // Vérifier si le joueur touche le sol
+        this.playerOnGround = this.player.body.blocked.down;
 
-    if (clavier.up.isDown && player.body.touching.down) {
+        if (clavier.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
     }
 
@@ -145,20 +154,6 @@ export default class accueil extends Phaser.Scene {
       if (this.physics.overlap(player, this.porte7))
         this.scene.switch("Niveau7");
     }
-  }
-}
-
-/***********************************************************************/
-/** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
-/***********************************************************************/
-    update(); {
-        const speed = 150;
-        const jumpPower = 300;
-        let vx = 0;
-
-        // Vérifier si le joueur touche le sol
-        this.playerOnGround = this.player.body.blocked.down;
-
         // Réinitialiser les sauts disponibles au sol
         if (this.playerOnGround) {
             this.jumpsRemaining = this.maxJumps;
@@ -196,4 +191,5 @@ export default class accueil extends Phaser.Scene {
             `Au sol: ${this.playerOnGround ? '✓' : '✗'} | Sauts: ${this.jumpsRemaining}/${this.maxJumps}\n` +
             `WASD/Flèches: Déplacer | ESPACE/W/↑: Double Saut`
         );
+      }
     }
