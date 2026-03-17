@@ -12,8 +12,11 @@ class Accueil extends Phaser.Scene {
         // Charger le tileset
         this.load.image('terrain_d2_70', 'assets/terrain_d2_70.jpg');
         
-        // Charger le sprite joueur
-        this.load.image('player', 'assets/spritesheet_91.png');
+        // Charger le spritesheet du joueur
+        this.load.spritesheet('savant', 'assets/savant.png', { 
+            frameWidth: 64, 
+            frameHeight: 64 
+        });
     }
 
     create() {
@@ -34,7 +37,7 @@ class Accueil extends Phaser.Scene {
         console.log('🔒 Collisions activées');
 
         // Créer le joueur
-        this.player = this.physics.add.sprite(100, 100, 'player');
+        this.player = this.physics.add.sprite(100, 100, 'savant');
         this.player.setScale(2);
         this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
