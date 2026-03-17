@@ -23,6 +23,11 @@ export default class accueil extends Phaser.Scene {
     // tous les assets du jeu sont placés dans le sous-répertoire src/assets/
     this.load.image('img_materiaux', 'assets/terrain_d2_70.jpg');
     this.load.tilemapTiledJSON('map_accueil', 'assets/Map/map_Accueil.tmj');
+    this.load.image("img_porte_orange", "assets/porteORANGE999.png");
+    this.load.spritesheet("img_perso", "src/assets/savant2.png", {
+      frameWidth: 100,
+      frameHeight: 450
+    });
   }
 
   /***********************************************************************/
@@ -41,31 +46,16 @@ export default class accueil extends Phaser.Scene {
      *  CREATION DU MONDE + PLATEFORMES  *
      *************************************/
 
-
-    // la création d'un groupes permet de gérer simultanément les éléments d'une meme famille
-    //  Le groupe groupe_plateformes contiendra le sol et deux platesformes sur lesquelles sauter
-    // notez le mot clé "staticGroup" : le static indique que ces élements sont fixes : pas de gravite,
-    // ni de possibilité de les pousser.
-    groupe_plateformes = this.physics.add.staticGroup();
-    // une fois le groupe créé, on va créer les platesformes , le sol, et les ajouter au groupe groupe_plateformes
-
-    // l'image img_plateforme fait 400x32. On en met 2 à coté pour faire le sol
-    // la méthode create permet de créer et d'ajouter automatiquement des objets à un groupe
-    // on précise 2 parametres : chaque coordonnées et la texture de l'objet, et "voila!"
-    groupe_plateformes.create(200, 584, "img_plateforme");
-    groupe_plateformes.create(600, 584, "img_plateforme");
-
-    //  on ajoute 3 platesformes flottantes
-    groupe_plateformes.create(600, 450, "img_plateforme");
-    groupe_plateformes.create(50, 300, "img_plateforme");
-    groupe_plateformes.create(750, 270, "img_plateforme");
-
     /****************************
      *  Ajout des portes   *
      ****************************/
-    this.porte1 = this.physics.add.staticSprite(600, 414, "img_porte1");
-    this.porte2 = this.physics.add.staticSprite(50, 264, "img_porte2");
-    this.porte3 = this.physics.add.staticSprite(750, 234, "img_porte3");
+    this.porte1 = this.physics.add.staticSprite(600, 414, "img_porte_orange");
+    this.porte2 = this.physics.add.staticSprite(50, 264, "img_porte_orange");
+    this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
+    this.porte4 = this.physics.add.staticSprite(650, 234, "img_porte_orange");
+    this.porte5 = this.physics.add.staticSprite(750, 234, "img_porte_orange");
+    this.porte6 = this.physics.add.staticSprite(750, 234, "img_porte_orange");
+    this.porte7 = this.physics.add.staticSprite(750, 234, "img_porte_orange");
 
     /****************************
      *  CREATION DU PERSONNAGE  *
@@ -124,7 +114,7 @@ export default class accueil extends Phaser.Scene {
      ******************************************************/
 
     //  Collide the player and the groupe_etoiles with the groupe_plateformes
-    this.physics.add.collider(player, groupe_plateformes);
+    //this.physics.add.collider(player, groupe_plateformes);
   }
 
   /***********************************************************************/
@@ -133,136 +123,35 @@ export default class accueil extends Phaser.Scene {
 
   update() {
     
-    if (clavier.left.isDown) {
-      player.setVelocityX(-160);
-      player.anims.play("anim_tourne_gauche", true);
-    } else if (clavier.right.isDown) {
-      player.setVelocityX(160);
-      player.anims.play("anim_tourne_droite", true);
-    } else {
-      player.setVelocityX(0);
-      player.anims.play("anim_face");
-    }
+  
 
-<<<<<<< HEAD
     if (clavier.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
     }
 
     if (Phaser.Input.Keyboard.JustDown(clavier.space) == true) {
       if (this.physics.overlap(player, this.porte1))
-        this.scene.switch("niveau1");
+        this.scene.switch("Niveau1");
       if (this.physics.overlap(player, this.porte2))
-        this.scene.switch("niveau2");
+        this.scene.switch("Niveau2");
       if (this.physics.overlap(player, this.porte3))
-        this.scene.switch("niveau3");
-=======
-    preload() {
-        console.log('📦 Chargement des assets Accueil...');
-        
-        // Charger la tilemap Tiled
-        this.load.tilemapTiledJSON('mapAccueil', 'assets/Map/map_accueil.tmj');
-        
-        // Charger le tileset
-        this.load.image('terrain_d2_70', 'assets/terrain_d2_70.jpg');
-        
-        // Charger le spritesheet du joueur
-        this.load.spritesheet('savant1', 'assets/savant1.png', { 
-            frameWidth: 66, 
-            frameHeight: 64 
-        });
-    }
-
-    create() {
-        console.log('✅ Création de la scène Accueil...');
-
-        // Créer la tilemap depuis le fichier JSON
-        const map = this.make.tilemap({ key: 'mapAccueil' });
-        console.log(`🗺️ Map chargée: ${map.width}x${map.height} tuiles`);
-
-        // Ajouter le tileset
-        const tileset = map.addTilesetImage('terrain_d2_70', 'terrain_d2_70');
-        
-        // Créer le layer
-        const layer = map.createLayer('Calque de Tuiles 1', tileset);
-
-        // Ajouter collisions sur les tiles marquées
-        layer.setCollisionByProperty({ collision: true });
-        console.log('🔒 Collisions activées');
-
-        // Créer le joueur
-        this.player = this.physics.add.sprite(100, 100, 'savant1');
-        this.player.setScale(2);
-        this.player.setBounce(0.1);
-        this.player.setCollideWorldBounds(true);
-        this.player.setFrame(5); // 6ème image
-        console.log('👤 Joueur créé');
-
-        // Collisions joueur vs map
-        this.playerOnGround = false;
-        const groundCollider = this.physics.add.collider(this.player, layer, () => {
-            this.playerOnGround = true;
-        });
-        
-        // Détecter quand le joueur n'est plus au sol
-        this.physics.world.on('worldbounds', () => {
-            if (this.player.body.touching.down) {
-                this.playerOnGround = true;
-            } else {
-                this.playerOnGround = false;
-            }
-        });
-
-        // Caméra qui suit le joueur
-        this.cameras.main.startFollow(this.player);
-        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        console.log('📷 Caméra configurée');
-
-        // Sauvegarder le layer pour la physique
-        this.layer = layer;
-        this.map = map;
-        this.jumpsRemaining = 2; // Double saut
-        this.maxJumps = 2;
-
-        // Configurer les contrôles
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.keys = {
-            w: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-            a: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-            s: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-            d: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-            space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-        };
-        console.log('⌨️ Contrôles configurés');
-
-        // Afficher l'UI
-        this.uiText = this.add.text(10, 10, '', {
-            fontSize: '14px',
-            fill: '#0f0',
-            backgroundColor: '#000000cc',
-            padding: { x: 8, y: 6 }
-        }).setScrollFactor(0).setDepth(100);
-
-        // Afficher le titre
-        this.titleText = this.add.text(400, 30, '🎮 SAVANT FOU - Accueil', {
-            fontSize: '20px',
-            fill: '#0f0',
-            strokeThickness: 2
-        }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
-
-        console.log('✨ Accueil prêt! Utilisez WASD ou Flèches pour explorer');
->>>>>>> 522078c0184043210b991d23380349fac44b6570
+        this.scene.switch("Niveau3");
+      if (this.physics.overlap(player, this.porte4))
+        this.scene.switch("Niveau4");   
+      if (this.physics.overlap(player, this.porte5))
+        this.scene.switch("Niveau5");   
+      if (this.physics.overlap(player, this.porte6))
+        this.scene.switch("Niveau6"); 
+      if (this.physics.overlap(player, this.porte7))
+        this.scene.switch("Niveau7");
     }
   }
 }
 
-<<<<<<< HEAD
 /***********************************************************************/
 /** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
 /***********************************************************************/
-=======
-    update() {
+    update(); {
         const speed = 150;
         const jumpPower = 300;
         let vx = 0;
@@ -308,5 +197,3 @@ export default class accueil extends Phaser.Scene {
             `WASD/Flèches: Déplacer | ESPACE/W/↑: Double Saut`
         );
     }
-}
->>>>>>> 522078c0184043210b991d23380349fac44b6570
