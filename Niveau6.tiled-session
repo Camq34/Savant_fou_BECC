@@ -3,10 +3,14 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "assets/map_niveau4.tmx",
+    "activeFile": "assets/map_niveau1.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "C:/Users/Elna/Downloads/map_niveau4.tmx": {
             "scale": 0.43046874999999996,
             "selectedLayer": 0,
@@ -26,8 +30,29 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "assets/laser.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "assets/map_niveau1.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 654.5454545454547,
+                "y": 768.1818181818181
+            }
+        },
         "assets/map_niveau1.tmx#brique": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "assets/map_niveau1.tmx#laser": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "assets/map_niveau1.tmx#tiles_tiny_sample_2": {
+            "scaleInDock": 1
         },
         "assets/map_niveau4.tmx": {
             "scale": 0.3452,
@@ -48,7 +73,9 @@
             "scaleInEditor": 1
         },
         "assets/tiles_tiny_sample_2.tsx": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
         },
         "bogart-9_0.tsx": {
             "scaleInDock": 1,
@@ -96,31 +123,33 @@
         }
     },
     "last.exportedFilePath": "C:/Users/Elna/Documents/EPF/CPO/Savant_fou_BECC/assets/Map",
+    "last.externalTilesetPath": "C:/Users/Elna/Documents/EPF/CPO/Savant_fou_BECC/assets",
     "last.imagePath": "C:/Users/Elna/Documents/EPF/CPO/Savant_fou_BECC/assets",
     "map.height": 40,
     "map.lastUsedExportFilter": "Fichiers de carte JSON (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.width": 60,
     "openFiles": [
-        "assets/map_niveau4.tmx",
-        "assets/preview_122.tsx",
-        "assets/preview_1366.tsx"
+        "assets/map_niveau1.tmx",
+        "assets/preview_1366.tsx",
+        "assets/tiles_tiny_sample_2.tsx",
+        "assets/laser.tsx"
     ],
     "project": "",
     "property.type": "bool",
     "recentFiles": [
+        "assets/preview_1366.tsx",
+        "assets/tiles_tiny_sample_2.tsx",
+        "assets/laser.tsx",
+        "assets/map_niveau1.tmx",
         "assets/denzi_32_ortho_preview1.tsx",
         "assets/preview_122.tsx",
-        "assets/preview_1366.tsx",
         "C:/Users/Elna/Downloads/map_niveau4.tmx",
         "assets/map_niveau4.tmx",
         "preview_1366.tsx",
         "screenshot_6.tsx",
         "tiles_tiny_sample_2.tsx",
-        "preview_122.tsx",
-        "map_niveau4.tmx",
-        "sans titre.tmx",
-        "bogart-9_0.tsx"
+        "preview_122.tsx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }

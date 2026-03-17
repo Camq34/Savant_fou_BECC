@@ -9,8 +9,8 @@
  <tileset firstgid="50" name="tiles_tiny_sample_2" tilewidth="32" tileheight="32" tilecount="100" columns="10">
   <image source="items.png" width="320" height="320"/>
  </tileset>
- <tileset firstgid="150" name="laser" tilewidth="32" tileheight="32" tilecount="49" columns="7">
-  <image source="laser.png" width="233" height="250"/>
+ <tileset firstgid="150" name="laser" tilewidth="32" tileheight="32" tilecount="100" columns="7">
+  <image source="lasers.png" width="233" height="250"/>
  </tileset>
  <layer id="1" name="Calque de Tuiles 1" width="60" height="40">
   <data encoding="csv">
