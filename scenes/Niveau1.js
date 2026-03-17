@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -6,11 +7,18 @@ const config = {
     scene: {
         preload: preload,
         create: create
+=======
+class Niveau1 extends Phaser.Scene {
+    constructor() {
+        super('Niveau1');
+>>>>>>> 41bbb98f1d72e3d6e9cfee76d787bc7b6ab65335
     }
-};
 
-const game = new Phaser.Game(config);
+    preload() {
+        console.log('📦 Chargement Niveau 1...');
+    }
 
+<<<<<<< HEAD
 function preload() {
     // 1. On charge les images depuis le dossier 'asset'
     // Assure-toi que les noms de fichiers .png sont exactement ceux-là
@@ -44,4 +52,13 @@ function create() {
     this.cameras.main.centerOn(map.widthInPixels / 2, map.heightInPixels / 2);
 
     this.cameras.main.setZoom(0.415); // On dézoome un peu
+=======
+    create() {
+        console.log('✅ Niveau 1 créé (À implémenter)');
+        this.add.text(400, 300, 'Niveau 1 - À implémenter', {
+            fontSize: '32px',
+            fill: '#fff'
+        }).setOrigin(0.5);
+    }
+>>>>>>> 41bbb98f1d72e3d6e9cfee76d787bc7b6ab65335
 }
