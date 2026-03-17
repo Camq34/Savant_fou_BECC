@@ -5,20 +5,30 @@ export default class niveau2 extends Phaser.Scene {
       key: "niveau2" //  ici on précise le nom de la classe en tant qu'identifiant
     });
   }
-  preload() {}
+  preload() {
+    this.preload.tilemapTiledJSON('map_niveau2', 'assets/Map/map_niveau2:5.tmj');
+    this.preload.image('img_materiaux', 'assets/donjonasset.png');
+    this.preload.image('img_materiaux', 'assets/terrain_d2_70.jpg');
+    this.preload.image('img_coffrebleu', 'assets/coffreBLEU.png');
+    this.preload.image('img_coffrerouge', 'assets/coffreROUGE.png');
+    this.preload.image('img_coffrevert', 'assets/coffreVERT.png');
+    this.preload.image('img_coffrejaune', 'assets/coffreJAUNE.png');
+    this.preload.image('img_portesortie', 'assets/portesortiewallah.png');
+    this.load.spritesheet("img_perso", "src/assets/savant2.png", {
+      frameWidth: 100,
+      frameHeight: 450
+    });
+  }
 
   create() {
-    this.add.image(400, 300, "img_ciel");
-    this.groupe_plateformes = this.physics.add.staticGroup();
-    this.groupe_plateformes.create(200, 584, "img_plateforme");
-    this.groupe_plateformes.create(600, 584, "img_plateforme");
+    
     // ajout d'un texte distintcif  du niveau
     this.add.text(400, 100, "Vous êtes dans le niveau 2", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
       fontSize: "22pt"
     });
 
-    this.porte_retour = this.physics.add.staticSprite(100, 550, "img_porte2");
+    this.porte_retour = this.physics.add.staticSprite(100, 550, "img_portesortiewallah");
 
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.refreshBody();
