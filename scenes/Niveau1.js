@@ -1,47 +1,125 @@
-const config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    backgroundColor: '#000000', // Fond gris foncé pour éviter le blanc
-    scene: {
-        preload: preload,
-        create: create
+var config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 600,
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 500 },
+      debug: false 
     }
+  },
+  scene: {
+    preload: preload,
+    create: create,
+    update: update
+  }
 };
 
-const game = new Phaser.Game(config);
+var player;
+var clavier;
+var gameOver = false;
+var porte;
+var layer;
+
+new Phaser.Game(config);
 
 function preload() {
-    // 1. On charge les images depuis le dossier 'asset'
-    // Assure-toi que les noms de fichiers .png sont exactement ceux-là
     this.load.image('img_lasers', 'assets/lasers.png');
     this.load.image('img_items', 'assets/items.png');
-
-    // 2. On charge la map JSON depuis le dossier 'asset'
     this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
+
+    this.load.spritesheet("img_perso", "assets/savant1.png", {
+        frameWidth: 32,
+        frameHeight: 48
+    });
+
+    this.load.spritesheet("img_porte", "assets/porteORANGE999.png", {
+        frameWidth: 96,
+        frameHeight: 120
+    }); 
 }
 
-function create() {
-    // Création de la map à partir du JSON chargé
+function create() {  
     const map = this.make.tilemap({ key: 'ma_map' });
-
-    // 3. Liaison entre le nom dans Tiled et l'image chargée
-    // 'laser' et 'brique' doivent être les noms des onglets dans Tiled
     const tilesetLasers = map.addTilesetImage('lasers', 'img_lasers');
     const tilesetItems = map.addTilesetImage('tiles_tiny_sample_2', 'img_items');
+    
+    layer = map.createLayer('Calque de Tuiles 1', [tilesetLasers, tilesetItems], 0, 0);
+    layer.setCollisionByExclusion([-1]); 
 
-    // 4. Création du calque (Vérifie bien le nom exact à droite dans Tiled)
-    // On met les tilesets dans un tableau [ ] au cas où tu utilises les deux
-    const layer = map.createLayer('Calque de Tuiles 1', [tilesetLasers, tilesetItems], 0, 0);
+    player = this.physics.add.sprite(100, 100, 'img_perso');
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true); 
 
-    console.log(layer)
+    this.physics.add.collider(player, layer);
 
-    // Centrer la caméra
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-    // Zoom arrière pour voir si la map est cachée quelque part
+    this.cameras.main.startFollow(player);
+    this.cameras.main.setZoom(0.8); 
 
-    // Force la caméra à aller au centre de la map
-    this.cameras.main.centerOn(map.widthInPixels / 2, map.heightInPixels / 2);
+    this.anims.create({
+        key: "anim_tourne_gauche",
+        frames: this.anims.generateFrameNumbers("img_perso", { start: 0, end: 3 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.create({
+        key: "anim_tourne_droite",
+        frames: this.anims.generateFrameNumbers("img_perso", { start: 5, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.create({
+        key: "anim_face",
+        frames: [{ key: "img_perso", frame: 4 }],
+        frameRate: 20
+    });
 
-    this.cameras.main.setZoom(0.415); // On dézoome un peu
+    clavier = this.input.keyboard.createCursorKeys();
+
+    porte = this.physics.add.staticSprite(550, 372, "img_porte"); 
+    
+    this.anims.create({
+        key: "anim_ouvreporte",
+        frames: this.anims.generateFrameNumbers("img_porte", { start: 0, end: 5 }),
+        frameRate: 10,
+        repeat: 0
+    }); 
+    this.anims.create({
+        key: "anim_fermeporte",
+        frames: this.anims.generateFrameNumbers("img_porte", { start: 5, end: 0 }),
+        frameRate: 10,
+        repeat: 0
+    }); 
+    porte.ouverte = false; 
+}
+
+function update() {
+    if (gameOver) return;
+
+    if (clavier.left.isDown) {
+        player.setVelocityX(-160);
+        player.anims.play('anim_tourne_gauche', true);
+    } else if (clavier.right.isDown) {
+        player.setVelocityX(160);
+        player.anims.play('anim_tourne_droite', true);
+    } else {
+        player.setVelocityX(0);
+        player.anims.play('anim_face');
+    }
+
+    if ((clavier.up.isDown || clavier.space.isDown) && player.body.blocked.down) {
+        player.setVelocityY(-400);
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(clavier.space) && this.physics.overlap(player, porte)) {
+        if (!porte.ouverte) {
+            porte.anims.play("anim_ouvreporte");
+            porte.ouverte = true;
+        } else {
+            porte.anims.play("anim_fermeporte");
+            porte.ouverte = false;
+        }
+    }
 }
