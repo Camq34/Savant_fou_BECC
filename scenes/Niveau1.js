@@ -1,7 +1,7 @@
 const config = {
     type: Phaser.AUTO,
-    width: 1600,
-    height: 1200,
+    width: 800,
+    height: 600,
     backgroundColor: '#2d2d2d', // Fond gris foncé pour éviter le blanc
     scene: {
         preload: preload,
