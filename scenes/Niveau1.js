@@ -30,8 +30,8 @@ function preload() {
     this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
 
     this.load.spritesheet("img_perso", "assets/savant1.png", {
-        frameWidth: 32,
-        frameHeight: 48
+        frameWidth: 100,
+        frameHeight: 450,
     });
 
     this.load.spritesheet("img_porte", "assets/porteORANGE999.png", {
@@ -92,7 +92,8 @@ function create() {
         frameRate: 10,
         repeat: 0
     }); 
-    porte.ouverte = false; 
+    porte.ouverte = false;
+    this.cameras.main.setZoom(0.4); 
 }
 
 function update() {
