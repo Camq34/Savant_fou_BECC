@@ -13,8 +13,8 @@ class Accueil extends Phaser.Scene {
         this.load.image('terrain_d2_70', 'assets/terrain_d2_70.jpg');
         
         // Charger le spritesheet du joueur
-        this.load.spritesheet('savant', 'assets/savant.png', { 
-            frameWidth: 64, 
+        this.load.spritesheet('savant1', 'assets/savant1.png', { 
+            frameWidth: 66, 
             frameHeight: 64 
         });
     }
@@ -37,10 +37,11 @@ class Accueil extends Phaser.Scene {
         console.log('🔒 Collisions activées');
 
         // Créer le joueur
-        this.player = this.physics.add.sprite(100, 100, 'savant');
+        this.player = this.physics.add.sprite(100, 100, 'savant1');
         this.player.setScale(2);
         this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
+        this.player.setFrame(5); // 6ème image
         console.log('👤 Joueur créé');
 
         // Collisions joueur vs map
@@ -120,6 +121,11 @@ class Accueil extends Phaser.Scene {
         }
 
         this.player.setVelocityX(vx);
+
+        // Afficher la 6ème frame (index 5) quand au repos
+        if (vx === 0 && this.playerOnGround) {
+            this.player.setFrame(5);
+        }
 
         // Double Saut
         const jumpKey = this.cursors.up.isDown || this.keys.space.isDown || this.keys.w.isDown;
