@@ -1,3 +1,9 @@
+
+export default class niveau3 extends Phaser.Scene {
+	constructor() {
+		super({ key: "niveau3" });
+	}
+    
 var config = {
   type: Phaser.AUTO,
   width: 1920,
