@@ -1,3 +1,9 @@
+export default class Niveau1 extends Phaser.Scene {
+    constructor(){
+        super("Niveau1");
+    }
+}
+
 var config = {
   type: Phaser.AUTO,
   width: 800,
@@ -48,7 +54,7 @@ function create() {
     layer = map.createLayer('Calque de Tuiles 1', [tilesetLasers, tilesetItems], 0, 0);
     layer.setCollisionByExclusion([-1]); 
 
-    player = this.physics.add.sprite(0, 0, 'img_perso');
+    player = this.physics.add.sprite(500, 1000, 'img_perso');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true); 
 
