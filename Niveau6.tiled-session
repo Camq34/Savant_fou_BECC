@@ -4,6 +4,14 @@
     ],
     "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
     "fileStates": {
+        "C:/Users/Elna/Downloads/map_niveau4.tmx": {
+            "scale": 0.43046874999999996,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 959.4192377495463,
+                "y": 396.0798548094374
+            }
+        },
         "C:/Users/Elna/Downloads/preview_122.tsx": {
             "scaleInDock": 1
         },
@@ -14,8 +22,8 @@
             "scale": 0.3452,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1118.1923522595598,
-                "y": 638.7601390498262
+                "x": 1045.7705677867903,
+                "y": 650.3476245654693
             }
         },
         "assets/preview_122.tsx": {
@@ -84,9 +92,9 @@
     ],
     "project": "",
     "recentFiles": [
+        "assets/map_niveau4.tmx",
         "assets/preview_1366.tsx",
         "assets/preview_122.tsx",
-        "assets/map_niveau4.tmx",
         "preview_1366.tsx",
         "screenshot_6.tsx",
         "tiles_tiny_sample_2.tsx",
