@@ -29,7 +29,7 @@ function preload() {
     this.load.image('img_items', 'assets/items.png');
     this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
 
-    this.load.spritesheet("img_perso", "assets/savant1.png", {
+    this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 100,
         frameHeight: 450,
     });
@@ -48,7 +48,7 @@ function create() {
     layer = map.createLayer('Calque de Tuiles 1', [tilesetLasers, tilesetItems], 0, 0);
     layer.setCollisionByExclusion([-1]); 
 
-    player = this.physics.add.sprite(100, 100, 'img_perso');
+    player = this.physics.add.sprite(0, 0, 'img_perso');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true); 
 
@@ -78,7 +78,8 @@ function create() {
 
     clavier = this.input.keyboard.createCursorKeys();
 
-    porte = this.physics.add.staticSprite(550, 372, "img_porte"); 
+    porte = this.physics.add.staticSprite(96,452, "img_porte");
+    porte = this.physics.add.staticSprite(1800,1093, "img_porte"); 
     
     this.anims.create({
         key: "anim_ouvreporte",
