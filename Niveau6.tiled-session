@@ -1,0 +1,85 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "assets/map_niveau4.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "assets/map_niveau4.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2518.181818181818,
+                "y": 654.5454545454545
+            }
+        },
+        "assets/preview_122.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/preview_1366.tsx": {
+            "scaleInDock": 1
+        },
+        "bogart-9_0.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "denzi_32_ortho_preview1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.5
+        },
+        "preview_122.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "preview_1366.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "sans titre.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 968,
+                "y": 602
+            }
+        },
+        "screenshot_6.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "tiles_tiny_sample_2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "void-tiles-test.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        }
+    },
+    "last.imagePath": "C:/Users/Elna/Documents/EPF/CPO/Savant_fou_BECC/assets",
+    "map.height": 40,
+    "map.lastUsedFormat": "tmx",
+    "map.width": 60,
+    "openFiles": [
+        "preview_1366.tsx",
+        "screenshot_6.tsx",
+        "tiles_tiny_sample_2.tsx",
+        "preview_122.tsx",
+        "assets/map_niveau4.tmx"
+    ],
+    "project": "Niveau6.tiled-project",
+    "recentFiles": [
+        "preview_1366.tsx",
+        "screenshot_6.tsx",
+        "tiles_tiny_sample_2.tsx",
+        "preview_122.tsx",
+        "assets/map_niveau4.tmx",
+        "sans titre.tmx",
+        "bogart-9_0.tsx",
+        "void-tiles-test.tsx",
+        "denzi_32_ortho_preview1.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}
