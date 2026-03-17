@@ -1,8 +1,8 @@
 const config = {
     type: Phaser.AUTO,
-    width: 1200, // Augmenté pour être sûr de voir la map
-    height: 800,
-    backgroundColor: '#222222', // Fond gris foncé pour ne pas voir du blanc pur
+    width: 1600,
+    height: 1200,
+    backgroundColor: '#2d2d2d', // Fond gris foncé pour éviter le blanc
     scene: {
         preload: preload,
         create: create
@@ -12,30 +12,32 @@ const config = {
 const game = new Phaser.Game(config);
 
 function preload() {
-    // On ajoute 'asset/' pour dire au code d'entrer dans le dossier
-    this.load.image('img_laser', 'asset/laser.png');
-    this.load.image('img_brique', 'asset/brique.png');
-    
-    // Pareil pour la map
-    this.load.tilemapTiledJSON('ma_map', 'asset/map_niveau1.tmj');
+    // 1. On charge les images depuis le dossier 'asset'
+    // Assure-toi que les noms de fichiers .png sont exactement ceux-là
+    this.load.image('img_laser', 'assets/laser.png');
+    this.load.image('img_brique', 'assets/brique.png');
+    this.load.image('img_items', 'assets/items.png');
+
+    // 2. On charge la map JSON depuis le dossier 'asset'
+    this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
 }
 
 function create() {
+    // Création de la map à partir du JSON chargé
     const map = this.make.tilemap({ key: 'ma_map' });
 
-    // LIAISON AVEC LES TILESETS (Le 1er nom doit être le nom de l'onglet dans Tiled)
+    // 3. Liaison entre le nom dans Tiled et l'image chargée
+    // 'laser' et 'brique' doivent être les noms des onglets dans Tiled
     const tilesetLaser = map.addTilesetImage('laser', 'img_laser');
     const tilesetBrique = map.addTilesetImage('brique', 'img_brique');
-    const tilesetSample = map.addTilesetImage('tiles_tiny_sample_2', 'img_sample');
+    const tilesetItems = map.addTilesetImage('tiles_tiny_sample_2', 'img_items');
 
-    // CRÉATION DU CALQUE (Le nom exact à droite dans Tiled)
-    // On met tous les tilesets dans un tableau [ ] pour qu'il trouve tout
-    const calque = map.createLayer('Calque de Tuiles 1', [tilesetLaser, tilesetBrique, tilesetSample], 0, 0);
+    // 4. Création du calque (Vérifie bien le nom exact à droite dans Tiled)
+    // On met les tilesets dans un tableau [ ] au cas où tu utilises les deux
+    const layer = map.createLayer('Calque de Tuiles 1', [tilesetLaser, tilesetBrique], 0, 0);
 
-    if (!calque) {
-        console.error("Le calque n'a pas été trouvé. Vérifiez le nom 'Calque de Tuiles 1'");
-    }
+    console.log(layer)
 
-    // Zoomer un peu pour bien voir
-    this.cameras.main.setZoom(1.5);
+    // Centrer la caméra
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 }

@@ -26,6 +26,9 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "assets/map_niveau1.tmx#brique": {
+            "dynamicWrapping": false
+        },
         "assets/map_niveau4.tmx": {
             "scale": 0.3452,
             "selectedLayer": 1,

@@ -61,16 +61,43 @@
  "tileheight":32,
  "tilesets":[
         {
+         "columns":7,
          "firstgid":1,
-         "source":"..\/preview_1366.tsx"
+         "image":"..\/brique.png",
+         "imageheight":250,
+         "imagewidth":250,
+         "margin":0,
+         "name":"brique",
+         "spacing":0,
+         "tilecount":49,
+         "tileheight":32,
+         "tilewidth":32
         }, 
         {
+         "columns":10,
          "firstgid":50,
-         "source":"..\/tiles_tiny_sample_2.tsx"
+         "image":"..\/tiles_tiny_sample_2.png",
+         "imageheight":320,
+         "imagewidth":320,
+         "margin":0,
+         "name":"tiles_tiny_sample_2",
+         "spacing":0,
+         "tilecount":100,
+         "tileheight":32,
+         "tilewidth":32
         }, 
         {
+         "columns":7,
          "firstgid":150,
-         "source":"..\/laser.tsx"
+         "image":"..\/laser.png",
+         "imageheight":250,
+         "imagewidth":233,
+         "margin":0,
+         "name":"laser",
+         "spacing":0,
+         "tilecount":49,
+         "tileheight":32,
+         "tilewidth":32
         }],
  "tilewidth":32,
  "type":"map",

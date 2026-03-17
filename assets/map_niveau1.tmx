@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
- <tileset firstgid="1" source="preview_1366.tsx"/>
- <tileset firstgid="50" source="tiles_tiny_sample_2.tsx"/>
- <tileset firstgid="150" source="laser.tsx"/>
+ <editorsettings>
+  <export target="Map/map_niveau1.tmj" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="brique" tilewidth="32" tileheight="32" tilecount="49" columns="7">
+  <image source="brique.png" width="250" height="250"/>
+ </tileset>
+ <tileset firstgid="50" name="tiles_tiny_sample_2" tilewidth="32" tileheight="32" tilecount="100" columns="10">
+  <image source="items.png" width="320" height="320"/>
+ </tileset>
+ <tileset firstgid="150" name="laser" tilewidth="32" tileheight="32" tilecount="49" columns="7">
+  <image source="laser.png" width="233" height="250"/>
+ </tileset>
  <layer id="1" name="Calque de Tuiles 1" width="60" height="40">
   <data encoding="csv">
 198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,198,72,72,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,1610612889,1610612896,
