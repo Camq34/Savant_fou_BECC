@@ -6,61 +6,79 @@ export default class Niveau6 extends Phaser.Scene {
     }
 
     preload() {
-        // ⚠️ IMPORTANT : exporte ta map en JSON depuis Tiled !
         this.load.tilemapTiledJSON('map6', 'assets/maps/map_niveau6.json');
-
-        // Tes tilesets (noms EXACTS de Tiled)
         this.load.image('screenshot_6', 'assets/tilesets/screenshot_6.png');
         this.load.image('tuilesJeu', 'assets/tilesets/tuilesJeu.png');
-
-        // Player (à adapter si besoin)
         this.load.image('player', 'assets/player/player.png');
+        this.load.spritesheet('porte_anim', 'assets/tilesets/porte_blanche.png', { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
-        // Création de la map
         const map = this.make.tilemap({ key: 'map6' });
-
-        // Associer les tilesets (nom dans Tiled + clé preload)
         const tileset1 = map.addTilesetImage('screenshot_6', 'screenshot_6');
         const tileset2 = map.addTilesetImage('tuilesJeu', 'tuilesJeu');
 
-        // Créer les layers (mets EXACTEMENT les noms de Tiled)
         const sol = map.createLayer('Sol', [tileset1, tileset2]);
         const decor = map.createLayer('Decor', [tileset1, tileset2]);
-
-        // Collision
         sol.setCollisionByExclusion([-1]);
 
-        // Player
-        this.player = this.physics.add.sprite(100, 100, 'player');
+        this.anims.create({
+            key: 'animation_porte',
+            frames: this.anims.generateFrameNumbers('porte_anim', { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1
+        });
 
-        // Collision player ↔ map
+        // --- POSITION DE DÉPART (En bas à gauche) ---
+        // Tu peux aussi définir ce point dans Tiled
+        this.player = this.physics.add.sprite(50, 1150, 'player'); 
         this.physics.add.collider(this.player, sol);
 
-        // Caméra
+        // --- GESTION DES PORTES ---
+        const objetsPortes = map.getObjectLayer('calque_portes').objects;
+        this.portes = this.physics.add.staticGroup();
+
+        objetsPortes.forEach(obj => {
+            let porte = this.portes.create(obj.x, obj.y, 'porte_anim').setOrigin(0);
+            porte.play('animation_porte');
+            porte.destination = obj.name; // Le nom qu'on a mis dans Tiled
+            porte.body.setSize(obj.width, obj.height);
+            porte.refreshBody();
+        });
+
+        // --- LOGIQUE DE TÉLÉPORTATION ---
+        this.physics.add.overlap(this.player, this.portes, (player, porte) => {
+            if (porte.destination === 'CasierHautGauche') {
+                // Téléportation interne au casier (coordonnées à ajuster selon ta map)
+                // Idéalement, on cherche l'objet 'CasierHautGauche' dans le calque de points
+                this.teleporterJoueur(100, 100); 
+            } else if (porte.destination) {
+                // Changement de niveau classique
+                this.scene.start(porte.destination);
+            }
+        });
+
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
-        // Contrôles
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
-    update() {
-        const speed = 160;
+    teleporterJoueur(x, y) {
+        // Petite astuce pour éviter que la physique ne s'affole pendant le TP
+        this.player.setPosition(x, y);
+        this.player.body.setVelocity(0, 0);
+    }
 
+    update() {
+        const speed = 200;
         this.player.setVelocity(0);
 
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-speed);
-        } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(speed);
-        }
+        if (this.cursors.left.isDown) this.player.setVelocityX(-speed);
+        else if (this.cursors.right.isDown) this.player.setVelocityX(speed);
 
-        if (this.cursors.up.isDown) {
-            this.player.setVelocityY(-speed);
-        } else if (this.cursors.down.isDown) {
-            this.player.setVelocityY(speed);
-        }
+        if (this.cursors.up.isDown) this.player.setVelocityY(-speed);
+        else if (this.cursors.down.isDown) this.player.setVelocityY(speed);
+
+        this.player.body.velocity.normalize().scale(speed);
     }
 }
