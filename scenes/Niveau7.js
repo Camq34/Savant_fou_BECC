@@ -7,50 +7,14 @@ var clavier;
 var mapNiveau7;
 // Calque principal de tuiles. Il affiche le decor et porte aussi les collisions.
 var layer1;
-// Donnees logiques de la porte 1. Sert pour l'ouverture et la collision.
-var porte1;
-// Donnees logiques de la porte 2. Pour l'instant la variable existe surtout pour les futures interactions.
-var porte2;
-// Donnees logiques de la porte 3. Meme idee que pour porte2.
-var porte3;
-// Liste des 12 cases Tiled qui composent visuellement la porte 1 en 3 colonnes x 4 lignes.
-var porte1Positions = [];
-// Coordonnee X en tuiles de la cle dans la map. Le joueur doit recouvrir cette case pour la ramasser.
-var keyTileX = 0;
-// Coordonnee Y en tuiles de la cle dans la map.
-var keyTileY = 20;
-// Etat logique de la cle: false tant qu'elle est visible, true des qu'elle est recuperee.
-var keyCollected = false;
-// Verrou pour eviter de relancer plusieurs fois l'animation d'ouverture de la porte pendant qu'elle joue.
-var isDoorAnimating = false;
-// Etat final de la porte 1. Passe a true quand l'ouverture est terminee.
-var Porte1Ouverte = false;
-// Premier gid du tileset porteORANGE999 dans la map Tiled. Sert a reconstruire les frames directement dans le calque.
-var orangeDoorFirstGid = 186;
-// Debut de l'intervalle des tuiles du tileset donjonasset, utilise pour detecter les pieges/danger.
-var donjonFirstGid = 0;
-// Fin de l'intervalle des tuiles du tileset donjonasset.
-var donjonLastGid = 0;
-// Colonnes de depart de chaque etape d'animation de la porte dans le spritesheet/tuileset orange.
-var doorFrameColumns = [0, 3, 6, 9, 12, 14];
-// Tableau calcule des offsets de tuiles a appliquer pour chaque frame de l'ouverture de porte.
-var doorFrameOffsets = [];
-// Offsets de la pose finale de la porte ouverte, pour la laisser affichée ouverte a la fin de l'animation.
-var finalOpenDoorOffsets = [];
+// Groupe des boules lancees depuis les lanceurs situes a droite de la map.
+var groupeBoulesLancees;
 // Vitesse horizontale du joueur quand on appuie a gauche ou a droite.
 var playerSpeed = 180;
 // Impulsion verticale du saut. Valeur negative = le joueur monte.
 var jumpSpeed = -360;
-// Position de reapparition X du joueur apres contact avec le donjonasset.
-var spawnX = 64;
-// Position de reapparition Y du joueur.
-var spawnY = 0;
-// Horodatage de la derniere reapparition pour eviter plusieurs respawns trop rapproches.
-var lastRespawnAt = 0;
-// Etat temporaire quand le joueur vient de toucher un danger et attend son reapparition.
-var playerHitByDonjon = false;
 
-// Scene Phaser du niveau 7. Elle charge la map, affiche le joueur, gere la cle, la porte 1 et les dangers.
+// Scene Phaser du niveau 7. Elle charge la map et affiche le joueur.
 export default class niveau7 extends Phaser.Scene {
     constructor() {
         // Cle de scene utilisee par Phaser pour identifier et lancer ce niveau.
@@ -64,14 +28,17 @@ export default class niveau7 extends Phaser.Scene {
         this.load.tilemapTiledJSON("map_niveau7", "assets/Map/map_niveau7.tmj");
         // Image des objets/decor utilises dans la map.
         this.load.image("img_decor", "assets/items.png");
-        // Image du tileset donjonasset, utilisee ici comme zone de danger.
+        // Image du tileset donjonasset, conservee pour l'affichage normal de la map.
         this.load.image("img_donjonasset", "assets/donjonasset.png");
+        // Version spritesheet du meme tileset pour pouvoir animer individuellement les deux boules.
+        this.load.spritesheet("sprite_donjonasset", "assets/donjonasset.png", {
+            frameWidth: 32,
+            frameHeight: 32
+        });
         // Image d'un autre tileset present dans la map.
         this.load.image("img_capture", "assets/coffre_fermé.png");
-        // Image du tileset qui contient notamment l'icone de cle visible dans la map.
+        // Image d'un tileset d'icones utilise par la map.
         this.load.image("img_icons", "assets/icons_prev_comp-removebg-preview.png");
-        // Spritesheet/tileset de la porte orange. Ici il est utilise comme tileset Tiled pour reconstituer l'ouverture.
-        this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png");
         // Tileset de briques eventuel pour la map.
         this.load.image("img_brique", "assets/brique.png");
         // Tileset des portes de sortie.
@@ -84,7 +51,7 @@ export default class niveau7 extends Phaser.Scene {
         });
     }
 
-    // Create construit tout ce qu'on voit quand le niveau commence: map, joueur, camera, texte, variables de gameplay.
+    // Create construit tout ce qu'on voit quand le niveau commence: map, joueur, camera et titre.
     create() {
         // Instancie la map Tiled en memoire a partir de la ressource chargee dans preload.
         mapNiveau7 = this.make.tilemap({ key: "map_niveau7" });
@@ -106,7 +73,6 @@ export default class niveau7 extends Phaser.Scene {
         const tilesetDonjon = mapNiveau7.addTilesetImage("donjonasset", "img_donjonasset");
         const tilesetCapture = mapNiveau7.addTilesetImage("coffre_fermé", "img_capture");
         const tilesetIcons = mapNiveau7.addTilesetImage("icons_prev_comp-removebg-preview", "img_icons");
-        const tilesetPorteOrange = mapNiveau7.addTilesetImage("porteORANGE999", "img_porte_orange");
         const tilesetBrique = mapNiveau7.addTilesetImage("brique", "img_brique");
         const tilesetPorteSortie = mapNiveau7.addTilesetImage("portesortiewallah", "img_portesortie");
         const allTilesets = [
@@ -114,12 +80,11 @@ export default class niveau7 extends Phaser.Scene {
             tilesetDonjon,
             tilesetCapture,
             tilesetIcons,
-            tilesetPorteOrange,
             tilesetBrique,
             tilesetPorteSortie
         ].filter(Boolean);
 
-        // Cree le calque principal visible du niveau. C'est lui qui affiche le sol, les murs, la cle et les portes.
+        // Cree le calque principal visible du niveau. C'est lui qui affiche le sol, les murs et le decor.
         layer1 = mapNiveau7.createLayer("Tile Layer 1", allTilesets, 0, 0);
         if (!layer1) {
             // Si le calque manque dans la map, on l'affiche clairement a l'ecran pour faciliter le debug.
@@ -135,62 +100,11 @@ export default class niveau7 extends Phaser.Scene {
         // Active les collisions uniquement sur les tuiles qui ont la propriete Tiled "collision = true".
         layer1.setCollisionByProperty({ collision: true });
 
-        // Recupere les infos des tilesets depuis la map pour connaitre les vrais gid utilises par Tiled.
-        const orangeDoorTileset = mapNiveau7.tilesets.find((tileset) => tileset.name === "porteORANGE999");
-        const donjonTileset = mapNiveau7.tilesets.find((tileset) => tileset.name === "donjonasset");
-
-        // Gid de depart du tileset de porte orange. Sert a "dessiner" manuellement les differentes images de la porte.
-        orangeDoorFirstGid = orangeDoorTileset ? orangeDoorTileset.firstgid : 186;
-        // Intervalle complet du tileset donjonasset pour reconnaitre rapidement les tuiles dangereuses.
-        donjonFirstGid = donjonTileset ? donjonTileset.firstgid : 0;
-        donjonLastGid = donjonTileset ? donjonTileset.firstgid + donjonTileset.total - 1 : 0;
-
-        // Reinitialise tous les etats de gameplay a chaque entree dans la scene.
-        keyCollected = false;
-        isDoorAnimating = false;
-        Porte1Ouverte = false;
-        lastRespawnAt = 0;
-        playerHitByDonjon = false;
-
-        // Liste exacte des 12 cases de la porte 1 dans la map.
-        // Ces positions sont modifiees pendant l'animation pour afficher visuellement l'ouverture porte par porte.
-        porte1Positions = [
-            { x: 11, y: 35 }, { x: 12, y: 35 }, { x: 13, y: 35 },
-            { x: 11, y: 36 }, { x: 12, y: 36 }, { x: 13, y: 36 },
-            { x: 11, y: 37 }, { x: 12, y: 37 }, { x: 13, y: 37 },
-            { x: 11, y: 38 }, { x: 12, y: 38 }, { x: 13, y: 38 }
-        ];
-
-        // Zone logique de la porte 1. Elle resume la surface occupee par la porte dans la map.
-        porte1 = { xMin: 11, xMax: 13, yMin: 35, yMax: 38 };
-        // Zone logique de la porte 2 + position cible potentielle pour une teleportation future.
-        porte2 = {
-            xMin: 0,
-            xMax: 3,
-            yMin: 13,
-            yMax: 16,
-            targetX: mapNiveau7.tileToWorldX(1) + mapNiveau7.tileWidth / 2,
-            targetY: mapNiveau7.tileToWorldY(16) + mapNiveau7.tileHeight / 2 - 75
-        };
-        // Zone logique de la porte 3. Utile plus tard si une interaction doit etre ajoutee.
-        porte3 = { xMin: 0, xMax: 3, yMin: 7, yMax: 10 };
-
-        // Pour chaque etape de l'ouverture, on calcule les 12 tuiles exactes a afficher dans la porte.
-        // Le spritesheet de porte est organise en colonnes, donc on derive chaque "frame" a partir d'une colonne de depart.
-        doorFrameOffsets = doorFrameColumns.map((startCol) => [
-            startCol, startCol + 1, startCol + 2,
-            startCol + 17, startCol + 18, startCol + 19,
-            startCol + 34, startCol + 35, startCol + 36,
-            startCol + 51, startCol + 52, startCol + 53
-        ]);
-
-        // Pose finale de la porte completement ouverte. On la reapplique a la fin pour garantir le bon visuel final.
-        finalOpenDoorOffsets = [
-            12, 13, 14,
-            29, 30, 31,
-            46, 47, 48,
-            63, 64, 65
-        ];
+        // Groupe physique pour les boules tirees par les lanceurs horizontaux.
+        groupeBoulesLancees = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
 
         // Animation idle: le personnage reste immobile a l'ecran.
         this.anims.create({
@@ -216,12 +130,12 @@ export default class niveau7 extends Phaser.Scene {
             repeat: -1
         });
 
-        // Position initiale du joueur au lancement du niveau et point de reapparition apres degat.
-        spawnX = 160;
-        spawnY = mapNiveau7.heightInPixels - 220;
+        // Position initiale du joueur au lancement du niveau.
+        const spawnX = 160;
+        const spawnY = mapNiveau7.heightInPixels - 220;
 
         // Cree le personnage physique visible a l'ecran.
-        // C'est ce sprite qui entre en collision avec le decor, touche la cle et peut mourir sur les tuiles dangereuses.
+        // C'est ce sprite qui entre en collision avec le decor.
         player = this.physics.add.sprite(spawnX, spawnY, "savant2", 5);
         player.setScale(1.5);
         player.setCollideWorldBounds(true);
@@ -230,8 +144,28 @@ export default class niveau7 extends Phaser.Scene {
         player.body.setOffset(10, 6);
         player.play("savant2_idle");
 
+        // Remplace les deux boules fixes de la map par deux sprites qui flottent verticalement en boucle.
+        [
+            { tileX: 42, tileY: 27 },
+            { tileX: 43, tileY: 27 }
+        ].forEach(({ tileX, tileY }) => {
+            this.creerBouleAnimee(tileX, tileY, "vertical");
+        });
+
+        // Remplace les boules fixes de la ligne 34 par des sprites qui bougent horizontalement en boucle.
+        [6, 16, 17, 18, 29, 30, 31, 32].forEach((tileX) => {
+            this.creerBouleAnimee(tileX, 34, "horizontal");
+        });
+
+        // Cree les trois lanceurs a droite, puis declenche un seul tir par seconde choisi au hasard parmi eux.
+        [12, 14, 16].forEach((tileY) => {
+            this.creerLanceurHorizontal(59, tileY);
+        });
+        this.programmerTirHorizontalAleatoire();
+
         // Active la collision entre le joueur et le calque de tuiles du niveau.
         this.physics.add.collider(player, layer1);
+        this.physics.add.collider(player, groupeBoulesLancees);
 
         // Recupere les fleches du clavier pour piloter le joueur.
         clavier = this.input.keyboard.createCursorKeys();
@@ -260,8 +194,7 @@ export default class niveau7 extends Phaser.Scene {
         this.cameras.main.startFollow(player, true, 0.1, 0.1);
     }
 
-    // Update s'execute a chaque frame. C'est ici que sont geres le mouvement, le saut,
-    // la detection de la cle, les dangers et le changement d'animation du joueur.
+    // Update s'execute a chaque frame. C'est ici que sont geres le mouvement, le saut et le changement d'animation du joueur.
     update() {
         // Si le joueur ou le clavier n'existent pas encore, on ne fait rien pour eviter une erreur JS.
         if (!player || !clavier) {
@@ -276,13 +209,6 @@ export default class niveau7 extends Phaser.Scene {
         // Protection equivalente pour le clavier Phaser.
         if (this.input && this.input.keyboard && !this.input.keyboard.enabled) {
             this.input.keyboard.enabled = true;
-        }
-
-        // Quand le joueur vient de toucher un danger, on le fige pendant l'effet avant reapparition.
-        if (playerHitByDonjon) {
-            player.setVelocity(0, 0);
-            player.play("savant2_idle", true);
-            return;
         }
 
         // Detection du contact avec le sol. Sert a autoriser le saut et a choisir l'animation correcte.
@@ -305,41 +231,6 @@ export default class niveau7 extends Phaser.Scene {
             player.setVelocityY(jumpSpeed);
         }
 
-        // Detection de la cle.
-        // On convertit la hitbox du joueur en coordonnees de tuiles, puis on verifie si la case de la cle
-        // se trouve a l'interieur de la zone actuellement occupee par le joueur.
-        if (!keyCollected && !isDoorAnimating) {
-            try {
-                const body = player.body;
-                const leftTile = mapNiveau7.worldToTileX(body.left);
-                const rightTile = mapNiveau7.worldToTileX(body.right);
-                const topTile = mapNiveau7.worldToTileY(body.top);
-                const bottomTile = mapNiveau7.worldToTileY(body.bottom);
-                if (
-                    keyTileX >= leftTile &&
-                    keyTileX <= rightTile &&
-                    keyTileY >= topTile &&
-                    keyTileY <= bottomTile
-                ) {
-                    // La cle est consideree comme ramassee.
-                    keyCollected = true;
-                    if (layer1) {
-                        // On efface la tuile de la cle dans le calque, donc visuellement la cle disparait de la map.
-                        layer1.removeTileAt(keyTileX, keyTileY, true, false);
-                    }
-                    // Des que la cle disparait, on lance l'ouverture de la porte 1.
-                    this.openPorte1();
-                }
-            } catch (error) {
-                // En cas de probleme pendant la detection, on stoppe la boucle de ramassage pour eviter un plantage visuel.
-                keyCollected = true;
-                isDoorAnimating = false;
-            }
-        }
-
-        // Test des tuiles dangereuses du donjon. Peut declencher la coloration rouge puis le respawn.
-        this.respawnOnDonjonTouch();
-
         // Choix de l'animation affichee a l'ecran selon l'etat physique du joueur.
         if (!isOnGround) {
             player.play("savant2_jump", true);
@@ -350,99 +241,110 @@ export default class niveau7 extends Phaser.Scene {
         }
     }
 
-    // Verifie si le joueur touche une tuile du tileset donjonasset.
-    // Si oui, le joueur devient rouge, s'arrete puis reapparait a son point de spawn apres un court delai.
-    respawnOnDonjonTouch() {
-        if (!player || !player.body || !layer1 || donjonFirstGid === 0) {
+    // Cree une boule issue du tileset donjonasset, retire la tuile fixe de la map puis lui applique un mouvement infini.
+    creerBouleAnimee(tileX, tileY, direction) {
+        if (!layer1 || !mapNiveau7) {
             return;
         }
-        if (playerHitByDonjon) {
-            return;
-        }
-        if (this.time.now - lastRespawnAt < 250) {
-            return;
-        }
-        const body = player.body;
-        const leftTile = mapNiveau7.worldToTileX(body.left);
-        const rightTile = mapNiveau7.worldToTileX(body.right);
-        const topTile = mapNiveau7.worldToTileY(body.top);
-        const bottomTile = mapNiveau7.worldToTileY(body.bottom);
 
-        // Balaye toutes les cases actuellement recouvertes par le joueur pour savoir s'il touche un danger.
-        for (let tileY = topTile; tileY <= bottomTile; tileY += 1) {
-            for (let tileX = leftTile; tileX <= rightTile; tileX += 1) {
-                const tile = layer1.getTileAt(tileX, tileY);
-                if (!tile) {
-                    continue;
-                }
-                if (tile.index >= donjonFirstGid && tile.index <= donjonLastGid) {
-                    // Effet de degat: joueur bloque, teint en rouge, puis repositionne au point de spawn.
-                    playerHitByDonjon = true;
-                    player.setTint(0xff0000);
-                    player.setVelocity(0, 0);
-                    this.time.delayedCall(1000, () => {
-                        player.setPosition(spawnX, spawnY);
-                        player.setVelocity(0, 0);
-                        player.clearTint();
-                        playerHitByDonjon = false;
-                        lastRespawnAt = this.time.now;
-                    });
-                    return;
-                }
-            }
-        }
-    }
+        layer1.removeTileAt(tileX, tileY, true, false);
 
-    // Anime l'ouverture de la porte 1 directement en remplaçant les tuiles de la porte dans la map.
-    // Visuellement, la porte orange change d'image et finit ouverte, puis ses collisions sont coupees.
-    openPorte1() {
-        if (!layer1 || !porte1Positions || !doorFrameOffsets) {
-            return;
-        }
-        if (isDoorAnimating) {
-            return;
-        }
-        isDoorAnimating = true;
-        Porte1Ouverte = false;
+        const boule = this.physics.add.sprite(
+            mapNiveau7.tileToWorldX(tileX) + mapNiveau7.tileWidth / 2,
+            mapNiveau7.tileToWorldY(tileY) + mapNiveau7.tileHeight / 2,
+            "sprite_donjonasset",
+            115
+        );
 
-        // Chaque delayedCall correspond a une etape de l'animation d'ouverture.
-        doorFrameOffsets.forEach((offsets, frameIndex) => {
-            this.time.delayedCall(120 * frameIndex, () => {
-                try {
-                    // Remplace les 12 tuiles de la porte par celles correspondant a la frame courante.
-                    offsets.forEach((offset, tileIndex) => {
-                        const tilePos = porte1Positions[tileIndex];
-                        if (!tilePos) {
-                            return;
-                        }
-                        layer1.putTileAt(orangeDoorFirstGid + offset, tilePos.x, tilePos.y);
-                    });
-                    if (frameIndex === doorFrameOffsets.length - 1) {
-                        // Quand l'animation est terminee, on impose la version finale ouverte de la porte.
-                        finalOpenDoorOffsets.forEach((offset, tileIndex) => {
-                            const tilePos = porte1Positions[tileIndex];
-                            if (tilePos) {
-                                layer1.putTileAt(orangeDoorFirstGid + offset, tilePos.x, tilePos.y);
-                            }
-                        });
+        boule.setDepth(20);
+        boule.body.setAllowGravity(false);
+        boule.body.setImmovable(true);
+        boule.body.setSize(24, 24);
+        boule.body.setOffset(4, 4);
 
-                        // On desactive la collision sur toutes les cases de la porte pour pouvoir passer a travers.
-                        porte1Positions.forEach((tilePos) => {
-                            if (tilePos) {
-                                layer1.setCollisionAt(tilePos.x, tilePos.y, false, false);
-                            }
-                        });
+        this.physics.add.collider(player, boule);
 
-                        // Fin logique de l'animation: la porte est desormais consideree comme ouverte.
-                        isDoorAnimating = false;
-                        Porte1Ouverte = true;
-                    }
-                } catch (error) {
-                    // Si une erreur survient pendant l'ouverture, on debloque l'etat pour eviter une porte figée a jamais.
-                    isDoorAnimating = false;
-                    Porte1Ouverte = false;
-                }
+        if (direction === "horizontal") {
+            this.tweens.add({
+                targets: boule,
+                x: boule.x + 50,
+                duration: 700,
+                yoyo: true,
+                repeat: -1,
+                ease: "Sine.InOut"
             });
+            return;
+        }
+
+        this.tweens.add({
+            targets: boule,
+            y: boule.y + 7,
+            duration: 700,
+            yoyo: true,
+            repeat: -1,
+            ease: "Sine.InOut"
         });
     }
+
+    // Cree un lanceur fixe sur la droite.
+    creerLanceurHorizontal(tileX, tileY) {
+        if (!layer1 || !mapNiveau7) {
+            return;
+        }
+
+        layer1.removeTileAt(tileX, tileY, true, false);
+
+        const lanceur = this.physics.add.sprite(
+            mapNiveau7.tileToWorldX(tileX) + mapNiveau7.tileWidth / 2,
+            mapNiveau7.tileToWorldY(tileY) + mapNiveau7.tileHeight / 2,
+            "sprite_donjonasset",
+            115
+        );
+
+        lanceur.setDepth(20);
+        lanceur.body.setAllowGravity(false);
+        lanceur.body.setImmovable(true);
+        lanceur.body.setSize(24, 24);
+        lanceur.body.setOffset(4, 4);
+    }
+
+    // Chaque seconde, choisit un seul des trois lanceurs et lui fait tirer une boule vers la gauche.
+    programmerTirHorizontalAleatoire() {
+        const delai = 1000;
+
+        this.time.delayedCall(delai, () => {
+            const lignesLanceurs = [12, 14, 16];
+            const tileY = Phaser.Utils.Array.GetRandom(lignesLanceurs);
+            this.lancerBouleVersLaGauche(59, tileY);
+            this.programmerTirHorizontalAleatoire();
+        });
+    }
+
+    // Lance une boule projectile vers la gauche pour qu'elle traverse la ligne comme un lanceur de boules.
+    lancerBouleVersLaGauche(tileX, tileY) {
+        if (!mapNiveau7 || !groupeBoulesLancees) {
+            return;
+        }
+
+        const boule = groupeBoulesLancees.create(
+            mapNiveau7.tileToWorldX(tileX) + mapNiveau7.tileWidth / 2,
+            mapNiveau7.tileToWorldY(tileY) + mapNiveau7.tileHeight / 2,
+            "sprite_donjonasset",
+            115
+        );
+
+        boule.setDepth(19);
+        boule.body.setAllowGravity(false);
+        boule.body.setImmovable(true);
+        boule.body.setSize(24, 24);
+        boule.body.setOffset(4, 4);
+        boule.setVelocityX(-220);
+
+        this.time.delayedCall(10000, () => {
+            if (boule && boule.active) {
+                boule.destroy();
+            }
+        });
+    }
+
 }
