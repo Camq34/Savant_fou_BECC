@@ -34,6 +34,7 @@ export default class niveau6 extends Phaser.Scene {
 
 }
     create() {
+    const map = this.make.tilemap({ key: 'ma_map' });
     const tilesetLaser = map.addTilesetImage('laser', 'img_laser');
     const tilesetCoffre = map.addTilesetImage('brique', 'img_coffre_ferme');
     const tilesetPorteOrange = map.addTilesetImage('tiles_tiny_sample_2', 'img_porte_orange');
@@ -59,7 +60,10 @@ export default class niveau6 extends Phaser.Scene {
 
     console.log('Calques créés :', calquePorte, calqueTuiles);
 
-    layer = map.createLayer('Calque de Tuiles 1', [tilesetLasers, tilesetItems], 0, 0);
+    layer = map.createLayer('Calque de Tuiles 1', [tilesetLaser, tilesetCoffre,
+        tilesetPorteOrange,
+        tilesetPorteSortie,
+        tilesetTuilesJeu,tilesetScreenshot], 0, 0);
     layer.setCollisionByProperty({ collision: true });
 
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
