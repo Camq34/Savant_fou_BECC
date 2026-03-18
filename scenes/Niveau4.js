@@ -6,6 +6,7 @@ var layer1;
 var layer2;
 var porte1;
 var porte2;
+var coffre;
 
 
 
@@ -29,6 +30,9 @@ export default class niveau4 extends Phaser.Scene {
         frameHeight: 120
     });
 
+    this.load.image("coffre_fermé", "assets/coffre_fermé.png");
+    this.load.image("coffre_ouvert", "assets/coffre_ouvert.png");
+
 }
     create() {
     const map = this.make.tilemap({ key: 'ma_map_4' });
@@ -41,6 +45,9 @@ export default class niveau4 extends Phaser.Scene {
     layer2.setCollisionByProperty({ collision: true });
 
     this.porte = this.physics.add.staticSprite(1850, 1092, "img_porte");
+
+    coffre = this.physics.add.staticSprite(720, 960, "coffre_fermé");
+    coffre.ouverte = false;
 
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
     player.setScale(1.5);
@@ -148,6 +155,16 @@ update() {
             } else {
                 porte2.anims.play("anim_fermeporte");
                 porte2.ouverte = false;
+            }
+        }
+
+        if (this.physics.overlap(player, coffre)) {
+            if (!coffre.ouverte) {
+                coffre.setTexture("coffre_ouvert");
+                coffre.ouverte = true;
+            } else {
+                coffre.setTexture("coffre_fermé");
+                coffre.ouverte = false;
             }
         }
     }
