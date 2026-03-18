@@ -62,6 +62,7 @@ export default class Accueil extends Phaser.Scene {
     this.porte1 = this.physics.add.staticSprite(140, 930, "img_porte_orange");
     this.porte2 = this.physics.add.staticSprite(512, 613, "img_porte_orange");
     this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
+    this.porte3 = this.physics.add.staticSprite(140, 265, "img_porte_orange");
     this.porte4 = this.physics.add.staticSprite(1277, 1091, "img_porte_orange");
     this.porte5 = this.physics.add.staticSprite(1664, 487, "img_porte_orange");
     this.porte6 = this.physics.add.staticSprite(895, 740, "img_porte_orange");
@@ -151,7 +152,6 @@ export default class Accueil extends Phaser.Scene {
         }
       })
       .setOrigin(0.5);
->>>>>>> fe2dccd3a70eb2bf2a2fd0ed4d97fa24488a7da5
 
     /*************************************/
     /* ANIMATIONS DU PERSONNAGE */
@@ -193,7 +193,7 @@ export default class Accueil extends Phaser.Scene {
         end: 5
       }),
       frameRate: 10,
-      repeat: 0
+      repeat: 0   
     });
 
     this.anims.create({
@@ -238,31 +238,31 @@ export default class Accueil extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
       if (this.physics.overlap(this.player, this.porte1)) {
         this.porte1.anims.play("porte_ouvre");
-        this.scene.start("Niveau1");
+        this.scene.start("niveau1");
       }
       if (this.physics.overlap(this.player, this.porte2)) {
         this.porte2.anims.play("porte_ouvre");
-        this.scene.start("Niveau2");
+        this.scene.start("niveau2");
       }
       if (this.physics.overlap(this.player, this.porte3)) {
         this.porte3.anims.play("porte_ouvre");
-        this.scene.start("Niveau3");
+        this.scene.start("niveau3");
       }
       if (this.physics.overlap(this.player, this.porte4)) {
         this.porte4.anims.play("porte_ouvre");
-        this.scene.start("Niveau4");
+        this.scene.start("niveau4");
       }
       if (this.physics.overlap(this.player, this.porte5)) {
         this.porte5.anims.play("porte_ouvre");
-        this.scene.start("Niveau5");
+        this.scene.start("niveau5");
       }
       if (this.physics.overlap(this.player, this.porte6)) {
         this.porte6.anims.play("porte_ouvre");
-        this.scene.start("Niveau6");
+        this.scene.start("niveau6");
       }
       if (this.physics.overlap(this.player, this.porte7)) {
         this.porte7.anims.play("porte_ouvre");
-        this.scene.start("Niveau7");
+        this.scene.start("niveau7");
       }
     }
 
