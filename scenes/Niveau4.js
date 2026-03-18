@@ -15,7 +15,7 @@ export default class niveau4 extends Phaser.Scene {
     preload() {
     this.load.image('img_brique', 'assets/preview_122.png');
     this.load.image('img_lasers', 'assets/preview_1366.png');
-    this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau4.tmj');
+    this.load.tilemapTiledJSON('ma_map_4', 'assets/Map/map_niveau4.tmj');
 
     this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 40,
@@ -30,7 +30,7 @@ export default class niveau4 extends Phaser.Scene {
 
 }
     create() {
-    const map = this.make.tilemap({ key: 'ma_map' });
+    const map = this.make.tilemap({ key: 'ma_map_4' });
     const tilesetBrique = map.addTilesetImage('brique', 'img_brique');
     const tilesetLasers = map.addTilesetImage('lasers', 'img_lasers');
 
@@ -89,12 +89,6 @@ export default class niveau4 extends Phaser.Scene {
 
     clavier = this.input.keyboard.createCursorKeys();
     this.toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-
-    porte1 = this.physics.add.staticSprite(96, 1093, "img_porte");
-    porte2 = this.physics.add.staticSprite(1800, 1093, "img_porte");
-
-    porte1.ouverte = false;
-    porte2.ouverte = false;
 }
 update() {
     if (gameOver) return;
