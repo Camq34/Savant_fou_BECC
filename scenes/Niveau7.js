@@ -1,4 +1,4 @@
-class niveau7 extends Phaser.Scene {
+export default class niveau7 extends Phaser.Scene {
 	constructor() {
 		super({ key: "niveau7" });
 	}

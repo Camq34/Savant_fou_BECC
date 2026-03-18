@@ -5,9 +5,9 @@
 var clavier; // pour la gestion du clavier
 
 // définition de la classe "selection"
-export default class accueil extends Phaser.Scene {
+export default class Accueil extends Phaser.Scene {
   constructor() {
-    super({ key: "accueil" }); // mettre le meme nom que le nom de la classe
+    super({ key: "Accueil" }); // mettre le meme nom que le nom de la classe
   }
 
   /***********************************************************************/
@@ -21,16 +21,16 @@ export default class accueil extends Phaser.Scene {
   preload() {
     // tous les assets du jeu sont placés dans le sous-répertoire src/assets/
     this.load.image('img_materiaux', 'assets/terrain_d2_70.jpg');
-    this.load.image('img_items', 'assets/items.jpg');
+    this.load.image('img_items', 'assets/items.png');
     this.load.tilemapTiledJSON('map_accueil', 'assets/Map/map_Accueil.tmj');
     this.load.image("img_porte_orange", "assets/porteORANGE999.png");
-    this.load.spritesheet("img_perso_droite", "src/assets/savant2.png", {
-      frameWidth: 100,
-      frameHeight: 450
+    this.load.spritesheet("img_perso_droite", "assets/savant2.png", {
+      frameWidth: 41,
+      frameHeight: 50
     });
-    this.load.spritesheet("img_perso_gauche", "src/assets/savant2gauche.png", {
-      frameWidth: 100,
-      frameHeight: 450
+    this.load.spritesheet("img_perso_gauche", "assets/savant2gauche.png", {
+      frameWidth: 41,
+      frameHeight: 50
     });
   }
 
@@ -50,6 +50,19 @@ export default class accueil extends Phaser.Scene {
      *  CREATION DU MONDE + PLATEFORMES  *
      *************************************/
 
+        const map = this.make.tilemap({ key: 'map_accueil' });
+        const tilesetmateriaux = map.addTilesetImage('materiaux', 'img_materiaux');
+        const tilesetItems = map.addTilesetImage('tiles_tiny_sample_2', 'img_items');
+
+        this.layer = map.createLayer('Calque de Tuiles 1', [tilesetmateriaux, tilesetItems], 0, 0);
+        this.layer.setCollisionByProperty({ collision: true });
+
+        player = this.physics.add.sprite(100, 100, 'img_perso_gauche');
+        player.setBounce(0.2);
+        player.setCollideWorldBounds(true);
+
+        this.physics.add.collider(player, layer);
+
     /****************************
      *  Ajout des portes   *
      ****************************/
@@ -66,11 +79,11 @@ export default class accueil extends Phaser.Scene {
      ****************************/
 
     // On créée un nouveeau personnage : player
-    this.player = this.physics.add.sprite(100, 450, "img_perso");
+    this.player = this.physics.add.sprite(100, 450, "img_perso_gauche");
 
     //  propriétées physiqyes de l'objet player :
-   this.player.setBounce(0.2); // on donne un petit coefficient de rebond
-  this.player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
+    this.player.setBounce(0.2); // on donne un petit coefficient de rebond
+    this.player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
 
     /***************************
      *  CREATION DES ANIMATIONS *
@@ -81,7 +94,7 @@ export default class accueil extends Phaser.Scene {
     // creation de l'animation "anim_tourne_gauche" qui sera jouée sur le player lorsque ce dernier tourne à gauche
     this.anims.create({
       key: "anim_tourne_gauche", // key est le nom de l'animation : doit etre unique poru la scene.
-      frames: this.anims.generateFrameNumbers("img_perso", {
+      frames: this.anims.generateFrameNumbers("img_perso_gauche", {
         start: 0,
         end: 3
       }), // on prend toutes les frames de img perso numerotées de 0 à 3
@@ -92,14 +105,14 @@ export default class accueil extends Phaser.Scene {
     // creation de l'animation "anim_tourne_face" qui sera jouée sur le player lorsque ce dernier n'avance pas.
     this.anims.create({
       key: "anim_face",
-      frames: [{ key: "img_perso", frame: 4 }],
+      frames: [{ key: "img_perso_gauche", frame: 4 }],
       frameRate: 20
     });
 
     // creation de l'animation "anim_tourne_droite" qui sera jouée sur le player lorsque ce dernier tourne à droite
     this.anims.create({
       key: "anim_tourne_droite",
-      frames: this.anims.generateFrameNumbers("img_perso", {
+      frames: this.anims.generateFrameNumbers("img_perso_droite", {
         start: 5,
         end: 8
       }),
@@ -122,18 +135,18 @@ export default class accueil extends Phaser.Scene {
   }
 
 
-/***********************************************************************/
-/** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
-/***********************************************************************/
-    update() {
-        const speed = 150;
-        const jumpPower = 300;
-        let vx = 0;
+  /***********************************************************************/
+  /** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
+  /***********************************************************************/
+  update() {
+    const speed = 150;
+    const jumpPower = 300;
+    let vx = 0;
 
-        // Vérifier si le joueur touche le sol
-        this.playerOnGround = this.player.body.blocked.down;
+    // Vérifier si le joueur touche le sol
+    this.playerOnGround = this.player.body.blocked.down;
 
-        if (clavier.up.isDown && this.player.body.touching.down) {
+    if (clavier.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-330);
     }
 
@@ -145,44 +158,44 @@ export default class accueil extends Phaser.Scene {
       if (this.physics.overlap(this.player, this.porte3))
         this.scene.switch("Niveau3");
       if (this.physics.overlap(this.player, this.porte4))
-        this.scene.switch("Niveau4");   
+        this.scene.switch("Niveau4");
       if (this.physics.overlap(this.player, this.porte5))
-        this.scene.switch("Niveau5");   
+        this.scene.switch("Niveau5");
       if (this.physics.overlap(this.player, this.porte6))
-        this.scene.switch("Niveau6"); 
+        this.scene.switch("Niveau6");
       if (this.physics.overlap(this.player, this.porte7))
         this.scene.switch("Niveau7");
     }
-        // Réinitialiser les sauts disponibles au sol
-        if (this.playerOnGround) {
-            this.jumpsRemaining = this.maxJumps;
-        }
-
-        // Mouvement horizontal
-        if (clavier.left.isDown) {
-            vx = -speed;
-        } else if (clavier.right.isDown) {
-            vx = speed;
-        }
-
-        this.player.setVelocityX(vx);
-
-        // Afficher la 6ème frame (index 5) quand au repos
-        if (vx === 0 && this.playerOnGround) {
-            this.player.setFrame(5);
-        }
-
-        // Double Saut
-        const jumpKey = clavier.up.isDown || clavier.space.isDown;
-        
-        // Détecter la transition (quand on passe de non-appuyé à appuyé)
-        if (jumpKey && !this.lastJumpKey && this.jumpsRemaining > 0) {
-            this.player.setVelocityY(-jumpPower);
-            this.jumpsRemaining--;
-        }
-        
-        this.lastJumpKey = jumpKey;
-
-        
-      }
+    // Réinitialiser les sauts disponibles au sol
+    if (this.playerOnGround) {
+      this.jumpsRemaining = this.maxJumps;
     }
+
+    // Mouvement horizontal
+    if (clavier.left.isDown) {
+      vx = -speed;
+    } else if (clavier.right.isDown) {
+      vx = speed;
+    }
+
+    this.player.setVelocityX(vx);
+
+    // Afficher la 6ème frame (index 5) quand au repos
+    if (vx === 0 && this.playerOnGround) {
+      this.player.setFrame(5);
+    }
+
+    // Double Saut
+    const jumpKey = clavier.up.isDown || clavier.space.isDown;
+
+    // Détecter la transition (quand on passe de non-appuyé à appuyé)
+    if (jumpKey && !this.lastJumpKey && this.jumpsRemaining > 0) {
+      this.player.setVelocityY(-jumpPower);
+      this.jumpsRemaining--;
+    }
+
+    this.lastJumpKey = jumpKey;
+
+
+  }
+}
