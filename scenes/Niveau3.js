@@ -14,11 +14,12 @@ var calque3Actif = false;
 var coffres = [];
 var inventaire = [];
 var objetCalque3Recupere = false;
+var finNiveau3Declenchee = false;
 const OBJET_TILE_X = 53;
 const OBJET_TILE_Y = 17;
 const NOM_OBJET_CALQUE3 = "objet_calque3_53_17";
-const PORTE3_X = 1400;
-const PORTE3_Y = 1093;
+const PORTE3_X = 1840;
+const PORTE3_Y = 320;
 
 
 
@@ -41,6 +42,11 @@ export default class niveau3 extends Phaser.Scene {
     });
 
     this.load.spritesheet("img_porte", "assets/porteORANGE999.png", {
+        frameWidth: 96,
+        frameHeight: 120
+    }); 
+
+    this.load.spritesheet("img_porte_sortie", "assets/portesortiewallah.png", {
         frameWidth: 96,
         frameHeight: 120
     }); 
@@ -124,6 +130,20 @@ export default class niveau3 extends Phaser.Scene {
         repeat: 0
     });
 
+    this.anims.create({
+        key: "anim_ouvreporte_sortie",
+        frames: this.anims.generateFrameNumbers("img_porte_sortie", { start: 0, end: 5 }),
+        frameRate: 10,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "anim_fermeporte_sortie",
+        frames: this.anims.generateFrameNumbers("img_porte_sortie", { start: 5, end: 0 }),
+        frameRate: 10,
+        repeat: 0
+    });
+
     player.play("savant2_idle");
 
     clavier = this.input.keyboard.createCursorKeys();
@@ -131,7 +151,9 @@ export default class niveau3 extends Phaser.Scene {
 
     porte1 = this.physics.add.staticSprite(96, 1093, "img_porte");
     porte2 = this.physics.add.staticSprite(1800, 1093, "img_porte");
-    porte3 = this.physics.add.staticSprite(1900, 500, "img_porte");
+    porte3 = this.physics.add.staticSprite(1850, 416, "img_porte_sortie");
+    porte3.setOrigin(0.5, 1);
+    porte3.refreshBody();
     porte3.setVisible(false);
     porte3.body.enable = false;
 
@@ -143,6 +165,7 @@ export default class niveau3 extends Phaser.Scene {
     calque3Actif = false;
     inventaire = [];
     objetCalque3Recupere = false;
+    finNiveau3Declenchee = false;
 }
 
 activerCalque1() {
@@ -272,6 +295,7 @@ recupererObjetCalque3() {
         this.registry.set("inventaireNiveau3", [...inventaire]);
         objetCalque3Recupere = true;
         this.faireApparaitrePorte3();
+        this.afficherMessagePotion();
     }
 }
 
@@ -285,17 +309,73 @@ faireApparaitrePorte3() {
     porte3.refreshBody();
 }
 
+afficherMessagePotion() {
+    const message = this.add
+        .text(this.cameras.main.width * 0.5, 80, "Vous avez recupere une potion !", {
+            fontFamily: "Arial",
+            fontSize: "36px",
+            color: "#ffffff",
+            stroke: "#000000",
+            strokeThickness: 6
+        })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(1000);
+
+    this.tweens.add({
+        targets: message,
+        alpha: 0,
+        duration: 1800,
+        delay: 700,
+        onComplete: () => message.destroy()
+    });
+}
+
+terminerNiveau3() {
+    if (finNiveau3Declenchee) {
+        return;
+    }
+
+    finNiveau3Declenchee = true;
+    gameOver = true;
+    player.setVelocity(0, 0);
+    porte3.anims.play("anim_ouvreporte_sortie");
+
+    const messageFin = this.add
+        .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez finis le niveau 3 !", {
+            fontFamily: "Arial",
+            fontSize: "42px",
+            color: "#ffd64d",
+            stroke: "#000000",
+            strokeThickness: 8
+        })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(1000);
+
+    this.tweens.add({
+        targets: messageFin,
+        alpha: 0,
+        duration: 600,
+        delay: 1200
+    });
+
+    this.time.delayedCall(1700, () => {
+        this.scene.start("Accueil", { messageFinNiveau: "Bravo vous avez finis le niveau 3 !" });
+    });
+}
+
 update() {
     if (gameOver) return;
 
     const isOnGround = player.body.blocked.down || player.body.touching.down;
 
     if (clavier.left.isDown) {
-        player.setVelocityX(-160);
+        player.setVelocityX(-240);
         player.setFlipX(true);
     } 
     else if (clavier.right.isDown) {
-        player.setVelocityX(160);
+        player.setVelocityX(240);
         player.setFlipX(false);
     } 
     else {
@@ -334,6 +414,10 @@ update() {
         if (this.physics.overlap(player, porte2)) {
             porte2.anims.play("anim_ouvreporte");
             this.teleporterPorte2VersPorte1();
+        }
+
+        if (porte3.body.enable && this.physics.overlap(player, porte3)) {
+            this.terminerNiveau3();
         }
     }
 }
