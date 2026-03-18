@@ -1,6 +1,6 @@
 export default class niveau2 extends Phaser.Scene {
 	constructor() {
-		super({ key: "niveau2" });
+		super({ key: "Niveau2" });
 	}
 
 	preload() {
@@ -42,11 +42,13 @@ export default class niveau2 extends Phaser.Scene {
 			tilesetCoffreVert,
 			tilesetCoffreJaune,
 			tilesetPorteSortie
-		];
+		].filter(Boolean);
 
 		map.createLayer("Tile Layer 1", allTilesets, 0, 0);
 		this.layerDecor = map.createLayer("décor", allTilesets, 0, 0);
-		this.layerDecor.setCollisionByProperty({ collision: true });
+		if (this.layerDecor) {
+			this.layerDecor.setCollisionByProperty({ collision: true });
+		}
 
 		this.anims.create({
 			key: "savant2_idle",
