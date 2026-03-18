@@ -52,9 +52,9 @@ function create() {
     const tilesetItems = map.addTilesetImage('tiles_tiny_sample_2', 'img_items');
     
     layer = map.createLayer('Calque de Tuiles 1', [tilesetLasers, tilesetItems], 0, 0);
-    layer.setCollisionByExclusion([-1]); 
+    layer.setCollisionByProperty({ collides: true });
 
-    player = this.physics.add.sprite(500, 1000, 'img_perso');
+    player = this.physics.add.sprite(100, 100, 'img_perso');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true); 
 
