@@ -2,7 +2,8 @@
 var player;
 var clavier;
 var gameOver = false;
-var layer;
+var layer1;
+var layer2;
 var porte1;
 var porte2;
 
@@ -13,8 +14,8 @@ export default class niveau4 extends Phaser.Scene {
 		super({ key: "niveau4" });
 	}
     preload() {
-    this.load.image('img_brique', 'assets/preview_122.png');
-    this.load.image('img_lasers', 'assets/preview_1366.png');
+    this.load.image('img_brique', 'assets/brique.png');
+    this.load.image('img_lasers', 'assets/lasers.png');
     this.load.tilemapTiledJSON('ma_map_4', 'assets/Map/map_niveau4.tmj');
 
     this.load.spritesheet("img_perso", "assets/savant2.png", {
@@ -32,10 +33,12 @@ export default class niveau4 extends Phaser.Scene {
     create() {
     const map = this.make.tilemap({ key: 'ma_map_4' });
     const tilesetBrique = map.addTilesetImage('brique', 'img_brique');
-    const tilesetLasers = map.addTilesetImage('lasers', 'img_lasers');
+    const tilesetLasers = map.addTilesetImage('preview_122', 'img_lasers');
 
-    layer = map.createLayer('Calque de Tuiles 1', [tilesetBrique, tilesetLasers], 0, 0);
-    layer.setCollisionByProperty({ collision: true });
+    layer1 = map.createLayer('Calque de Tuiles 1', [tilesetBrique, tilesetLasers], 0, 0);
+    layer2 = map.createLayer('Calque de Tuiles 2', [tilesetBrique, tilesetLasers], 0, 0);
+    layer1.setCollisionByProperty({ collision: true });
+    layer2.setCollisionByProperty({ collision: true });
 
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
     player.setScale(1.5);
@@ -44,11 +47,15 @@ export default class niveau4 extends Phaser.Scene {
     player.body.setSize(20, 44);
     player.body.setOffset(10, 6);
 
-    this.physics.add.collider(player, layer);
+    this.physics.add.collider(player, layer1);
+    this.physics.add.collider(player, layer2);
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(player);
-    this.cameras.main.setZoom(0.4);
+    const gameWidth = this.sys.game.config.width;
+    const gameHeight = this.sys.game.config.height;
+    const mapZoom = Math.min(gameWidth / map.widthInPixels, gameHeight / map.heightInPixels, 1);
+    this.cameras.main.setZoom(mapZoom);
 
     this.anims.create({
         key: "savant2_idle",

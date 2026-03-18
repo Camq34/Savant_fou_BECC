@@ -69,7 +69,10 @@ export default class niveau3 extends Phaser.Scene {
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(player);
-    this.cameras.main.setZoom(1);
+    const gameWidth = this.sys.game.config.width;
+    const gameHeight = this.sys.game.config.height;
+    const mapZoom = Math.min(gameWidth / map.widthInPixels, gameHeight / map.heightInPixels, 1);
+    this.cameras.main.setZoom(mapZoom);
 
     this.anims.create({
         key: "savant2_idle",
