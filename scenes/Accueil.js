@@ -61,10 +61,10 @@ export default class Accueil extends Phaser.Scene {
     this.porte1 = this.physics.add.staticSprite(600, 414, "img_porte_orange");
     this.porte2 = this.physics.add.staticSprite(50, 264, "img_porte_orange");
     this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
-    this.porte4 = this.physics.add.staticSprite(650, 234, "img_porte_orange");
+    this.porte4 = this.physics.add.staticSprite(1277, 1091, "img_porte_orange");
     this.porte5 = this.physics.add.staticSprite(800, 234, "img_porte_orange");
     this.porte6 = this.physics.add.staticSprite(900, 234, "img_porte_orange");
-    this.porte7 = this.physics.add.staticSprite(1000, 234, "img_porte_orange");
+    this.porte7 = this.physics.add.staticSprite(1277, 355, "img_porte_orange");
 
     /*************************************/
     /* ANIMATIONS DU PERSONNAGE */
@@ -90,7 +90,7 @@ export default class Accueil extends Phaser.Scene {
       key: "savant2_jump",
       frames: this.anims.generateFrameNumbers("img_perso", {
         start: 6,
-        end: 8
+        end: 10
       }),
       frameRate: 10,
       repeat: -1
