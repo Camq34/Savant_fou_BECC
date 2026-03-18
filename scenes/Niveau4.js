@@ -7,6 +7,9 @@ var layer2;
 var porte1;
 var porte2;
 var coffre;
+var potion;
+var messagePotion;
+var cle;
 
 
 
@@ -33,9 +36,33 @@ export default class niveau4 extends Phaser.Scene {
     this.load.image("coffre_fermé", "assets/coffre_fermé.png");
     this.load.image("coffre_ouvert", "assets/coffre_ouvert.png");
 
+    this.load.spritesheet("donjonasset", "assets/donjonasset.png", {
+        frameWidth: 32,
+        frameHeight: 32
+    });
+
+    this.load.spritesheet("icons_prev", "assets/icons_prev_comp-removebg-preview.png", {
+    frameWidth: 32,
+    frameHeight: 32
+});
+
 }
     create() {
+    gameOver = false;
     const map = this.make.tilemap({ key: 'ma_map_4' });
+    this.levelMap = map;
+    this.tuilesTueIndexes = new Set();
+
+    map.tilesets.forEach((tileset) => {
+        const proprietes = tileset.tileProperties || {};
+        Object.keys(proprietes).forEach((idTuile) => {
+            const props = proprietes[idTuile];
+            if (props && props.tue) {
+                this.tuilesTueIndexes.add(tileset.firstgid + Number(idTuile));
+            }
+        });
+    });
+
     const tilesetBrique = map.addTilesetImage('brique', 'img_brique');
     const tilesetLasers = map.addTilesetImage('preview_122', 'img_lasers');
 
@@ -48,6 +75,9 @@ export default class niveau4 extends Phaser.Scene {
 
     coffre = this.physics.add.staticSprite(720, 960, "coffre_fermé");
     coffre.ouverte = false;
+
+    cle = this.physics.add.staticSprite(1602, 130, "icons_prev", 9);
+    cle.setScale(1.5);
 
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
     player.setScale(1.5);
@@ -106,6 +136,69 @@ export default class niveau4 extends Phaser.Scene {
     clavier = this.input.keyboard.createCursorKeys();
     this.toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 }
+
+joueurToucheTuileTue(layer) {
+    if (!layer) return false;
+
+    const body = player.body;
+    const points = [
+        { x: body.center.x, y: body.center.y },
+        { x: body.center.x, y: body.bottom - 2 },
+        { x: body.left + 2, y: body.bottom - 2 },
+        { x: body.right - 2, y: body.bottom - 2 },
+        { x: body.left + 2, y: body.center.y },
+        { x: body.right - 2, y: body.center.y }
+    ];
+
+    for (let i = 0; i < points.length; i += 1) {
+        const point = points[i];
+        const tile = layer.getTileAtWorldXY(point.x, point.y, false, this.cameras.main);
+        if (!tile) {
+            continue;
+        }
+
+        const indexNormalise = tile.index & 0x1fffffff;
+        const tueParPropriete = tile.properties && tile.properties.tue;
+        const tueParIndex = this.tuilesTueIndexes && this.tuilesTueIndexes.has(indexNormalise);
+
+        if (tueParPropriete || tueParIndex) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+mourirEtRespawn() {
+    if (gameOver) return;
+
+    gameOver = true;
+    player.setVelocity(0, 0);
+
+    player.setTint(0xff4d4d);
+    this.cameras.main.shake(180, 0.004);
+    this.tweens.add({
+        targets: player,
+        alpha: 0,
+        scaleX: player.scaleX * 0.75,
+        scaleY: player.scaleY * 0.75,
+        angle: 12,
+        duration: 220,
+        ease: "Quad.easeIn",
+        onComplete: () => {
+            player.clearTint();
+            player.setAlpha(1);
+            player.setAngle(0);
+            player.setScale(1.5);
+        }
+    });
+
+    this.time.delayedCall(260, () => {
+        this.scene.restart();
+        gameOver = false;
+    });
+}
+
 update() {
     if (gameOver) return;
 
@@ -137,6 +230,32 @@ update() {
         player.anims.play("savant2_idle", true);
     }
 
+    // Vérifier si le joueur prend la potion
+    if (potion && this.physics.overlap(player, potion)) {
+        // Afficher le message
+        potion.destroy();
+        potion = null;
+        messagePotion = this.add.text(760, 95, "POTION RÉCUPÉRÉE!", {
+            fontFamily: "Courier New, monospace",
+            fontSize: "72px",
+            fontStyle: "bold",
+            color: "#00ff00",
+            stroke: "#4d0000",
+            strokeThickness: 8,
+        }).setDepth(100);
+    }
+
+    // Vérifier si le joueur prend la clé
+    if (cle && this.physics.overlap(player, cle)) {
+        cle.destroy();
+        cle = null;
+    }
+
+    if (this.joueurToucheTuileTue(layer1) || this.joueurToucheTuileTue(layer2)) {
+        this.mourirEtRespawn();
+        return;
+    }
+
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
         if (this.physics.overlap(player, porte1)) {
             if (!porte1.ouverte) {
@@ -162,9 +281,8 @@ update() {
             if (!coffre.ouverte) {
                 coffre.setTexture("coffre_ouvert");
                 coffre.ouverte = true;
-            } else {
-                coffre.setTexture("coffre_fermé");
-                coffre.ouverte = false;
+                // Créer la potion à côté du coffre
+                potion = this.physics.add.staticSprite(coffre.x + 112, coffre.y - 42, "donjonasset", 163);
             }
         }
     }
