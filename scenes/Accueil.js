@@ -43,17 +43,7 @@ export default class Accueil extends Phaser.Scene {
     this.layer = map.createLayer("Calque de Tuiles 1", [tilesetMateriaux, tilesetItems], 0, 0);
     this.layer.setCollisionByProperty({ collision: true });
 
-    /*************************************/
-    /* CREATION DU JOUEUR */
-    /*************************************/
-    this.player = this.physics.add.sprite(100, 450, "img_perso", 5);
-    this.player.setScale(1.5);
-    this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true);
-    this.player.body.setSize(20, 44);
-    this.player.body.setOffset(10, 6);
-
-    this.physics.add.collider(this.player, this.layer);
+    
 
     /*************************************/
     /* CREATION DES PORTES */
@@ -152,6 +142,18 @@ export default class Accueil extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+      /*************************************/
+    /* CREATION DU JOUEUR */
+    /*************************************/
+    this.player = this.physics.add.sprite(100, 450, "img_perso", 5);
+    this.player.setScale(1.5);
+    this.player.setBounce(0.2);
+    this.player.setCollideWorldBounds(true);
+    this.player.body.setSize(20, 44);
+    this.player.body.setOffset(10, 6);
+
+    this.physics.add.collider(this.player, this.layer);
+    
     /*************************************/
     /* ANIMATIONS DU PERSONNAGE */
     /*************************************/

@@ -78,17 +78,17 @@ export default class niveau7 extends Phaser.Scene {
 			fontFamily: "Courier New, monospace",
 			fontSize: "72px",
 			fontStyle: "bold",
-			color: "#5cff72",
-			stroke: "#0b2a12",
+			color: "#ff2a2a",
+        stroke: "#4d0000",
 			strokeThickness: 8,
 			shadow: {
-				offsetX: 0,
-				offsetY: 0,
-				color: "#7dff8d",
-				blur: 12,
-				stroke: true,
-				fill: true
-			}
+          offsetX: 0,
+          offsetY: 0,
+          color: "#ff3b00",
+          blur: 14,
+          stroke: true,
+          fill: true
+        }
 		}).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
 		this.cameras.main.setBackgroundColor("#000000");
