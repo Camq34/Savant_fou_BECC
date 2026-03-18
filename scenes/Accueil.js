@@ -1,194 +1,206 @@
 /***********************************************************************/
-/** VARIABLES GLOBALES 
+/** VARIABLES GLOBALES */
 /***********************************************************************/
 
-var clavier; // pour la gestion du clavier
+var clavier;
 
-// définition de la classe "selection"
+// définition de la classe "Accueil"
 export default class Accueil extends Phaser.Scene {
   constructor() {
-    super({ key: "Accueil" }); // mettre le meme nom que le nom de la classe
+    super({ key: "Accueil" });
   }
 
   /***********************************************************************/
-  /** FONCTION PRELOAD 
-/***********************************************************************/
-
-  /** La fonction preload est appelée une et une seule fois,
-   * lors du chargement de la scene dans le jeu.
-   * On y trouve surtout le chargement des assets (images, son ..)
-   */
+  /** FONCTION PRELOAD */
+  /***********************************************************************/
   preload() {
-    // tous les assets du jeu sont placés dans le sous-répertoire src/assets/
-    this.load.image('img_materiaux', 'assets/terrain_d2_70.jpg');
-    this.load.image('img_items', 'assets/items.png');
-    this.load.tilemapTiledJSON('map_accueil', 'assets/Map/map_accueil.tmj');
-    this.load.image("img_porte_orange", "assets/porteORANGE999.png");
-    this.load.spritesheet("img_perso_droite", "assets/savant2.png", {
-      frameWidth: 41,
-      frameHeight: 50
+    this.load.image("img_materiaux", "assets/terrain_d2_70.jpg");
+    this.load.image("img_items", "assets/items.png");
+    this.load.tilemapTiledJSON("map_accueil", "assets/Map/map_accueil.tmj");
+    this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
+      frameWidth: 96,
+      frameHeight: 120
     });
-    this.load.spritesheet("img_perso_gauche", "assets/savant2gauche.png", {
-      frameWidth: 41,
-      frameHeight: 50
+
+    this.load.spritesheet("img_perso", "assets/savant2.png", {
+      frameWidth: 40,
+      frameHeight: 50,
+      spacing: 1
     });
   }
 
   /***********************************************************************/
-  /** FONCTION CREATE 
-/***********************************************************************/
-
-  /* La fonction create est appelée lors du lancement de la scene
-   * si on relance la scene, elle sera appelée a nouveau
-   * on y trouve toutes les instructions permettant de créer la scene
-   * placement des peronnages, des sprites, des platesformes, création des animations
-   * ainsi que toutes les instructions permettant de planifier des evenements
-   */
+  /** FONCTION CREATE */
+  /***********************************************************************/
   create() {
+    /*************************************/
+    /* CREATION DE LA MAP */
+    /*************************************/
+    const map = this.make.tilemap({ key: "map_accueil" });
+    const tilesetMateriaux = map.addTilesetImage("terrain_d2_70", "img_materiaux");
+    const tilesetItems = map.addTilesetImage("items", "img_items");
 
-    /*************************************
-     *  CREATION DU MONDE + PLATEFORMES  *
-     *************************************/
+    this.layer = map.createLayer("Calque de Tuiles 1", [tilesetMateriaux, tilesetItems], 0, 0);
+    this.layer.setCollisionByProperty({ collision: true });
 
-        const map = this.make.tilemap({ key: 'map_accueil' });
-        const tilesetmateriaux = map.addTilesetImage('terrain_d2_70', 'img_materiaux');
-        const tilesetItems = map.addTilesetImage('items', 'img_items');
+    /*************************************/
+    /* CREATION DU JOUEUR */
+    /*************************************/
+    this.player = this.physics.add.sprite(100, 450, "img_perso", 5);
+    this.player.setScale(1.5);
+    this.player.setBounce(0.2);
+    this.player.setCollideWorldBounds(true);
+    this.player.body.setSize(20, 44);
+    this.player.body.setOffset(10, 6);
 
-        this.layer = map.createLayer('Calque de Tuiles 1', [tilesetmateriaux, tilesetItems], 0, 0);
-        this.layer.setCollisionByProperty({ collision: true });
+    this.physics.add.collider(this.player, this.layer);
 
-        this.player = this.physics.add.sprite(100, 100, 'img_perso_gauche');
-        this.player.setBounce(0.2);
-        this.player.setCollideWorldBounds(true);
-
-        this.physics.add.collider(this.player, this.layer);
-
-    /****************************
-     *  Ajout des portes   *
-     ****************************/
+    /*************************************/
+    /* CREATION DES PORTES */
+    /*************************************/
     this.porte1 = this.physics.add.staticSprite(600, 414, "img_porte_orange");
     this.porte2 = this.physics.add.staticSprite(50, 264, "img_porte_orange");
     this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
     this.porte4 = this.physics.add.staticSprite(650, 234, "img_porte_orange");
-    this.porte5 = this.physics.add.staticSprite(750, 234, "img_porte_orange");
-    this.porte6 = this.physics.add.staticSprite(750, 234, "img_porte_orange");
-    this.porte7 = this.physics.add.staticSprite(750, 234, "img_porte_orange");
+    this.porte5 = this.physics.add.staticSprite(800, 234, "img_porte_orange");
+    this.porte6 = this.physics.add.staticSprite(900, 234, "img_porte_orange");
+    this.porte7 = this.physics.add.staticSprite(1000, 234, "img_porte_orange");
 
-    /****************************
-     *  CREATION DU PERSONNAGE  *
-     ****************************/
-
-    // On créée un nouveeau personnage : player
-    this.player = this.physics.add.sprite(100, 450, "img_perso_gauche");
-
-    //  propriétées physiqyes de l'objet player :
-    this.player.setBounce(0.2); // on donne un petit coefficient de rebond
-    this.player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
-
-    /***************************
-     *  CREATION DES ANIMATIONS *
-     ****************************/
-    // dans cette partie, on crée les animations, à partir des spritesheet
-    // chaque animation est une succession de frame à vitesse de défilement défini
-    // une animation doit avoir un nom. Quand on voudra la jouer sur un sprite, on utilisera la méthode play()
-    // creation de l'animation "anim_tourne_gauche" qui sera jouée sur le player lorsque ce dernier tourne à gauche
+    /*************************************/
+    /* ANIMATIONS DU PERSONNAGE */
+    /*************************************/
     this.anims.create({
-      key: "anim_tourne_gauche", // key est le nom de l'animation : doit etre unique poru la scene.
-      frames: this.anims.generateFrameNumbers("img_perso_gauche", {
+      key: "savant2_idle",
+      frames: [{ key: "img_perso", frame: 5 }],
+      frameRate: 1,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: "savant2_walk",
+      frames: this.anims.generateFrameNumbers("img_perso", {
         start: 0,
-        end: 3
-      }), // on prend toutes les frames de img perso numerotées de 0 à 3
-      frameRate: 10, // vitesse de défilement des frames
-      repeat: -1 // nombre de répétitions de l'animation. -1 = infini
+        end: 4
+      }),
+      frameRate: 10,
+      repeat: -1
     });
 
-    // creation de l'animation "anim_tourne_face" qui sera jouée sur le player lorsque ce dernier n'avance pas.
     this.anims.create({
-      key: "anim_face",
-      frames: [{ key: "img_perso_gauche", frame: 4 }],
-      frameRate: 20
-    });
-
-    // creation de l'animation "anim_tourne_droite" qui sera jouée sur le player lorsque ce dernier tourne à droite
-    this.anims.create({
-      key: "anim_tourne_droite",
-      frames: this.anims.generateFrameNumbers("img_perso_droite", {
-        start: 5,
+      key: "savant2_jump",
+      frames: this.anims.generateFrameNumbers("img_perso", {
+        start: 6,
         end: 8
       }),
       frameRate: 10,
       repeat: -1
     });
 
-    /***********************
-     *  CREATION DU CLAVIER *
-     ************************/
-    // ceci permet de creer un clavier et de mapper des touches, connaitre l'état des touches
+    /*************************************/
+    /* ANIMATIONS DES PORTES */
+    /*************************************/
+    this.anims.create({
+      key: "porte_ouvre",
+      frames: this.anims.generateFrameNumbers("img_porte_orange", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
+
+    this.anims.create({
+      key: "porte_ferme",
+      frames: this.anims.generateFrameNumbers("img_porte_orange", {
+        start: 5,
+        end: 0
+      }),
+      frameRate: 10,
+      repeat: 0
+    });
+
+    this.player.play("savant2_idle");
+
+    /*************************************/
+    /* CLAVIER */
+    /*************************************/
     clavier = this.input.keyboard.createCursorKeys();
+    this.toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
-    /*****************************************************
-     *  GESTION DES INTERATIONS ENTRE  GROUPES ET ELEMENTS *
-     ******************************************************/
-
-    //  Collide the player and the groupe_etoiles with the groupe_plateformes
-    //this.physics.add.collider(player, groupe_plateformes);
+    /*************************************/
+    /* VARIABLES POUR LE SAUT */
+    /*************************************/
+    this.maxJumps = 2;
+    this.jumpsRemaining = 2;
+    this.lastJumpKey = false;
   }
 
-
   /***********************************************************************/
-  /** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
+  /** UPDATE */
   /***********************************************************************/
   update() {
     const speed = 150;
     const jumpPower = 300;
     let vx = 0;
 
-    // Vérifier si le joueur touche le sol
-    this.playerOnGround = this.player.body.blocked.down;
+    const playerOnGround = this.player.body.blocked.down || this.player.body.touching.down;
 
-    if (clavier.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-330);
+    /*************************************/
+    /* OUVERTURE DES PORTES + CHANGEMENT DE SCENE */
+    /*************************************/
+    if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
+      if (this.physics.overlap(this.player, this.porte1)) {
+        this.porte1.anims.play("porte_ouvre");
+        this.scene.start("Niveau1");
+      }
+      if (this.physics.overlap(this.player, this.porte2)) {
+        this.porte2.anims.play("porte_ouvre");
+        this.scene.start("Niveau2");
+      }
+      if (this.physics.overlap(this.player, this.porte3)) {
+        this.porte3.anims.play("porte_ouvre");
+        this.scene.start("Niveau3");
+      }
+      if (this.physics.overlap(this.player, this.porte4)) {
+        this.porte4.anims.play("porte_ouvre");
+        this.scene.start("Niveau4");
+      }
+      if (this.physics.overlap(this.player, this.porte5)) {
+        this.porte5.anims.play("porte_ouvre");
+        this.scene.start("Niveau5");
+      }
+      if (this.physics.overlap(this.player, this.porte6)) {
+        this.porte6.anims.play("porte_ouvre");
+        this.scene.start("Niveau6");
+      }
+      if (this.physics.overlap(this.player, this.porte7)) {
+        this.porte7.anims.play("porte_ouvre");
+        this.scene.start("Niveau7");
+      }
     }
 
-    if (Phaser.Input.Keyboard.JustDown(clavier.space) == true) {
-      if (this.physics.overlap(this.player, this.porte1))
-        this.scene.switch("Niveau1");
-      if (this.physics.overlap(this.player, this.porte2))
-        this.scene.switch("Niveau2");
-      if (this.physics.overlap(this.player, this.porte3))
-        this.scene.switch("Niveau3");
-      if (this.physics.overlap(this.player, this.porte4))
-        this.scene.switch("Niveau4");
-      if (this.physics.overlap(this.player, this.porte5))
-        this.scene.switch("Niveau5");
-      if (this.physics.overlap(this.player, this.porte6))
-        this.scene.switch("Niveau6");
-      if (this.physics.overlap(this.player, this.porte7))
-        this.scene.switch("Niveau7");
-    }
-    // Réinitialiser les sauts disponibles au sol
-    if (this.playerOnGround) {
-      this.jumpsRemaining = this.maxJumps;
-    }
-
-    // Mouvement horizontal
+    /*************************************/
+    /* DEPLACEMENT HORIZONTAL */
+    /*************************************/
     if (clavier.left.isDown) {
       vx = -speed;
+      this.player.setFlipX(true);
     } else if (clavier.right.isDown) {
       vx = speed;
+      this.player.setFlipX(false);
     }
 
     this.player.setVelocityX(vx);
 
-    // Afficher la 6ème frame (index 5) quand au repos
-    if (vx === 0 && this.playerOnGround) {
-      this.player.setFrame(5);
+    /*************************************/
+    /* DOUBLE SAUT */
+    /*************************************/
+    const jumpKey = clavier.up.isDown;
+
+    if (playerOnGround) {
+      this.jumpsRemaining = this.maxJumps;
     }
 
-    // Double Saut
-    const jumpKey = clavier.up.isDown;  
-
-    // Détecter la transition (quand on passe de non-appuyé à appuyé)
     if (jumpKey && !this.lastJumpKey && this.jumpsRemaining > 0) {
       this.player.setVelocityY(-jumpPower);
       this.jumpsRemaining--;
@@ -196,6 +208,15 @@ export default class Accueil extends Phaser.Scene {
 
     this.lastJumpKey = jumpKey;
 
-
+    /*************************************/
+    /* ANIMATIONS DU PERSONNAGE */
+    /*************************************/
+    if (!playerOnGround) {
+      this.player.play("savant2_jump", true);
+    } else if (vx !== 0) {
+      this.player.play("savant2_walk", true);
+    } else {
+      this.player.play("savant2_idle", true);
+    }
   }
 }
