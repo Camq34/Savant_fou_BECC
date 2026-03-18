@@ -7,6 +7,9 @@ var layer2;
 var porte1;
 var porte2;
 var coffre;
+var potion;
+var messagePotion;
+var cle;
 
 
 
@@ -33,6 +36,16 @@ export default class niveau4 extends Phaser.Scene {
     this.load.image("coffre_fermé", "assets/coffre_fermé.png");
     this.load.image("coffre_ouvert", "assets/coffre_ouvert.png");
 
+    this.load.spritesheet("donjonasset", "assets/donjonasset.png", {
+        frameWidth: 32,
+        frameHeight: 32
+    });
+
+    this.load.spritesheet("icons_prev", "assets/icons_prev_comp-removebg-preview.png", {
+    frameWidth: 32,
+    frameHeight: 32
+});
+
 }
     create() {
     const map = this.make.tilemap({ key: 'ma_map_4' });
@@ -48,6 +61,9 @@ export default class niveau4 extends Phaser.Scene {
 
     coffre = this.physics.add.staticSprite(720, 960, "coffre_fermé");
     coffre.ouverte = false;
+
+    cle = this.physics.add.staticSprite(1602, 130, "icons_prev", 9);
+    cle.setScale(1.5);
 
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
     player.setScale(1.5);
@@ -137,6 +153,27 @@ update() {
         player.anims.play("savant2_idle", true);
     }
 
+    // Vérifier si le joueur prend la potion
+    if (potion && this.physics.overlap(player, potion)) {
+        // Afficher le message
+        potion.destroy();
+        potion = null;
+        messagePotion = this.add.text(760, 95, "POTION RÉCUPÉRÉE!", {
+            fontFamily: "Courier New, monospace",
+            fontSize: "72px",
+            fontStyle: "bold",
+            color: "#00ff00",
+            stroke: "#4d0000",
+            strokeThickness: 8,
+        }).setDepth(100);
+    }
+
+    // Vérifier si le joueur prend la clé
+    if (cle && this.physics.overlap(player, cle)) {
+        cle.destroy();
+        cle = null;
+    }
+
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
         if (this.physics.overlap(player, porte1)) {
             if (!porte1.ouverte) {
@@ -162,9 +199,8 @@ update() {
             if (!coffre.ouverte) {
                 coffre.setTexture("coffre_ouvert");
                 coffre.ouverte = true;
-            } else {
-                coffre.setTexture("coffre_fermé");
-                coffre.ouverte = false;
+                // Créer la potion à côté du coffre
+                potion = this.physics.add.staticSprite(coffre.x + 112, coffre.y - 42, "donjonasset", 163);
             }
         }
     }
