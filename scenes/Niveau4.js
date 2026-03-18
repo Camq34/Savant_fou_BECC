@@ -27,7 +27,7 @@ export default class niveau4 extends Phaser.Scene {
     this.load.spritesheet("img_porte", "assets/portesortiewallah.png", {
         frameWidth: 96,
         frameHeight: 120
-    }); 
+    });
 
 }
     create() {
