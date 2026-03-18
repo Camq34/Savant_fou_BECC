@@ -67,7 +67,40 @@ export default class Accueil extends Phaser.Scene {
     this.porte7 = this.physics.add.staticSprite(1277, 355, "img_porte_orange");
 
     this.add
-      .text(this.porte2.x, this.porte2.y - 90, "3", {
+      .text(this.porte1.x, this.porte1.y - 90, "1", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte2.x, this.porte2.y - 90, "2", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte3.x, this.porte3.y - 90, "3", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte4.x, this.porte4.y - 90, "4", {
         fontFamily: "Courier New, monospace",
         fontSize: "56px",
         fontStyle: "bold",
@@ -79,6 +112,28 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte5.x, this.porte5.y - 90, "5", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte6.x, this.porte6.y - 90, "6", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte7.x, this.porte7.y - 90, "7", {
         fontFamily: "Courier New, monospace",
         fontSize: "56px",
         fontStyle: "bold",
