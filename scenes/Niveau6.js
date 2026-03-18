@@ -68,6 +68,8 @@ export default class niveau6 extends Phaser.Scene {
         player.setDepth(10);
 
         this.porte = this.physics.add.staticSprite(1700, 550, "img_porte_orange");
+        
+        this.porteClef = this.physics.add.staticSprite(1700, 260, "img_porte_orange");
         this.teleportToTopLeftDoor = { x: 140, y: 130 };
         this.teleportToCoffreDoor = { x: map.tileToWorldX(57) + 16, y: map.tileToWorldY(8) + 16 };
 
@@ -96,7 +98,7 @@ export default class niveau6 extends Phaser.Scene {
 
         this.anims.create({
             key: "savant2_jump",
-            frames: this.anims.generateFrameNumbers("img_perso", { start: 6, end: 8 }),
+            frames: this.anims.generateFrameNumbers("img_perso", { start: 6, end: 10 }),
             frameRate: 10,
             repeat: -1
         });
