@@ -4,12 +4,12 @@ var clavier;
 var gameOver = false;
 var layer1;
 var layer2;
-var porte1;
-var porte2;
 var coffre;
 var potion;
 var messagePotion;
 var cle;
+var porteSortieVisible = false;
+var finNiveau4Declenchee = false;
 
 
 
@@ -28,7 +28,7 @@ export default class niveau4 extends Phaser.Scene {
         spacing: 1
     });
 
-    this.load.spritesheet("img_porte", "assets/portesortiewallah.png", {
+    this.load.spritesheet("img_porte_sortie_anim_n4", "assets/portesortiewallah.png", {
         frameWidth: 96,
         frameHeight: 120
     });
@@ -71,7 +71,11 @@ export default class niveau4 extends Phaser.Scene {
     layer1.setCollisionByProperty({ collision: true });
     layer2.setCollisionByProperty({ collision: true });
 
-    this.porte = this.physics.add.staticSprite(1850, 1092, "img_porte");
+    this.porte = this.physics.add.staticSprite(1850, 1092, "img_porte_sortie_anim_n4");
+    this.porte.setOrigin(0.5, 1);
+    this.porte.refreshBody();
+    this.porte.setVisible(false);
+    this.porte.body.enable = false;
 
     coffre = this.physics.add.staticSprite(720, 960, "coffre_fermé");
     coffre.ouverte = false;
@@ -118,18 +122,21 @@ export default class niveau4 extends Phaser.Scene {
     });
 
     this.anims.create({
-        key: "anim_ouvreporte",
-        frames: this.anims.generateFrameNumbers("img_porte", { start: 0, end: 5 }),
+        key: "anim_ouvreporte_n4",
+        frames: this.anims.generateFrameNumbers("img_porte_sortie_anim_n4", { start: 0, end: 5 }),
         frameRate: 10,
         repeat: 0
     });
 
     this.anims.create({
-        key: "anim_fermeporte",
-        frames: this.anims.generateFrameNumbers("img_porte", { start: 5, end: 0 }),
+        key: "anim_fermeporte_n4",
+        frames: this.anims.generateFrameNumbers("img_porte_sortie_anim_n4", { start: 5, end: 0 }),
         frameRate: 10,
         repeat: 0
     });
+
+    porteSortieVisible = false;
+    finNiveau4Declenchee = false;
 
     player.play("savant2_idle");
 
@@ -199,6 +206,51 @@ mourirEtRespawn() {
     });
 }
 
+faireApparaitrePorteSortie() {
+    if (!this.porte || porteSortieVisible) {
+        return;
+    }
+
+    this.porte.setVisible(true);
+    this.porte.body.enable = true;
+    this.porte.refreshBody();
+    porteSortieVisible = true;
+}
+
+terminerNiveau4() {
+    if (finNiveau4Declenchee) {
+        return;
+    }
+
+    finNiveau4Declenchee = true;
+    gameOver = true;
+    player.setVelocity(0, 0);
+    this.porte.anims.play("anim_ouvreporte_n4");
+
+    const messageFin = this.add
+        .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez fini le niveau 4 !", {
+            fontFamily: "Arial",
+            fontSize: "42px",
+            color: "#ffd64d",
+            stroke: "#000000",
+            strokeThickness: 8
+        })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(1000);
+
+    this.tweens.add({
+        targets: messageFin,
+        alpha: 0,
+        duration: 600,
+        delay: 1200
+    });
+
+    this.time.delayedCall(1700, () => {
+        this.scene.start("Accueil", { messageFinNiveau: "Bravo vous avez fini le niveau 4 !" });
+    });
+}
+
 update() {
     if (gameOver) return;
 
@@ -235,6 +287,7 @@ update() {
         // Afficher le message
         potion.destroy();
         potion = null;
+        this.faireApparaitrePorteSortie();
         messagePotion = this.add.text(760, 95, "POTION RÉCUPÉRÉE!", {
             fontFamily: "Courier New, monospace",
             fontSize: "72px",
@@ -257,27 +310,12 @@ update() {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
-        if (this.physics.overlap(player, porte1)) {
-            if (!porte1.ouverte) {
-                porte1.anims.play("anim_ouvreporte");
-                porte1.ouverte = true;
-            } else {
-                porte1.anims.play("anim_fermeporte");
-                porte1.ouverte = false;
-            }
+        if (porteSortieVisible && this.physics.overlap(player, this.porte)) {
+            this.terminerNiveau4();
+            return;
         }
 
-        if (this.physics.overlap(player, porte2)) {
-            if (!porte2.ouverte) {
-                porte2.anims.play("anim_ouvreporte");
-                porte2.ouverte = true;
-            } else {
-                porte2.anims.play("anim_fermeporte");
-                porte2.ouverte = false;
-            }
-        }
-
-        if (this.physics.overlap(player, coffre)) {
+        if (this.physics.overlap(player, coffre) && !cle) {
             if (!coffre.ouverte) {
                 coffre.setTexture("coffre_ouvert");
                 coffre.ouverte = true;
