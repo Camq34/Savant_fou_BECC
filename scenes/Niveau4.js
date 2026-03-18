@@ -24,7 +24,7 @@ export default class niveau4 extends Phaser.Scene {
         spacing: 1
     });
 
-    this.load.spritesheet("img_porte", "assets/porteORANGE999.png", {
+    this.load.spritesheet("img_porte", "assets/portesortiewallah.png", {
         frameWidth: 96,
         frameHeight: 120
     }); 
@@ -39,6 +39,8 @@ export default class niveau4 extends Phaser.Scene {
     layer2 = map.createLayer('Calque de Tuiles 2', [tilesetBrique, tilesetLasers], 0, 0);
     layer1.setCollisionByProperty({ collision: true });
     layer2.setCollisionByProperty({ collision: true });
+
+    this.porte = this.physics.add.staticSprite(1850, 1092, "img_porte");
 
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
     player.setScale(1.5);
