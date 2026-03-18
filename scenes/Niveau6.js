@@ -67,7 +67,7 @@ export default class niveau6 extends Phaser.Scene {
         player.body.setOffset(10, 6);
         player.setDepth(10);
 
-        this.porte = this.physics.add.staticSprite(1700, 550, "img_porte_orange");
+        this.portevrai = this.physics.add.staticSprite(1700, 550, "img_porte_orange");
         
         this.porteClef = this.physics.add.staticSprite(1700, 260, "img_porte_orange");
         this.teleportToTopLeftDoor = { x: 140, y: 130 };
