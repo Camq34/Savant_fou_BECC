@@ -5,10 +5,11 @@ export default class niveau7 extends Phaser.Scene {
 
 	preload() {
 		this.load.tilemapTiledJSON("map_niveau7", `assets/Map/map_niveau7.tmj?v=${Date.now()}`);
+		this.load.image("img_enfer", "assets/enfer.jpeg");
 		this.load.image("img_decor", "assets/items.png");
 		this.load.image("img_donjonasset", "assets/donjonasset.png");
 		this.load.image("img_capture", "assets/coffre_fermé.png");
-		this.load.image("img_icons_prev_comp-removebg-preview", "assets/items.png");
+		this.load.image("img_icons", "assets/icons_prev_comp-removebg-preview.png");
 		this.load.image("img_porte_orange", "assets/porteORANGE999.png");
 		this.load.image("img_portesortie", "assets/portesortiewallah.png");
 		this.load.spritesheet("savant2", "assets/savant2.png", {
@@ -20,6 +21,12 @@ export default class niveau7 extends Phaser.Scene {
 
 	create() {
 		const map = this.make.tilemap({ key: "map_niveau7" });
+		const imageLayer = map.getImageLayer("Image Layer 1");
+		const bg = this.add.image(imageLayer?.x ?? 0, imageLayer?.y ?? 0, "img_enfer");
+		bg.setOrigin(0, 0);
+		bg.setDisplaySize(map.widthInPixels, map.heightInPixels);
+		bg.setAlpha(imageLayer?.opacity ?? 1);
+		bg.setDepth(-1000);
 
 		const tilesetDecor = map.addTilesetImage("décor ", "img_decor");
 		const tilesetDonjon = map.addTilesetImage("donjonasset", "img_donjonasset");
