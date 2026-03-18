@@ -4,11 +4,21 @@ var clavier;
 var gameOver = false;
 var layer1;
 var layer2;
+var layer3;
 var porte1;
 var porte2;
+var porte3;
 var compteurTeleportPorte2 = 0;
 var calque1Actif = false;
+var calque3Actif = false;
 var coffres = [];
+var inventaire = [];
+var objetCalque3Recupere = false;
+const OBJET_TILE_X = 53;
+const OBJET_TILE_Y = 17;
+const NOM_OBJET_CALQUE3 = "objet_calque3_53_17";
+const PORTE3_X = 1400;
+const PORTE3_Y = 1093;
 
 
 
@@ -46,16 +56,20 @@ export default class niveau3 extends Phaser.Scene {
 
     layer1 = map.createLayer('Calque de Tuiles 1', tilesets, 0, 0);
     layer2 = map.createLayer('Calque de Tuiles 2', tilesets, 0, 0);
+    layer3 = map.createLayer('Calque de Tuiles 3', tilesets, 0, 0);
 
     coffres = [];
     this.initialiserCoffres();
 
     layer1.setCollisionByProperty({ collision: true });
     layer2.setCollisionByProperty({ collision: true });
+    layer3.setCollisionByProperty({ collision: true });
 
     // Au debut seul le calque 2 est visible.
     layer1.setVisible(false);
+    layer3.setVisible(false);
     calque1Actif = false;
+    calque3Actif = false;
 
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
     player.setScale(1.5);
@@ -66,6 +80,7 @@ export default class niveau3 extends Phaser.Scene {
 
     this.physics.add.collider(player, layer2);
     this.physics.add.collider(player, layer1, undefined, () => calque1Actif, this);
+    this.physics.add.collider(player, layer3, undefined, () => calque3Actif, this);
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(player);
@@ -116,11 +131,18 @@ export default class niveau3 extends Phaser.Scene {
 
     porte1 = this.physics.add.staticSprite(96, 1093, "img_porte");
     porte2 = this.physics.add.staticSprite(1800, 1093, "img_porte");
+    porte3 = this.physics.add.staticSprite(1900, 500, "img_porte");
+    porte3.setVisible(false);
+    porte3.body.enable = false;
 
     porte1.ouverte = false;
     porte2.ouverte = false;
+    porte3.ouverte = false;
     compteurTeleportPorte2 = 0;
     calque1Actif = false;
+    calque3Actif = false;
+    inventaire = [];
+    objetCalque3Recupere = false;
 }
 
 activerCalque1() {
@@ -128,6 +150,13 @@ activerCalque1() {
 
     layer1.setVisible(true);
     calque1Actif = true;
+}
+
+activerCalque3() {
+    if (calque3Actif) return;
+
+    layer3.setVisible(true);
+    calque3Actif = true;
 }
 
 teleporterPorte2VersPorte1() {
@@ -223,9 +252,37 @@ interagirAvecCoffre() {
                 .setDepth(2);
 
             coffre.ouvert = true;
+            this.activerCalque3();
             break;
         }
     }
+}
+
+recupererObjetCalque3() {
+    if (!calque3Actif || objetCalque3Recupere) {
+        return;
+    }
+
+    const tileXJoueur = layer3.worldToTileX(player.x);
+    const tileYJoueur = layer3.worldToTileY(player.y + player.body.height * 0.25);
+
+    if (tileXJoueur === OBJET_TILE_X && tileYJoueur === OBJET_TILE_Y) {
+        layer3.removeTileAt(OBJET_TILE_X, OBJET_TILE_Y, false, false);
+        inventaire.push(NOM_OBJET_CALQUE3);
+        this.registry.set("inventaireNiveau3", [...inventaire]);
+        objetCalque3Recupere = true;
+        this.faireApparaitrePorte3();
+    }
+}
+
+faireApparaitrePorte3() {
+    if (!porte3 || porte3.body.enable) {
+        return;
+    }
+
+    porte3.setVisible(true);
+    porte3.body.enable = true;
+    porte3.refreshBody();
 }
 
 update() {
@@ -258,6 +315,8 @@ update() {
     else {
         player.anims.play("savant2_idle", true);
     }
+
+    this.recupererObjetCalque3();
 
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
         this.interagirAvecCoffre();
