@@ -123,24 +123,4 @@ export default class niveau7 extends Phaser.Scene {
 	}
 }
 
-const config = {
-	type: Phaser.AUTO,
-	width: 1920,
-	height: 1280,
-	backgroundColor: "#000000",
-	pixelArt: true,
-	physics: {
-		default: "arcade",
-		arcade: {
-			gravity: { y: 500 },
-			debug: false
-		}
-	},
-	scale: {
-		mode: Phaser.Scale.FIT,
-		autoCenter: Phaser.Scale.CENTER_BOTH
-	},
-	scene: [niveau7]
-};
 
-new Phaser.Game(config);

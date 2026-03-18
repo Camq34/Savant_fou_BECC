@@ -13,7 +13,10 @@ var config = {
   type: Phaser.AUTO,
   width: 1920, // largeur en pixels
   height: 1280, // hauteur en pixels
-   
+   scale : {
+    mode : Phaser.Scale.FIT, // mode de redimensionnement : FIT pour garder les proportions
+    autoCenter : Phaser.Scale.CENTER_BOTH // centrer le jeu horizontalement et verticalement
+  },
   physics: {
     // définition des parametres physiques
     default: "arcade", // mode arcade : le plus simple : des rectangles pour gérer les collisions. Pas de pentes

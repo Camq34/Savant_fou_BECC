@@ -107,19 +107,6 @@ export default class Niveau1 extends Phaser.Scene {
     }
 }
 
-var config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    physics: {
-        default: "arcade",
-        arcade: {
-            gravity: { y: 500 },
-            debug: false
-        }
-    },
-    scene: [Niveau1]
-};
 
 var player;
 var clavier;
@@ -128,5 +115,4 @@ var porte;
 var porte2;
 var layer;
 
-new Phaser.Game(config);
 

@@ -22,7 +22,7 @@ export default class Accueil extends Phaser.Scene {
     // tous les assets du jeu sont placés dans le sous-répertoire src/assets/
     this.load.image('img_materiaux', 'assets/terrain_d2_70.jpg');
     this.load.image('img_items', 'assets/items.png');
-    this.load.tilemapTiledJSON('map_accueil', 'assets/Map/map_Accueil.tmj');
+    this.load.tilemapTiledJSON('map_accueil', 'assets/Map/map_accueil.tmj');
     this.load.image("img_porte_orange", "assets/porteORANGE999.png");
     this.load.spritesheet("img_perso_droite", "assets/savant2.png", {
       frameWidth: 41,
@@ -51,17 +51,17 @@ export default class Accueil extends Phaser.Scene {
      *************************************/
 
         const map = this.make.tilemap({ key: 'map_accueil' });
-        const tilesetmateriaux = map.addTilesetImage('materiaux', 'img_materiaux');
-        const tilesetItems = map.addTilesetImage('tiles_tiny_sample_2', 'img_items');
+        const tilesetmateriaux = map.addTilesetImage('terrain_d2_70', 'img_materiaux');
+        const tilesetItems = map.addTilesetImage('items', 'img_items');
 
         this.layer = map.createLayer('Calque de Tuiles 1', [tilesetmateriaux, tilesetItems], 0, 0);
         this.layer.setCollisionByProperty({ collision: true });
 
-        player = this.physics.add.sprite(100, 100, 'img_perso_gauche');
-        player.setBounce(0.2);
-        player.setCollideWorldBounds(true);
+        this.player = this.physics.add.sprite(100, 100, 'img_perso_gauche');
+        this.player.setBounce(0.2);
+        this.player.setCollideWorldBounds(true);
 
-        this.physics.add.collider(player, layer);
+        this.physics.add.collider(this.player, this.layer);
 
     /****************************
      *  Ajout des portes   *
@@ -186,7 +186,7 @@ export default class Accueil extends Phaser.Scene {
     }
 
     // Double Saut
-    const jumpKey = clavier.up.isDown || clavier.space.isDown;
+    const jumpKey = clavier.up.isDown;  
 
     // Détecter la transition (quand on passe de non-appuyé à appuyé)
     if (jumpKey && !this.lastJumpKey && this.jumpsRemaining > 0) {
