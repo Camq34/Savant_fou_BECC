@@ -37,6 +37,10 @@ export default class Niveau1 extends Phaser.Scene {
         
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(player);
+        const gameWidth = this.sys.game.config.width;
+        const gameHeight = this.sys.game.config.height;
+        const mapZoom = Math.min(gameWidth / map.widthInPixels, gameHeight / map.heightInPixels, 1);
+        this.cameras.main.setZoom(mapZoom);
 
         this.anims.create({
             key: "anim_tourne_gauche",
