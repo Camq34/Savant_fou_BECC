@@ -1,12 +1,12 @@
 // chargement des librairies
-import selection from "/scenes/selection.js";
-import niveau1 from "/scenes/niveau1.js";
-import niveau2 from "/scenes/niveau2.js";
-import niveau3 from "/scenes/niveau3.js";
-import niveau4 from "/scenes/niveau4.js";
-import niveau5 from "/scenes/niveau5.js";
-import niveau6 from "/scenes/niveau6.js";
-import niveau7 from "/scenes/niveau7.js";
+import Accueil from "/scenes/Accueil.js";
+import niveau1 from "/scenes/Niveau1.js";
+import niveau2 from "/scenes/Niveau2.js";
+import niveau3 from "/scenes/Niveau3.js";
+import niveau4 from "/scenes/Niveau4.js";
+import niveau5 from "/scenes/Niveau5.js";
+import niveau6 from "/scenes/Niveau6.js";
+import niveau7 from "/scenes/Niveau7.js";
 
 // configuration générale du jeu
 var config = {
