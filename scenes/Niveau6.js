@@ -6,13 +6,22 @@ var layer2;
 var layer3;
 var porte1;
 var porte2;
+var porteSortieFinale;
 var coffres = [];
 var inventaire = [];
 var objet57_9Recupere = false;
+var objet41_35Recupere = false;
 var calque3Actif = false;
+var porteSortieVisible = false;
+var finNiveau6Declenchee = false;
 const OBJET_TILE_X = 57;
 const OBJET_TILE_Y = 9;
 const NOM_OBJET_NIVEAU6 = "objet_niveau6_57_9";
+const OBJET2_TILE_X = 41;
+const OBJET2_TILE_Y = 35;
+const NOM_OBJET2_NIVEAU6 = "objet_niveau6_41_35";
+const PORTE_SORTIE_X = 1800;
+const PORTE_SORTIE_Y = 1153;
 
 export default class niveau6 extends Phaser.Scene {
     constructor() {
@@ -38,6 +47,11 @@ export default class niveau6 extends Phaser.Scene {
         });
 
         this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
+            frameWidth: 96,
+            frameHeight: 120
+        });
+
+        this.load.spritesheet("img_porte_sortie_anim", "assets/portesortiewallah.png", {
             frameWidth: 96,
             frameHeight: 120
         });
@@ -97,11 +111,22 @@ export default class niveau6 extends Phaser.Scene {
 
         this.portevrai = this.physics.add.staticSprite(1700, 550, "img_porte_orange");
         this.porteClef = this.physics.add.staticSprite(1700, 260, "img_porte_orange");
+        this.portevrai.ouverte = false;
+        this.porteClef.ouverte = false;
+        porteSortieFinale = this.physics.add.staticSprite(PORTE_SORTIE_X, PORTE_SORTIE_Y, "img_porte_sortie_anim");
+        porteSortieFinale.setOrigin(0.5, 1);
+        porteSortieFinale.refreshBody();
+        porteSortieFinale.setVisible(false);
+        porteSortieFinale.body.enable = false;
+        porteSortieFinale.ouverte = false;
         this.teleportToTopLeftDoor = { x: 140, y: 130 };
         this.teleportToCoffreDoor = { x: map.tileToWorldX(57) + 16, y: map.tileToWorldY(8) + 16 };
         inventaire = [];
         objet57_9Recupere = false;
+        objet41_35Recupere = false;
         calque3Actif = false;
+        porteSortieVisible = false;
+        finNiveau6Declenchee = false;
 
         this.physics.add.collider(player, layer1);
         this.physics.add.collider(player, layer3, undefined, () => calque3Actif, this);
@@ -144,6 +169,20 @@ export default class niveau6 extends Phaser.Scene {
         this.anims.create({
             key: "anim_fermeporte",
             frames: this.anims.generateFrameNumbers("img_porte_orange", { start: 5, end: 0 }),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: "anim_ouvreporte_sortie",
+            frames: this.anims.generateFrameNumbers("img_porte_sortie_anim", { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: "anim_fermeporte_sortie",
+            frames: this.anims.generateFrameNumbers("img_porte_sortie_anim", { start: 5, end: 0 }),
             frameRate: 10,
             repeat: 0
         });
@@ -268,6 +307,23 @@ export default class niveau6 extends Phaser.Scene {
         player.setVelocity(0, 0);
     }
 
+    animerPorteOrange(porte) {
+        if (!porte) {
+            return;
+        }
+
+        porte.anims.play("anim_ouvreporte");
+        porte.ouverte = true;
+
+        this.time.delayedCall(450, () => {
+            if (!porte.scene) {
+                return;
+            }
+            porte.anims.play("anim_fermeporte");
+            porte.ouverte = false;
+        });
+    }
+
     mourirEtRespawn() {
         if (gameOver) return;
 
@@ -340,6 +396,109 @@ export default class niveau6 extends Phaser.Scene {
         objet57_9Recupere = true;
     }
 
+    recupererObjet41_35() {
+        if (objet41_35Recupere || !calque3Actif) {
+            return;
+        }
+
+        const coffreOuvert = coffres.some((coffre) => coffre.ouvert);
+        if (!coffreOuvert) {
+            return;
+        }
+
+        const tileXJoueur = this.levelMap.worldToTileX(player.x);
+        const tileYJoueur = this.levelMap.worldToTileY(player.y + player.body.height * 0.25);
+
+        if (tileXJoueur !== OBJET2_TILE_X || tileYJoueur !== OBJET2_TILE_Y) {
+            return;
+        }
+
+        const tileLayer3 = layer3 ? layer3.getTileAt(OBJET2_TILE_X, OBJET2_TILE_Y) : null;
+        const tileLayer2 = layer2 ? layer2.getTileAt(OBJET2_TILE_X, OBJET2_TILE_Y) : null;
+        const tileLayer1 = layer1 ? layer1.getTileAt(OBJET2_TILE_X, OBJET2_TILE_Y) : null;
+
+        if (tileLayer3) {
+            layer3.removeTileAt(OBJET2_TILE_X, OBJET2_TILE_Y);
+        } else if (tileLayer2) {
+            layer2.removeTileAt(OBJET2_TILE_X, OBJET2_TILE_Y);
+        } else if (tileLayer1) {
+            layer1.removeTileAt(OBJET2_TILE_X, OBJET2_TILE_Y);
+        }
+
+        inventaire.push(NOM_OBJET2_NIVEAU6);
+        this.registry.set("inventaireNiveau6", [...inventaire]);
+        objet41_35Recupere = true;
+        this.afficherMessagePotionRouge();
+        this.faireApparaitrePorteSortie();
+    }
+
+    afficherMessagePotionRouge() {
+        const message = this.add
+            .text(this.cameras.main.width * 0.5, 80, "Vous avez récupéré la potion rouge !", {
+                fontFamily: "Arial",
+                fontSize: "36px",
+                color: "#ff6b6b",
+                stroke: "#000000",
+                strokeThickness: 6
+            })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(1000);
+
+        this.tweens.add({
+            targets: message,
+            alpha: 0,
+            duration: 1800,
+            delay: 700,
+            onComplete: () => message.destroy()
+        });
+    }
+
+    faireApparaitrePorteSortie() {
+        if (!porteSortieFinale || porteSortieVisible) {
+            return;
+        }
+
+        porteSortieFinale.setVisible(true);
+        porteSortieFinale.body.enable = true;
+        porteSortieFinale.refreshBody();
+        porteSortieVisible = true;
+    }
+
+    terminerNiveau6() {
+        if (finNiveau6Declenchee) {
+            return;
+        }
+
+        finNiveau6Declenchee = true;
+        gameOver = true;
+        player.setVelocity(0, 0);
+        porteSortieFinale.anims.play("anim_ouvreporte_sortie");
+
+        const messageFin = this.add
+            .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez fini le niveau 6 !", {
+                fontFamily: "Arial",
+                fontSize: "42px",
+                color: "#ffd64d",
+                stroke: "#000000",
+                strokeThickness: 8
+            })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(1000);
+
+        this.tweens.add({
+            targets: messageFin,
+            alpha: 0,
+            duration: 600,
+            delay: 1200
+        });
+
+        this.time.delayedCall(1700, () => {
+            this.scene.start("Accueil", { messageFinNiveau: "Bravo vous avez fini le niveau 6 !" });
+        });
+    }
+
     update() {
         if (gameOver) return;
 
@@ -372,6 +531,7 @@ export default class niveau6 extends Phaser.Scene {
         }
 
         this.recupererObjet57_9();
+        this.recupererObjet41_35();
 
         if (this.joueurToucheTuileTue(layer1) || this.joueurToucheTuileTue(layer2) || this.joueurToucheTuileTue(layer3)) {
             this.mourirEtRespawn();
@@ -382,12 +542,19 @@ export default class niveau6 extends Phaser.Scene {
             this.interagirAvecCoffre();
 
             if (this.physics.overlap(player, this.porteClef)) {
+                this.animerPorteOrange(this.porteClef);
                 this.teleporterPorteClefVersPorteVrai();
                 return;
             }
 
             if (this.physics.overlap(player, this.portevrai)) {
+                this.animerPorteOrange(this.portevrai);
                 this.teleporterPorteVraiVersPorteClef();
+                return;
+            }
+
+            if (porteSortieVisible && this.physics.overlap(player, porteSortieFinale)) {
+                this.terminerNiveau6();
                 return;
             }
 
