@@ -585,6 +585,11 @@
                          "name":"collision",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"tue",
+                         "type":"bool",
+                         "value":true
                         }]
                 }, 
                 {
@@ -961,6 +966,11 @@
                  "properties":[
                         {
                          "name":"collision",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"tue",
                          "type":"bool",
                          "value":true
                         }]
