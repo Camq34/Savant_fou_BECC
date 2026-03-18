@@ -122,6 +122,14 @@ export default class niveau6 extends Phaser.Scene {
         clavier = this.input.keyboard.createCursorKeys();
         this.toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     }
+    teleporterPorteVraiVersPorteClef() {
+        player.setPosition(this.porteClef.x, this.porteClef.y - 75);
+        player.setVelocity(0, 0);
+    }
+    teleporterPorteClefVersPorteVrai() {
+        player.setPosition(this.portevrai.x, this.portevrai.y - 75);
+        player.setVelocity(0, 0);
+    }
     update() {
         if (gameOver) return;
 
@@ -154,6 +162,16 @@ export default class niveau6 extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
+            if (this.physics.overlap(player, this.porteClef)) {
+                this.teleporterPorteClefVersPorteVrai();
+                return;
+            }
+
+            if (this.physics.overlap(player, this.portevrai)) {
+                this.teleporterPorteVraiVersPorteClef();
+                return;
+            }
+
             const tileDoor = this.levelMap.getTileAtWorldXY(player.x, player.y, false, this.cameras.main, layer2);
             if (tileDoor && tileDoor.index > 0) {
                 const tileX = this.levelMap.worldToTileX(player.x);
