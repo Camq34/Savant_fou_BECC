@@ -64,7 +64,7 @@ export default class niveau2 extends Phaser.Scene {
 
 		this.anims.create({
 			key: "savant2_jump",
-			frames: this.anims.generateFrameNumbers("savant2", { start: 6, end: 8 }),
+			frames: this.anims.generateFrameNumbers("savant2", { start: 6, end: 10 }),
 			frameRate: 10,
 			repeat: -1
 		});

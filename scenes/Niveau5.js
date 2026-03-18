@@ -1,10 +1,11 @@
-export default class niveau5 extends Phaser.Scene {
+class niveau5 extends Phaser.Scene {
 	constructor() {
+		super({ key: "niveau5" });
 		super({ key: "niveau5" });
 	}
 
 	preload() {
-		this.load.tilemapTiledJSON("map_niveau2", "assets/Map/mapniveau2_5.tmj");
+		this.load.tilemapTiledJSON("map_niveau5", "assets/Map/mapniveau2_5.tmj");
 		this.load.image("img_terrain", "assets/terrain_d2_70.jpg");
 		this.load.image("img_donjonasset", "assets/donjonasset.png");
 		this.load.image("img_brique", "assets/brique.png");
@@ -21,7 +22,7 @@ export default class niveau5 extends Phaser.Scene {
 	}
 
 	create() {
-		const map = this.make.tilemap({ key: "map_niveau2" });
+		const map = this.make.tilemap({ key: "map_niveau5" });
 		this.map = map;
 
 		const tilesetTerrain = map.addTilesetImage("terrain_d2_70", "img_terrain");
@@ -64,7 +65,7 @@ export default class niveau5 extends Phaser.Scene {
 
 		this.anims.create({
 			key: "savant2_jump",
-			frames: this.anims.generateFrameNumbers("savant2", { start: 6, end: 8 }),
+			frames: this.anims.generateFrameNumbers("savant2", { start: 6, end: 10 }),
 			frameRate: 10,
 			repeat: -1
 		});
@@ -107,7 +108,7 @@ export default class niveau5 extends Phaser.Scene {
 			[6219, 6220, 6221, 6236, 6237, 6238, 6253, 6254, 6255, 6270, 6271, 6272]
 		];
 
-		this.add.text(960, 95, "NIVEAU 2", {
+		this.add.text(960, 95, "NIVEAU 5", {
 			fontFamily: "Courier New, monospace",
 			fontSize: "72px",
 			fontStyle: "bold",
@@ -178,3 +179,25 @@ export default class niveau5 extends Phaser.Scene {
 		});
 	}
 }
+
+const config = {
+	type: Phaser.AUTO,
+	width: 1920,
+	height: 1280,
+	backgroundColor: "#000000",
+	pixelArt: true,
+	physics: {
+		default: "arcade",
+		arcade: {
+			gravity: { y: 500 },
+			debug: false
+		}
+	},
+	scale: {
+		mode: Phaser.Scale.FIT,
+		autoCenter: Phaser.Scale.CENTER_BOTH
+	},
+	scene: [niveau5]
+};
+
+new Phaser.Game(config);
