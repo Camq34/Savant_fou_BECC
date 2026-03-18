@@ -62,9 +62,31 @@ export default class Accueil extends Phaser.Scene {
     this.porte2 = this.physics.add.staticSprite(50, 264, "img_porte_orange");
     this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
     this.porte4 = this.physics.add.staticSprite(1277, 1091, "img_porte_orange");
-    this.porte5 = this.physics.add.staticSprite(800, 234, "img_porte_orange");
+    this.porte5 = this.physics.add.staticSprite(1664, 487, "img_porte_orange");
     this.porte6 = this.physics.add.staticSprite(900, 234, "img_porte_orange");
     this.porte7 = this.physics.add.staticSprite(1277, 355, "img_porte_orange");
+
+    this.add
+      .text(this.porte2.x, this.porte2.y - 90, "3", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte5.x, this.porte5.y - 90, "5", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
 
     /*************************************/
     /* ANIMATIONS DU PERSONNAGE */
