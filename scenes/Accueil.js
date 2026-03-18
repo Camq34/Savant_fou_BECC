@@ -58,6 +58,7 @@ export default class Accueil extends Phaser.Scene {
     /*************************************/
     /* CREATION DES PORTES */
     /*************************************/
+<<<<<<< HEAD
     this.porte1 = this.physics.add.staticSprite(600, 414, "img_porte_orange");
     this.porte2 = this.physics.add.staticSprite(512, 613, "img_porte_orange");
     this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
@@ -65,6 +66,100 @@ export default class Accueil extends Phaser.Scene {
     this.porte5 = this.physics.add.staticSprite(800, 234, "img_porte_orange");
     this.porte6 = this.physics.add.staticSprite(895, 740, "img_porte_orange");
     this.porte7 = this.physics.add.staticSprite(1000, 234, "img_porte_orange");
+=======
+    this.porte1 = this.physics.add.staticSprite(140, 930, "img_porte_orange");
+    this.porte2 = this.physics.add.staticSprite(50, 264, "img_porte_orange");
+    this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
+    this.porte4 = this.physics.add.staticSprite(1277, 1091, "img_porte_orange");
+    this.porte5 = this.physics.add.staticSprite(1664, 487, "img_porte_orange");
+    this.porte6 = this.physics.add.staticSprite(900, 234, "img_porte_orange");
+    this.porte7 = this.physics.add.staticSprite(1277, 355, "img_porte_orange");
+
+    this.add
+      .text(this.porte1.x, this.porte1.y - 90, "1", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte2.x, this.porte2.y - 90, "2", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte3.x, this.porte3.y - 90, "3", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte4.x, this.porte4.y - 90, "4", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte5.x, this.porte5.y - 90, "5", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte6.x, this.porte6.y - 90, "6", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(this.porte7.x, this.porte7.y - 90, "7", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "56px",
+        fontStyle: "bold",
+        color: "#ff2a2a",
+        stroke: "#4d0000",
+        strokeThickness: 8,
+        shadow: {
+          offsetX: 0,
+          offsetY: 0,
+          color: "#ff3b00",
+          blur: 14,
+          stroke: true,
+          fill: true
+        }
+      })
+      .setOrigin(0.5);
+>>>>>>> fe2dccd3a70eb2bf2a2fd0ed4d97fa24488a7da5
 
     /*************************************/
     /* ANIMATIONS DU PERSONNAGE */
@@ -90,7 +185,7 @@ export default class Accueil extends Phaser.Scene {
       key: "savant2_jump",
       frames: this.anims.generateFrameNumbers("img_perso", {
         start: 6,
-        end: 8
+        end: 10
       }),
       frameRate: 10,
       repeat: -1
