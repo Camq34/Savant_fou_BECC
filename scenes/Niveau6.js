@@ -36,6 +36,7 @@ export default class niveau6 extends Phaser.Scene {
     }
     create() {
         const map = this.make.tilemap({ key: 'ma_map_6' });
+        this.levelMap = map;
         const tilesetLaser = map.addTilesetImage('laser', 'img_laser');
         const tilesetCoffre = map.addTilesetImage('coffre_fermé', 'img_coffre_ferme');
         const tilesetPorteOrange = map.addTilesetImage('porteORANGE999', 'img_porte_orange');
@@ -65,8 +66,10 @@ export default class niveau6 extends Phaser.Scene {
         player.body.setSize(20, 44);
         player.body.setOffset(10, 6);
         player.setDepth(10);
-        
-        this.porte1 = this.physics.add.staticSprite(140, 130, "img_porte_orange");
+
+        this.porte = this.physics.add.staticSprite(1700, 550, "img_porte_orange");
+        this.teleportToTopLeftDoor = { x: 140, y: 130 };
+        this.teleportToCoffreDoor = { x: map.tileToWorldX(57) + 16, y: map.tileToWorldY(8) + 16 };
 
         this.physics.add.collider(player, layer1);
 
@@ -149,24 +152,19 @@ export default class niveau6 extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
-            if (this.physics.overlap(player, porte1)) {
-                if (!porte1.ouverte) {
-                    porte1.anims.play("anim_ouvreporte");
-                    porte1.ouverte = true;
-                } else {
-                    porte1.anims.play("anim_fermeporte");
-                    porte1.ouverte = false;
-                }
-            }
+            const tileDoor = this.levelMap.getTileAtWorldXY(player.x, player.y, false, this.cameras.main, layer2);
+            if (tileDoor && tileDoor.index > 0) {
+                const tileX = this.levelMap.worldToTileX(player.x);
+                const tileY = this.levelMap.worldToTileY(player.y);
 
-            if (this.physics.overlap(player, porte2)) {
-                if (!porte2.ouverte) {
-                    porte2.anims.play("anim_ouvreporte");
-                    porte2.ouverte = true;
+                const rightFirstFloorDoor = tileX >= 52 && tileX <= 54 && tileY === 6;
+                if (rightFirstFloorDoor) {
+                    player.setPosition(this.teleportToCoffreDoor.x, this.teleportToCoffreDoor.y - 32);
                 } else {
-                    porte2.anims.play("anim_fermeporte");
-                    porte2.ouverte = false;
+                    player.setPosition(this.teleportToTopLeftDoor.x, this.teleportToTopLeftDoor.y - 32);
                 }
+            } else {
+                // si on appuie sur E sans porte, on ne fait rien
             }
         }
     }
