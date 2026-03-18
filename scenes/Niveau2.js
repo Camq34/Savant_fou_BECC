@@ -64,7 +64,7 @@ export default class niveau2 extends Phaser.Scene {
 
 		this.anims.create({
 			key: "savant2_jump",
-			frames: this.anims.generateFrameNumbers("savant2", { start: 6, end: 8 }),
+			frames: this.anims.generateFrameNumbers("savant2", { start: 6, end: 10 }),
 			frameRate: 10,
 			repeat: -1
 		});
@@ -178,25 +178,3 @@ export default class niveau2 extends Phaser.Scene {
 		});
 	}
 }
-
-const config = {
-	type: Phaser.AUTO,
-	width: 1920,
-	height: 1280,
-	backgroundColor: "#000000",
-	pixelArt: true,
-	physics: {
-		default: "arcade",
-		arcade: {
-			gravity: { y: 500 },
-			debug: false
-		}
-	},
-	scale: {
-		mode: Phaser.Scale.FIT,
-		autoCenter: Phaser.Scale.CENTER_BOTH
-	},
-	scene: [niveau2]
-};
-
-new Phaser.Game(config);

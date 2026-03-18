@@ -2,7 +2,6 @@
 /** VARIABLES GLOBALES 
 /***********************************************************************/
 
-var player; // désigne le sprite du joueur
 var clavier; // pour la gestion du clavier
 
 // définition de la classe "selection"
@@ -67,11 +66,11 @@ export default class accueil extends Phaser.Scene {
      ****************************/
 
     // On créée un nouveeau personnage : player
-    player = this.physics.add.sprite(100, 450, "img_perso");
+    this.player = this.physics.add.sprite(100, 450, "img_perso");
 
     //  propriétées physiqyes de l'objet player :
-    player.setBounce(0.2); // on donne un petit coefficient de rebond
-    player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
+   this.player.setBounce(0.2); // on donne un petit coefficient de rebond
+  this.player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
 
     /***************************
      *  CREATION DES ANIMATIONS *
@@ -134,24 +133,24 @@ export default class accueil extends Phaser.Scene {
         // Vérifier si le joueur touche le sol
         this.playerOnGround = this.player.body.blocked.down;
 
-        if (clavier.up.isDown && player.body.touching.down) {
-      player.setVelocityY(-330);
+        if (clavier.up.isDown && this.player.body.touching.down) {
+      this.player.setVelocityY(-330);
     }
 
     if (Phaser.Input.Keyboard.JustDown(clavier.space) == true) {
-      if (this.physics.overlap(player, this.porte1))
+      if (this.physics.overlap(this.player, this.porte1))
         this.scene.switch("Niveau1");
-      if (this.physics.overlap(player, this.porte2))
+      if (this.physics.overlap(this.player, this.porte2))
         this.scene.switch("Niveau2");
-      if (this.physics.overlap(player, this.porte3))
+      if (this.physics.overlap(this.player, this.porte3))
         this.scene.switch("Niveau3");
-      if (this.physics.overlap(player, this.porte4))
+      if (this.physics.overlap(this.player, this.porte4))
         this.scene.switch("Niveau4");   
-      if (this.physics.overlap(player, this.porte5))
+      if (this.physics.overlap(this.player, this.porte5))
         this.scene.switch("Niveau5");   
-      if (this.physics.overlap(player, this.porte6))
+      if (this.physics.overlap(this.player, this.porte6))
         this.scene.switch("Niveau6"); 
-      if (this.physics.overlap(player, this.porte7))
+      if (this.physics.overlap(this.player, this.porte7))
         this.scene.switch("Niveau7");
     }
         // Réinitialiser les sauts disponibles au sol
@@ -160,9 +159,9 @@ export default class accueil extends Phaser.Scene {
         }
 
         // Mouvement horizontal
-        if (this.cursors.left.isDown || this.keys.a.isDown) {
+        if (clavier.left.isDown) {
             vx = -speed;
-        } else if (this.cursors.right.isDown || this.keys.d.isDown) {
+        } else if (clavier.right.isDown) {
             vx = speed;
         }
 
@@ -174,7 +173,7 @@ export default class accueil extends Phaser.Scene {
         }
 
         // Double Saut
-        const jumpKey = this.cursors.up.isDown || this.keys.space.isDown || this.keys.w.isDown;
+        const jumpKey = clavier.up.isDown || clavier.space.isDown;
         
         // Détecter la transition (quand on passe de non-appuyé à appuyé)
         if (jumpKey && !this.lastJumpKey && this.jumpsRemaining > 0) {
@@ -184,12 +183,6 @@ export default class accueil extends Phaser.Scene {
         
         this.lastJumpKey = jumpKey;
 
-        // Mettre à jour l'UI
-        this.uiText.setText(
-            `Position: ${Math.round(this.player.x)} x ${Math.round(this.player.y)}\n` +
-            `Vélocité: ${Math.round(this.player.body.velocity.x)} x ${Math.round(this.player.body.velocity.y)}\n` +
-            `Au sol: ${this.playerOnGround ? '✓' : '✗'} | Sauts: ${this.jumpsRemaining}/${this.maxJumps}\n` +
-            `WASD/Flèches: Déplacer | ESPACE/W/↑: Double Saut`
-        );
+        
       }
     }

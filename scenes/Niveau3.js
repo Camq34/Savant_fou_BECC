@@ -1,27 +1,4 @@
 
-export default class niveau3 extends Phaser.Scene {
-	constructor() {
-		super({ key: "niveau3" });
-	}
-    
-var config = {
-  type: Phaser.AUTO,
-  width: 1920,
-  height: 1280,
-  physics: {
-    default: "arcade",
-    arcade: {
-      gravity: { y: 500 },
-      debug: true
-    }
-  },
-  scene: {
-    preload: preload,
-    create: create,
-    update: update
-  }
-};
-
 var player;
 var clavier;
 var gameOver = false;
@@ -29,9 +6,13 @@ var layer;
 var porte1;
 var porte2;
 
-new Phaser.Game(config);
 
-function preload() {
+
+export default class niveau3 extends Phaser.Scene {
+	constructor() {
+		super({ key: "niveau3" });
+	}
+    preload() {
     this.load.image('img_lasers', 'assets/lasers.png');
     this.load.image('img_items', 'assets/items.png');
     this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau3.tmj');
@@ -45,10 +26,10 @@ function preload() {
     this.load.spritesheet("img_porte", "assets/porteORANGE999.png", {
         frameWidth: 96,
         frameHeight: 120
-    });
-}
+    }); 
 
-function create() {
+}
+    create() {
     const map = this.make.tilemap({ key: 'ma_map' });
     const tilesetLasers = map.addTilesetImage('lasers', 'img_lasers');
     const tilesetItems = map.addTilesetImage('tiles_tiny_sample_2', 'img_items');
@@ -115,8 +96,7 @@ function create() {
     porte1.ouverte = false;
     porte2.ouverte = false;
 }
-
-function update() {
+update() {
     if (gameOver) return;
 
     const isOnGround = player.body.blocked.down || player.body.touching.down;
@@ -168,4 +148,5 @@ function update() {
             }
         }
     }
+}
 }
