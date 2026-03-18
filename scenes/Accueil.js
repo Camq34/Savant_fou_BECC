@@ -61,7 +61,6 @@ export default class Accueil extends Phaser.Scene {
 
     this.porte1 = this.physics.add.staticSprite(140, 930, "img_porte_orange");
     this.porte2 = this.physics.add.staticSprite(512, 613, "img_porte_orange");
-    this.porte3 = this.physics.add.staticSprite(700, 234, "img_porte_orange");
     this.porte3 = this.physics.add.staticSprite(140, 265, "img_porte_orange");
     this.porte4 = this.physics.add.staticSprite(1277, 870, "img_porte_orange");
     this.porte5 = this.physics.add.staticSprite(1664, 487, "img_porte_orange");
