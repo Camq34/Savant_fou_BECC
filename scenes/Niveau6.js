@@ -20,7 +20,7 @@ export default class niveau6 extends Phaser.Scene {
     this.load.image('img_screenshot_6', 'assets/screenshot_6.png');
     this.load.image('tuilesJeu', 'assets/tuilesjeu.png');
 
-    this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau6.tmj');
+    this.load.tilemapTiledJSON('ma_map_6', 'assets/Map/map_niveau6.tmj');
     this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 40,
         frameHeight: 50,
@@ -34,7 +34,7 @@ export default class niveau6 extends Phaser.Scene {
 
 }
     create() {
-    const map = this.make.tilemap({ key: 'ma_map' });
+    const map = this.make.tilemap({ key: 'ma_map_6' });
     const tilesetLaser = map.addTilesetImage('laser', 'img_laser');
     const tilesetCoffre = map.addTilesetImage('brique', 'img_coffre_ferme');
     const tilesetPorteOrange = map.addTilesetImage('tiles_tiny_sample_2', 'img_porte_orange');
@@ -42,23 +42,8 @@ export default class niveau6 extends Phaser.Scene {
     const tilesetScreenshot = map.addTilesetImage('screenshot_6', 'img_screenshot_6');
     const tilesetTuilesJeu = map.addTilesetImage('tuilesJeu', 'tuilesJeu');
 
-    // 🔹 Création des calques
-    // Calque des portes et objets interactifs
-    const calquePorte = map.createLayer('calque_porte', [
-        tilesetLaser,
-        tilesetCoffre,
-        tilesetPorteOrange,
-        tilesetPorteSortie,
-        tilesetTuilesJeu
-    ], 0, 0);
 
-    // Calque de décor / sol
-    const calqueTuiles = map.createLayer('Calque de Tuiles 1', [
-        tilesetTuilesJeu,
-        tilesetScreenshot
-    ], 0, 0);
 
-    console.log('Calques créés :', calquePorte, calqueTuiles);
 
     layer = map.createLayer('Calque de Tuiles 1', [tilesetLaser, tilesetCoffre,
         tilesetPorteOrange,
@@ -118,12 +103,6 @@ export default class niveau6 extends Phaser.Scene {
 
     clavier = this.input.keyboard.createCursorKeys();
     this.toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-
-    porte1 = this.physics.add.staticSprite(96, 1093, "img_porte");
-    porte2 = this.physics.add.staticSprite(1800, 1093, "img_porte");
-
-    porte1.ouverte = false;
-    porte2.ouverte = false;
 }
 update() {
     if (gameOver) return;
