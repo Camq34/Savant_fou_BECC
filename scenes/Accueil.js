@@ -191,7 +191,7 @@ export default class Accueil extends Phaser.Scene {
         end: 5
       }),
       frameRate: 10,
-      repeat: 0
+      repeat: 0   
     });
 
     this.anims.create({
@@ -236,31 +236,31 @@ export default class Accueil extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
       if (this.physics.overlap(this.player, this.porte1)) {
         this.porte1.anims.play("porte_ouvre");
-        this.scene.start("Niveau1");
+        this.scene.start("niveau1");
       }
       if (this.physics.overlap(this.player, this.porte2)) {
         this.porte2.anims.play("porte_ouvre");
-        this.scene.start("Niveau2");
+        this.scene.start("niveau2");
       }
       if (this.physics.overlap(this.player, this.porte3)) {
         this.porte3.anims.play("porte_ouvre");
-        this.scene.start("Niveau3");
+        this.scene.start("niveau3");
       }
       if (this.physics.overlap(this.player, this.porte4)) {
         this.porte4.anims.play("porte_ouvre");
-        this.scene.start("Niveau4");
+        this.scene.start("niveau4");
       }
       if (this.physics.overlap(this.player, this.porte5)) {
         this.porte5.anims.play("porte_ouvre");
-        this.scene.start("Niveau5");
+        this.scene.start("niveau5");
       }
       if (this.physics.overlap(this.player, this.porte6)) {
         this.porte6.anims.play("porte_ouvre");
-        this.scene.start("Niveau6");
+        this.scene.start("niveau6");
       }
       if (this.physics.overlap(this.player, this.porte7)) {
         this.porte7.anims.play("porte_ouvre");
-        this.scene.start("Niveau7");
+        this.scene.start("niveau7");
       }
     }
 
