@@ -5,6 +5,9 @@ var gameOver = false;
 var layer;
 var porte1;
 var porte2;
+var blocsBlancs = [];
+var compteurTeleportPorte2 = 0;
+var blocsBlancsActifs = false;
 
 
 
@@ -37,6 +40,16 @@ export default class niveau3 extends Phaser.Scene {
     layer = map.createLayer('Calque de Tuiles 1', [tilesetLasers, tilesetItems], 0, 0);
     layer.setCollisionByProperty({ collision: true });
 
+    // Les blocs blancs restent caches jusqu'a 3 teleportations par la porte 2.
+    blocsBlancs = [];
+    layer.forEachTile((tile) => {
+        if (tile && (tile.index === 290 || tile.index === 292)) {
+            blocsBlancs.push(tile);
+            tile.setVisible(false);
+            tile.setCollision(false, false, false, false);
+        }
+    });
+
     player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
     player.setScale(1.5);
     player.setCollideWorldBounds(true);
@@ -48,7 +61,7 @@ export default class niveau3 extends Phaser.Scene {
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(player);
-    this.cameras.main.setZoom(0.4);
+    this.cameras.main.setZoom(1);
 
     this.anims.create({
         key: "savant2_idle",
@@ -95,7 +108,31 @@ export default class niveau3 extends Phaser.Scene {
 
     porte1.ouverte = false;
     porte2.ouverte = false;
+    compteurTeleportPorte2 = 0;
+    blocsBlancsActifs = false;
 }
+
+activerBlocsBlancs() {
+    if (blocsBlancsActifs) return;
+
+    blocsBlancs.forEach((tile) => {
+        tile.setVisible(true);
+        tile.setCollision(true, true, true, true);
+    });
+
+    blocsBlancsActifs = true;
+}
+
+teleporterPorte2VersPorte1() {
+    player.setPosition(porte1.x, porte1.y - 75);
+    player.setVelocity(0, 0);
+    compteurTeleportPorte2 += 1;
+
+    if (compteurTeleportPorte2 >= 3) {
+        this.activerBlocsBlancs();
+    }
+}
+
 update() {
     if (gameOver) return;
 
@@ -139,13 +176,8 @@ update() {
         }
 
         if (this.physics.overlap(player, porte2)) {
-            if (!porte2.ouverte) {
-                porte2.anims.play("anim_ouvreporte");
-                porte2.ouverte = true;
-            } else {
-                porte2.anims.play("anim_fermeporte");
-                porte2.ouverte = false;
-            }
+            porte2.anims.play("anim_ouvreporte");
+            this.teleporterPorte2VersPorte1();
         }
     }
 }
