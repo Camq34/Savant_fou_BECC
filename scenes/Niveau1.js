@@ -8,7 +8,7 @@ export default class Niveau1 extends Phaser.Scene {
         this.load.image('img_items', 'assets/items.png');
         this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
 
-        this.load.spritesheet("img_perso2", "assets/savant2.png", {
+        this.load.spritesheet("img_perso", "assets/savant2.png", {
             frameWidth: 41,
             frameHeight: 50
         });
@@ -40,19 +40,19 @@ export default class Niveau1 extends Phaser.Scene {
 
         this.anims.create({
             key: "anim_tourne_gauche",
-            frames: this.anims.generateFrameNumbers("img_perso2", { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers("img_perso", { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
             key: "anim_tourne_droite",
-            frames: this.anims.generateFrameNumbers("img_perso2", { start: 5, end: 8 }),
+            frames: this.anims.generateFrameNumbers("img_perso", { start: 5, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
             key: "anim_face",
-            frames: [{ key: "img_perso2", frame: 4 }],
+            frames: [{ key: "img_perso", frame: 4 }],
             frameRate: 20
         });
 
