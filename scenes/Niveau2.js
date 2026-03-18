@@ -1,6 +1,6 @@
 export default class niveau2 extends Phaser.Scene {
 	constructor() {
-		super({ key: "Niveau2" });
+		super({ key: "niveau2" });
 	}
 
 	preload() {
