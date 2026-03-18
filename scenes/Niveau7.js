@@ -8,7 +8,7 @@ export default class niveau7 extends Phaser.Scene {
 		this.load.image("img_decor", "assets/items.png");
 		this.load.image("img_donjonasset", "assets/donjonasset.png");
 		this.load.image("img_capture", "assets/coffre_fermé.png");
-		this.load.image("img_icons", "assets/items.png");
+		this.load.image("img_icons_prev_comp-removebg-preview", "assets/items.png");
 		this.load.image("img_porte_orange", "assets/porteORANGE999.png");
 		this.load.image("img_portesortie", "assets/portesortiewallah.png");
 		this.load.spritesheet("savant2", "assets/savant2.png", {
