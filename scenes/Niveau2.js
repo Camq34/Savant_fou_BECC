@@ -72,7 +72,7 @@ export default class niveau2 extends Phaser.Scene {
 		});
 
 		this.player = this.physics.add.sprite(160, map.heightInPixels - 180, "savant2", 5);
-		this.player.setScale(1.5);
+		this.player.setScale(2);
 		this.player.setCollideWorldBounds(true);
 		this.player.setBounce(0);
 		this.player.body.setSize(20, 44);
@@ -125,6 +125,43 @@ export default class niveau2 extends Phaser.Scene {
 				fill: true
 			}
 		}).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
+
+		// Texte gros au milieu
+		this.add.text(960, 440, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
+			fontFamily: "Arial",
+			fontSize: "64px",
+			fontStyle: "bold",
+			color: "#FFFFFF",
+			stroke: "#000000",
+			strokeThickness: 4
+		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1001);
+
+		// Configuration des 4 carrés colorés alignés en dessous
+		const squares = [
+			{ x: 300, y: 680, color: 0x0000FF, text: "Une lévitation", textColor: "#000000" },
+			{ x: 720, y: 680, color: 0xFF0000, text: "Une neutralisation", textColor: "#000000" },
+			{ x: 1140, y: 680, color: 0x00FF00, text: "Une combustion", textColor: "#000000" },
+			{ x: 1560, y: 680, color: 0xFFFF00, text: "Une précipitation", textColor: "#000000" }
+		];
+
+		squares.forEach(square => {
+			// Créer un rectangle arrondi avec graphics et l'afficher directement
+			const graphics = this.add.graphics();
+			graphics.fillStyle(square.color, 1);
+			graphics.fillRoundedRect(square.x - 130, square.y - 85, 260, 170, 20);
+			graphics.setScrollFactor(0);
+			graphics.setDepth(1001);
+
+			// Ajouter le texte sur le carré
+			this.add.text(square.x, square.y, square.text, {
+				fontFamily: "Arial",
+				fontSize: "22px",
+				fontStyle: "bold",
+				color: square.textColor,
+				wordWrap: { width: 200 },
+				align: "center"
+			}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1002);
+		});
 
 		this.cameras.main.setBackgroundColor("#000000");
 		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
