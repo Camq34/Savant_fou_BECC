@@ -74,7 +74,7 @@ export default class Niveau1 extends Phaser.Scene {
             repeat: 0
         });
         porte.ouverte = false;
-        this.cameras.main.setZoom(0.4);
+        this.cameras.main.setZoom(1);
     }
 
     update() {
