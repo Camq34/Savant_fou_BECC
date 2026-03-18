@@ -2,7 +2,8 @@
 var player;
 var clavier;
 var gameOver = false;
-var layer;
+var layer1;
+var layer2;
 var porte1;
 var porte2;
 
@@ -27,7 +28,7 @@ export default class niveau6 extends Phaser.Scene {
             spacing: 1
         });
 
-        this.load.spritesheet("img_porte", "assets/porteORANGE999.png", {
+        this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
             frameWidth: 96,
             frameHeight: 120
         });
@@ -36,20 +37,26 @@ export default class niveau6 extends Phaser.Scene {
     create() {
         const map = this.make.tilemap({ key: 'ma_map_6' });
         const tilesetLaser = map.addTilesetImage('laser', 'img_laser');
-        const tilesetCoffre = map.addTilesetImage('brique', 'img_coffre_ferme');
-        const tilesetPorteOrange = map.addTilesetImage('tiles_tiny_sample_2', 'img_porte_orange');
-        const tilesetPorteSortie = map.addTilesetImage('porte_sortie', 'img_porte_sortie');
+        const tilesetCoffre = map.addTilesetImage('coffre_fermé', 'img_coffre_ferme');
+        const tilesetPorteOrange = map.addTilesetImage('porteORANGE999', 'img_porte_orange');
+        const tilesetPorteSortie = map.addTilesetImage('portesortiewallah', 'img_porte_sortie');
         const tilesetScreenshot = map.addTilesetImage('screenshot_6', 'img_screenshot_6');
         const tilesetTuilesJeu = map.addTilesetImage('tuilesJeu', 'tuilesJeu');
 
 
+        
 
+        layer1 = map.createLayer('Calque de Tuiles 1', [tilesetTuilesJeu, tilesetScreenshot], 0, 0);
+        layer1.setCollisionByProperty({ collision: true });
 
-        layer = map.createLayer('Calque de Tuiles 1', [tilesetLaser, tilesetCoffre,
-            tilesetPorteOrange,
-            tilesetPorteSortie,
-            tilesetTuilesJeu, tilesetScreenshot], 0, 0);
-        layer.setCollisionByProperty({ collision: true });
+        const porteLayerName = map.getLayer('calque_porte') ? 'calque_porte' : (map.getLayer('Calque_porte') ? 'Calque_porte' : null);
+        if (porteLayerName) {
+            layer2 = map.createLayer(porteLayerName, [tilesetPorteOrange, tilesetLaser, tilesetCoffre, tilesetPorteSortie], 0, 0);
+            layer2.setVisible(true);
+            layer2.setDepth(0);
+        } else {
+            console.warn('Niveau6: calque porte non trouvé dans la map');
+        }
 
         player = this.physics.add.sprite(160, map.heightInPixels - 180, "img_perso", 5);
         player.setScale(1.5);
@@ -57,8 +64,11 @@ export default class niveau6 extends Phaser.Scene {
         player.setBounce(0);
         player.body.setSize(20, 44);
         player.body.setOffset(10, 6);
+        player.setDepth(10);
+        
+        this.porte1 = this.physics.add.staticSprite(140, 130, "img_porte_orange");
 
-        this.physics.add.collider(player, layer);
+        this.physics.add.collider(player, layer1);
 
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(player);
