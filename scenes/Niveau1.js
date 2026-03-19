@@ -121,6 +121,23 @@ export default class Niveau1 extends Phaser.Scene {
         const mapZoom = Math.min(gameWidth / this.map.widthInPixels, gameHeight / this.map.heightInPixels, 1);
         this.cameras.main.setZoom(mapZoom);
 
+        this.add.text(this.cameras.main.width * 0.7, 95, "NIVEAU 1", {
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+            fontSize: "72px",
+            fontStyle: "bold",
+            color: "#5cff72",
+            stroke: "#0b2a12",
+            strokeThickness: 8,
+            shadow: {
+                offsetX: 0,
+                offsetY: 0,
+                color: "#7dff8d",
+                blur: 12,
+                stroke: true,
+                fill: true
+            }
+        }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
+
         if (!this.anims.exists("savant2_idle")) {
             this.anims.create({
                 key: "savant2_idle",
@@ -385,12 +402,12 @@ export default class Niveau1 extends Phaser.Scene {
         }
 
         const messageFin = this.add
-            .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez fini le niveau 1 !", {
+            .text(this.cameras.main.width * 0.22, 180, "Bravo vous avez fini le niveau 1 !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "42px",
-                color: "#ffd64d",
+                fontSize: "55px",
+                color: "#ffd84d",
                 stroke: "#000000",
-                strokeThickness: 8
+                strokeThickness: 6
             })
             .setOrigin(0.5)
             .setScrollFactor(0)
@@ -410,10 +427,32 @@ export default class Niveau1 extends Phaser.Scene {
 
     afficherMessageCle() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 80, "Clef recuperee !", {
+            .text(this.cameras.main.width * 0.22, 180, "Clef récupérée !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "32px",
-                color: "#ffffff",
+                fontSize: "55px",
+                color: "#ffdf6e",
+                stroke: "#000000",
+                strokeThickness: 6
+            })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(1000);
+
+        this.tweens.add({
+            targets: message,
+            alpha: 0,
+            duration: 1300,
+            delay: 500,
+            onComplete: () => message.destroy()
+        });
+    }
+
+    afficherMessageBesoinCle() {
+        const message = this.add
+            .text(this.cameras.main.width * 0.22, 180, "Il me faut une clef pour ouvrir ce coffre !", {
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+                fontSize: "55px",
+                color: "#ffdf6e",
                 stroke: "#000000",
                 strokeThickness: 6
             })
@@ -432,9 +471,9 @@ export default class Niveau1 extends Phaser.Scene {
 
     afficherMessagePotionJaune() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 80, "Bravo vous avez recupere la potion jaune !", {
+            .text(this.cameras.main.width * 0.22, 180, "Bravo vous avez récupéré la potion jaune !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "36px",
+                fontSize: "55px",
                 color: "#ffd84d",
                 stroke: "#000000",
                 strokeThickness: 6
@@ -547,7 +586,7 @@ export default class Niveau1 extends Phaser.Scene {
     }
 
     ouvrirCoffreAvecCle() {
-        if (!this.clefCollected || this.coffreOuvert || !this.coffre) {
+        if (this.coffreOuvert || !this.coffre) {
             return;
         }
 
@@ -559,6 +598,11 @@ export default class Niveau1 extends Phaser.Scene {
         );
 
         if (distance > 110) {
+            return;
+        }
+
+        if (!this.clefCollected) {
+            this.afficherMessageBesoinCle();
             return;
         }
 
