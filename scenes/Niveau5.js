@@ -90,7 +90,7 @@ export default class niveau5 extends Phaser.Scene {
 
 		this.cle = this.physics.add.staticSprite(220, map.heightInPixels - 130, "icons_prev", 9);
 		this.cle.setScale(1.5);
-		this.potion = this.physics.add.staticSprite(1350, map.heightInPixels - 165, "img_items_sheet", 72);
+		this.potion = this.physics.add.staticSprite(1700, map.heightInPixels-120, "img_items_sheet", 72);
 		this.potion.setScale(1.4);
 		this.potion.setDepth(6);
 		this.potion.setVisible(false);
@@ -219,13 +219,14 @@ export default class niveau5 extends Phaser.Scene {
 
 			const chestTile = this.getOpenableChestTile();
 			if (chestTile) {
+				if (!this.hasKey) {
+					this.showMessage("Il me faut une clé pour ouvrir ce coffre !");
+					return;
+				}
+
 				const tilesetName = chestTile.tileset?.name || "";
 				if (tilesetName.includes("coffre_jaune")) {
-					if (this.hasKey) {
-						this.openDoor();
-					} else {
-						this.showMessage("Il me faut une clé pour ouvrir ce coffre !");
-					}
+					this.openDoor();
 				} else if (/coffre_(bleu|vert|rouge)/.test(tilesetName)) {
 					this.dieAndRestart();
 				}

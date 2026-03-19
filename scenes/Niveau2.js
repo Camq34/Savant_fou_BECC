@@ -13,6 +13,10 @@ export default class niveau2 extends Phaser.Scene {
 		this.load.image("img_coffre_vert", "assets/coffre_vert.png");
 		this.load.image("img_coffre_jaune", "assets/coffre_jaune.png");
 		this.load.image("img_portesortie", "assets/portesortiewallah.png");
+		this.load.spritesheet("img_items_sheet", "assets/items.png", {
+			frameWidth: 32,
+			frameHeight: 32
+		});
 		this.load.spritesheet("savant2", "assets/savant2.png", {
 			frameWidth: 40,
 			frameHeight: 50,
@@ -79,12 +83,18 @@ export default class niveau2 extends Phaser.Scene {
 		this.player.setScale(2);
 		this.player.setCollideWorldBounds(true);
 		this.player.setBounce(0);
+		this.player.setDepth(10);
 		this.player.body.setSize(20, 44);
 		this.player.body.setOffset(10, 6);
 		this.player.play("savant2_idle");
 
 		this.cle = this.physics.add.staticSprite(220, map.heightInPixels - 130, "icons_prev", 9);
 		this.cle.setScale(1.5);
+		this.potion = this.physics.add.staticSprite(1000, map.heightInPixels-120, "img_items_sheet", 72);
+		this.potion.setScale(1.4);
+		this.potion.setDepth(6);
+		this.potion.setVisible(false);
+		this.potion.body.enable = false;
 
 		this.physics.add.collider(this.player, this.layerDecor);
 		this.cursors = this.input.keyboard.createCursorKeys();
@@ -94,11 +104,11 @@ export default class niveau2 extends Phaser.Scene {
 		this.doorOpened = false;
 		this.isDoorAnimating = false;
 		this.hasKey = false;
+		this.hasPotion = false;
 
-		// Permet de collecter la clé en collision avec le joueur
 		this.physics.add.overlap(this.player, this.cle, this.collectKey, null, this);
+		this.physics.add.overlap(this.player, this.potion, this.collectPotion, null, this);
 
-		// Texte d'information temporaire
 		this.messageText = this.add.text(960, 900, "", {
 			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "52px",
@@ -146,7 +156,6 @@ export default class niveau2 extends Phaser.Scene {
 			}
 		}).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
-		// Texte gros au milieu
 		this.add.text(960, 350, "Pour créer une potion d'invisibilité, je dois mélanger un acide et une base. Comment appelle-t-on cette réaction chimique qui dégage souvent de la chaleur ?", {
 			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "60px",
@@ -158,7 +167,6 @@ export default class niveau2 extends Phaser.Scene {
 			wordWrap: { width: 1200 }
 		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1001);
 
-		// Configuration des 4 carrés colorés alignés en dessous
 		const squares = [
 			{ x: 300, y: 650, color: "#0000FF", text: "LEVITATION" },
 			{ x: 720, y: 650, color: "#FF0000", text: "NEUTRALISATION" },
@@ -201,19 +209,24 @@ export default class niveau2 extends Phaser.Scene {
 
 		if (Phaser.Input.Keyboard.JustDown(this.interactKey)) {
 			if (this.doorOpened) {
-				this.showMessage("La porte est déjà ouverte !", 1000);
+				if (this.isPlayerAtExit()) {
+					this.goToAccueil();
+				} else {
+					this.showMessage("Va jusqu'a la porte pour sortir !", 1000);
+				}
 				return;
 			}
 
 			const chestTile = this.getOpenableChestTile();
 			if (chestTile) {
+				if (!this.hasKey) {
+					this.showMessage("Il me faut une clé pour ouvrir ce coffre !");
+					return;
+				}
+
 				const tilesetName = chestTile.tileset?.name || "";
 				if (tilesetName.includes("coffre_rouge")) {
-					if (this.hasKey) {
-						this.openDoor();
-					} else {
-						this.showMessage("Il me faut une clé pour ouvrir ce coffre !");
-					}
+					this.openDoor();
 				} else if (/coffre_(bleu|vert|jaune)/.test(tilesetName)) {
 					this.dieAndRestart();
 				}
@@ -243,15 +256,20 @@ export default class niveau2 extends Phaser.Scene {
 				if (index === this.doorFrames.length - 1) {
 					this.doorOpened = true;
 					this.isDoorAnimating = false;
+					this.potion.setVisible(true);
+					this.potion.body.enable = true;
+					this.potion.refreshBody();
 
-					// Créer une zone de sortie invisible au niveau de la porte
 					this.doorExit = this.physics.add.staticSprite(58 * 32, 35 * 32, null);
 					this.doorExit.setSize(32, 64);
 					this.doorExit.setVisible(false);
-					this.physics.add.overlap(this.player, this.doorExit, this.goToAccueil, null, this);
 				}
 			});
 		});
+	}
+
+	isPlayerAtExit() {
+		return Boolean(this.doorExit && this.physics.overlap(this.player, this.doorExit));
 	}
 
 	getOpenableChestTile() {
@@ -296,7 +314,7 @@ export default class niveau2 extends Phaser.Scene {
 		});
 	}
 
-	goToAccueil(player, door) {
+	goToAccueil() {
 		this.scene.start("Accueil");
 	}
 
@@ -304,5 +322,16 @@ export default class niveau2 extends Phaser.Scene {
 		this.hasKey = true;
 		key.destroy();
 		this.showMessage("Clé récupérée !");
+	}
+
+	collectPotion(player, potion) {
+		if (this.hasPotion) {
+			return;
+		}
+
+		this.hasPotion = true;
+		this.registry.set("potionNiveau2", true);
+		potion.destroy();
+		this.showMessage("Potion récupérée !");
 	}
 }
