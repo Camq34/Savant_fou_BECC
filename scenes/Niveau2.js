@@ -249,6 +249,12 @@ export default class niveau2 extends Phaser.Scene {
 				if (index === this.doorFrames.length - 1) {
 					this.doorOpened = true;
 					this.isDoorAnimating = false;
+
+					// Créer une zone de sortie invisible au niveau de la porte
+					this.doorExit = this.physics.add.staticSprite(58 * 32, 35 * 32, null);
+					this.doorExit.setSize(32, 64);
+					this.doorExit.setVisible(false);
+					this.physics.add.overlap(this.player, this.doorExit, this.goToAccueil, null, this);
 				}
 			});
 		});
@@ -294,6 +300,10 @@ export default class niveau2 extends Phaser.Scene {
 		this.messageTimer = this.time.delayedCall(duration, () => {
 			this.messageText.setText("");
 		});
+	}
+
+	goToAccueil(player, door) {
+		this.scene.start("Accueil");
 	}
 
 	collectKey(player, key) {
