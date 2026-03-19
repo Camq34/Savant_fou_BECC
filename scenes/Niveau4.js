@@ -104,6 +104,23 @@ export default class niveau4 extends Phaser.Scene {
     const mapZoom = Math.min(gameWidth / map.widthInPixels, gameHeight / map.heightInPixels, 1);
     this.cameras.main.setZoom(mapZoom);
 
+    this.add.text(960, 95, "NIVEAU 4", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "72px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 8,
+        shadow: {
+            offsetX: 0,
+            offsetY: 0,
+            color: "#7dff8d",
+            blur: 12,
+            stroke: true,
+            fill: true
+        }
+    }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
+
     this.anims.create({
         key: "savant2_idle",
         frames: [{ key: "img_perso", frame: 5 }],
@@ -280,6 +297,42 @@ jouerSonCoffre() {
     }
 }
 
+afficherMessageCle() {
+    const message = this.add.text(this.cameras.main.width * 0.5, 250, "Clef récupérée !", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "55px",
+        color: "#ffdf6e",
+        stroke: "#000000",
+        strokeThickness: 6
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(1000);
+
+    this.tweens.add({
+        targets: message,
+        alpha: 0,
+        duration: 1300,
+        delay: 500,
+        onComplete: () => message.destroy()
+    });
+}
+
+afficherMessagePotion() {
+    const message = this.add.text(this.cameras.main.width * 0.5, 250, "Potion récupérée !", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "55px",
+        color: "#ffd84d",
+        stroke: "#000000",
+        strokeThickness: 6
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(1000);
+
+    this.tweens.add({
+        targets: message,
+        alpha: 0,
+        duration: 1800,
+        delay: 700,
+        onComplete: () => message.destroy()
+    });
+}
+
 update() {
     if (gameOver) return;
 
@@ -313,25 +366,18 @@ update() {
 
     // Vérifier si le joueur prend la potion
     if (potion && this.physics.overlap(player, potion)) {
-        // Afficher le message
         potion.destroy();
         potion = null;
         this.registry.set("inventaireNiveau4", ["objet_niveau4_potion"]);
         this.faireApparaitrePorteSortie();
-        messagePotion = this.add.text(760, 95, "POTION RÉCUPÉRÉE!", {
-            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-            fontSize: "72px",
-            fontStyle: "bold",
-            color: "#00ff00",
-            stroke: "#4d0000",
-            strokeThickness: 8,
-        }).setDepth(100);
+        this.afficherMessagePotion();
     }
 
     // Vérifier si le joueur prend la clé
     if (cle && this.physics.overlap(player, cle)) {
         cle.destroy();
         cle = null;
+        this.afficherMessageCle();
     }
 
     if (this.joueurToucheTuileTue(layer1) || this.joueurToucheTuileTue(layer2)) {
