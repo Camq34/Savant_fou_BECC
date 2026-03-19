@@ -324,7 +324,7 @@ faireApparaitrePorte3() {
 afficherMessagePotion() {
     const message = this.add
         .text(this.cameras.main.width * 0.5, 80, "Vous avez recupere une potion !", {
-            fontFamily: "Arial",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "36px",
             color: "#ffffff",
             stroke: "#000000",
@@ -355,7 +355,7 @@ terminerNiveau3() {
 
     const messageFin = this.add
         .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez finis le niveau 3 !", {
-            fontFamily: "Arial",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "42px",
             color: "#ffd64d",
             stroke: "#000000",
