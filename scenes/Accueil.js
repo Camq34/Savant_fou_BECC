@@ -4,6 +4,7 @@
 
 var clavier;
 const SON_PORTE_ACCUEIL = "son_porte_accueil";
+const SON_SIX_POTIONS_ACCUEIL = "son_six_potions_accueil";
 
 // définition de la classe "Accueil"
 export default class Accueil extends Phaser.Scene {
@@ -21,6 +22,7 @@ export default class Accueil extends Phaser.Scene {
     this.load.tilemapTiledJSON("map_accueil", "assets/Map/map_accueil.tmj");
     this.load.image("chaudron", "assets/chaudron.png");
     this.load.audio(SON_PORTE_ACCUEIL, "assets/audio/porte_niveau6.mp3");
+    this.load.audio(SON_SIX_POTIONS_ACCUEIL, "assets/audio/accueil_6_potions.mp3");
     this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
       frameWidth: 96,
       frameHeight: 120
@@ -80,6 +82,7 @@ export default class Accueil extends Phaser.Scene {
     this.chaudron= this.physics.add.staticSprite(895, 487, "chaudron");
 
     this.nbPotionsTotal = 7;
+    this.sonSixPotionsJoue = false;
     this.compteurPotionsText = this.add
       .text(this.chaudron.x, this.chaudron.y - 100, "", {
         fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
@@ -91,6 +94,7 @@ export default class Accueil extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.mettreAJourCompteurPotions();
+    this.jouerSonSixPotionsSiPret();
 
     this.add
       .text(this.porte1.x, this.porte1.y - 90, "1", {
@@ -263,6 +267,31 @@ export default class Accueil extends Phaser.Scene {
       });
     } catch (error) {
       console.warn("Accueil: lecture du son de porte impossible", error);
+    }
+  }
+
+  jouerSonSixPotionsSiPret() {
+    if (this.sonSixPotionsJoue) {
+      return;
+    }
+
+    if (this.compterPotionsRecuperees() < 6) {
+      return;
+    }
+
+    if (!this.cache.audio.exists(SON_SIX_POTIONS_ACCUEIL)) {
+      return;
+    }
+
+    this.sonSixPotionsJoue = true;
+
+    try {
+      this.sound.play(SON_SIX_POTIONS_ACCUEIL, {
+        loop: false,
+        volume: 0.8
+      });
+    } catch (error) {
+      console.warn("Accueil: lecture du son des 6 potions impossible", error);
     }
   }
 
