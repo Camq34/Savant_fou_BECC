@@ -52,7 +52,7 @@ export default class Accueil extends Phaser.Scene {
     this.layer.setCollisionByProperty({ collision: true });
 
     this.add
-      .text(960, 70, "Bienvenue à l'Accueil !", {
+      .text(960, 70, "Bienvenue à l'Accueil ", {
         fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "58px",
         fontStyle: "bold",

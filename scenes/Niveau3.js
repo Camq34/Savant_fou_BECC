@@ -323,7 +323,7 @@ faireApparaitrePorte3() {
 
 afficherMessagePotion() {
     const message = this.add
-        .text(this.cameras.main.width * 0.5, 80, "Vous avez recupere une potion !", {
+        .text(this.cameras.main.width * 0.5, 80, "Vous avez récupéré une potion !", {
             fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "36px",
             color: "#ffffff",
@@ -354,7 +354,7 @@ terminerNiveau3() {
     porte3.anims.play("anim_ouvreporte_sortie_n3");
 
     const messageFin = this.add
-        .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez finis le niveau 3 !", {
+        .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo ! Vous avez fini le niveau 3 !", {
             fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "42px",
             color: "#ffd64d",
@@ -373,7 +373,7 @@ terminerNiveau3() {
     });
 
     this.time.delayedCall(1700, () => {
-        this.scene.start("Accueil", { messageFinNiveau: "Bravo vous avez finis le niveau 3 !" });
+        this.scene.start("Accueil", { messageFinNiveau: "Bravo ! Vous avez fini le niveau 3 !" });
     });
 }
 
