@@ -77,6 +77,19 @@ export default class Accueil extends Phaser.Scene {
     this.porte7 = this.physics.add.staticSprite(1277, 355, "img_porte_orange");
     this.chaudron= this.physics.add.staticSprite(895, 487, "chaudron");
 
+    this.nbPotionsTotal = 7;
+    this.compteurPotionsText = this.add
+      .text(this.chaudron.x, this.chaudron.y - 100, "", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "44px",
+        fontStyle: "bold",
+        color: "#ffd64d",
+        stroke: "#3b2100",
+        strokeThickness: 7
+      })
+      .setOrigin(0.5);
+    this.mettreAJourCompteurPotions();
+
     this.add
       .text(this.porte1.x, this.porte1.y - 90, "1", {
         fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
@@ -318,5 +331,23 @@ export default class Accueil extends Phaser.Scene {
     } else {
       this.player.play("savant2_idle", true);
     }
+  }
+
+  compterPotionsRecuperees() {
+    let total = 0;
+
+    for (let niveau = 1; niveau <= this.nbPotionsTotal; niveau += 1) {
+      const inventaireNiveau = this.registry.get(`inventaireNiveau${niveau}`);
+      if (Array.isArray(inventaireNiveau) && inventaireNiveau.length > 0) {
+        total += 1;
+      }
+    }
+
+    return total;
+  }
+
+  mettreAJourCompteurPotions() {
+    const potionsRecuperees = this.compterPotionsRecuperees();
+    this.compteurPotionsText.setText(`${potionsRecuperees}/${this.nbPotionsTotal}`);
   }
 }
