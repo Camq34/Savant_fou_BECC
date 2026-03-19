@@ -497,7 +497,7 @@ export default class niveau6 extends Phaser.Scene {
 
     afficherMessageCle() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 540, "Vous avez récupéré une clef !", {
+            .text(this.cameras.main.width * 0.5, 540, "Vous avez récupéré une clé !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "55px",
                 color: "#ffdf6e",
