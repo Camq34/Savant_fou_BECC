@@ -93,16 +93,13 @@ export default class niveau5 extends Phaser.Scene {
 		this.jumpSpeed = -360;
 		this.doorOpened = false;
 		this.isDoorAnimating = false;
-
-		this.cle = this.physics.add.staticSprite(250, map.heightInPixels - 130, "icons_prev", 9);
-		this.cle.setScale(1.5);
 		this.hasKey = false;
 
 		this.physics.add.overlap(this.player, this.cle, this.collectKey, null, this);
 
-		this.messageText = this.add.text(960, 1030, "", {
-			fontFamily: "Arial",
-			fontSize: "32px",
+		this.messageText = this.add.text(960, 900, "", {
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+			fontSize: "52px",
 			color: "#FFFF00",
 			stroke: "#000000",
 			strokeThickness: 4
@@ -147,34 +144,30 @@ export default class niveau5 extends Phaser.Scene {
 			}
 		}).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
-		this.add.text(960, 440, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
-			fontFamily: "Arial",
-			fontSize: "64px",
+		this.add.text(960, 350, "Comment appelle t-on le passsage d'un corp de l'etait liquide a l'etat gaz ?", {
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+			fontSize: "60px",
 			fontStyle: "bold",
 			color: "#7dff8d",
 			stroke: "#000000",
-			strokeThickness: 4
+			strokeThickness: 4,
+			align: "center",
+			wordWrap: { width: 1200 }
 		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1001);
 
 		const squares = [
-			{ x: 300, y: 680, color: 0x0000FF, text: "Une lévitation", textColor: "#000000" },
-			{ x: 720, y: 680, color: 0xFF0000, text: "Une neutralisation", textColor: "#000000" },
-			{ x: 1140, y: 680, color: 0x00FF00, text: "Une combustion", textColor: "#000000" },
-			{ x: 1560, y: 680, color: 0xFFFF00, text: "Une précipitation", textColor: "#000000" }
+			{ x: 300, y: 650, color: "#0000FF", text: "LEVITATION" },
+			{ x: 720, y: 650, color: "#FF0000", text: "NEUTRALISATION" },
+			{ x: 1140, y: 650, color: "#00FF00", text: "COMBUSTION" },
+			{ x: 1560, y: 650, color: "#FFFF00", text: "PRECIPITATION" }
 		];
 
 		squares.forEach(square => {
-			const graphics = this.add.graphics();
-			graphics.fillStyle(square.color, 1);
-			graphics.fillRoundedRect(square.x - 130, square.y - 85, 260, 170, 20);
-			graphics.setScrollFactor(0);
-			graphics.setDepth(1001);
-
 			this.add.text(square.x, square.y, square.text, {
-				fontFamily: "Arial",
-				fontSize: "22px",
+				fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+				fontSize: "45px",
 				fontStyle: "bold",
-				color: square.textColor,
+				color: square.color,
 				wordWrap: { width: 200 },
 				align: "center"
 			}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1002);

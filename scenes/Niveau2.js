@@ -93,19 +93,15 @@ export default class niveau2 extends Phaser.Scene {
 		this.jumpSpeed = -360;
 		this.doorOpened = false;
 		this.isDoorAnimating = false;
-
-		// Créer la clé à côté du joueur
-		this.cle = this.physics.add.staticSprite(250, map.heightInPixels - 130, "icons_prev", 9);
-		this.cle.setScale(1.5);
 		this.hasKey = false;
 
 		// Permet de collecter la clé en collision avec le joueur
 		this.physics.add.overlap(this.player, this.cle, this.collectKey, null, this);
 
 		// Texte d'information temporaire
-		this.messageText = this.add.text(960, 1030, "", {
+		this.messageText = this.add.text(960, 900, "", {
 			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-			fontSize: "32px",
+			fontSize: "52px",
 			color: "#FFFF00",
 			stroke: "#000000",
 			strokeThickness: 4
@@ -151,28 +147,29 @@ export default class niveau2 extends Phaser.Scene {
 		}).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
 		// Texte gros au milieu
-		this.add.text(960, 440, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
-			fontFamily: "Arial",
-			fontSize: "64px",
+		this.add.text(960, 350, "Pour créer une potion d'invisibilité, je dois mélanger un acide et une base. Comment appelle-t-on cette réaction chimique qui dégage souvent de la chaleur ?", {
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+			fontSize: "60px",
 			fontStyle: "bold",
 			color: "#7dff8d",
 			stroke: "#000000",
 			strokeThickness: 4,
-			align: "center"
+			align: "center",
+			wordWrap: { width: 1200 }
 		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1001);
 
 		// Configuration des 4 carrés colorés alignés en dessous
 		const squares = [
-			{ x: 300, y: 600, color: "#0000FF", text: "LEVITATION" },
-			{ x: 720, y: 600, color: "#FF0000", text: "NEUTRALISATION" },
-			{ x: 1140, y: 600, color: "#00FF00", text: "COMBUSTION" },
-			{ x: 1560, y: 600, color: "#FFFF00", text: "PRECIPITATION" }
+			{ x: 300, y: 650, color: "#0000FF", text: "LEVITATION" },
+			{ x: 720, y: 650, color: "#FF0000", text: "NEUTRALISATION" },
+			{ x: 1140, y: 650, color: "#00FF00", text: "COMBUSTION" },
+			{ x: 1560, y: 650, color: "#FFFF00", text: "PRECIPITATION" }
 		];
 
 		squares.forEach(square => {
 			this.add.text(square.x, square.y, square.text, {
-				fontFamily: "Arial",
-				fontSize: "22px",
+				fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+				fontSize: "45px",
 				fontStyle: "bold",
 				color: square.color,
 				wordWrap: { width: 200 },
