@@ -17,6 +17,7 @@ export default class Accueil extends Phaser.Scene {
     this.load.image("img_materiaux", "assets/terrain_d2_70.jpg");
     this.load.image("img_items", "assets/items.png");
     this.load.tilemapTiledJSON("map_accueil", "assets/Map/map_accueil.tmj");
+    this.load.image("chaudron", "assets/chaudron.png");
     this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
       frameWidth: 96,
       frameHeight: 120
@@ -56,6 +57,7 @@ export default class Accueil extends Phaser.Scene {
     this.porte5 = this.physics.add.staticSprite(1664, 487, "img_porte_orange");
     this.porte6 = this.physics.add.staticSprite(895, 740, "img_porte_orange");
     this.porte7 = this.physics.add.staticSprite(1277, 355, "img_porte_orange");
+    this.chaudron= this.physics.add.staticSprite(895, 487, "chaudron");
 
     this.add
       .text(this.porte1.x, this.porte1.y - 90, "1", {

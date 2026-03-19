@@ -18,6 +18,10 @@ export default class niveau2 extends Phaser.Scene {
 			frameHeight: 50,
 			spacing: 1
 		});
+		this.load.spritesheet("icons_prev", "assets/icons_prev_comp-removebg-preview.png", {
+			frameWidth: 32,
+			frameHeight: 32
+		});
 	}
 
 	create() {
@@ -79,14 +83,34 @@ export default class niveau2 extends Phaser.Scene {
 		this.player.body.setOffset(10, 6);
 		this.player.play("savant2_idle");
 
+		this.cle = this.physics.add.staticSprite(220, map.heightInPixels - 130, "icons_prev", 9);
+		this.cle.setScale(1.5);
+
 		this.physics.add.collider(this.player, this.layerDecor);
 		this.cursors = this.input.keyboard.createCursorKeys();
-		this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+		this.interactKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 		this.playerSpeed = 180;
 		this.jumpSpeed = -360;
 		this.doorOpened = false;
 		this.isDoorAnimating = false;
-		this.redChestBounds = new Phaser.Geom.Rectangle(24 * 32, 34 * 32, 5 * 32, 3 * 32);
+
+		// Créer la clé à côté du joueur
+		this.cle = this.physics.add.staticSprite(250, map.heightInPixels - 130, "icons_prev", 9);
+		this.cle.setScale(1.5);
+		this.hasKey = false;
+
+		// Permet de collecter la clé en collision avec le joueur
+		this.physics.add.overlap(this.player, this.cle, this.collectKey, null, this);
+
+		// Texte d'information temporaire
+		this.messageText = this.add.text(960, 1030, "", {
+			fontFamily: "Arial",
+			fontSize: "32px",
+			color: "#FFFF00",
+			stroke: "#000000",
+			strokeThickness: 4
+		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1002);
+
 		this.doorTilePositions = [
 			{ x: 56, y: 33 },
 			{ x: 57, y: 33 },
@@ -128,19 +152,19 @@ export default class niveau2 extends Phaser.Scene {
 
 		// Texte gros au milieu
 		this.add.text(960, 440, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
-			fontFamily: "'Special Elite', Courier New, monospace",
-			fontSize: "58px",
-			color: "#5cff72",
-			stroke: "#0b2a12",
-			strokeThickness: 5,
-			shadow: { offsetX: 2, offsetY: 2, color: "#000", blur: 6, fill: true }
+			fontFamily: "Arial",
+			fontSize: "64px",
+			fontStyle: "bold",
+			color: "#FFFFFF",
+			stroke: "#000000",
+			strokeThickness: 4
 		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1001);
 
 		// Configuration des 4 carrés colorés alignés en dessous
 		const squares = [
-			{ x: 300, y: 680, color: 0x0000FF, text: "Une lévitation", textColor: "#000000" },
+			{ x: 300, y: 680, color: 0x0000FF, text: "Une lévitation", textColor: "#FFFFFF" },
 			{ x: 720, y: 680, color: 0xFF0000, text: "Une neutralisation", textColor: "#000000" },
-			{ x: 1140, y: 680, color: 0x00FF00, text: "Une combustion", textColor: "#000000" },
+			{ x: 1140, y: 680, color: 0x00FF00, text: "Une combustion", textColor: "#FFFFFF" },
 			{ x: 1560, y: 680, color: 0xFFFF00, text: "Une précipitation", textColor: "#000000" }
 		];
 
@@ -170,7 +194,6 @@ export default class niveau2 extends Phaser.Scene {
 
 	update() {
 		const isOnGround = this.player.body.blocked.down || this.player.body.touching.down;
-		const nearRedChest = Phaser.Geom.Rectangle.ContainsPoint(this.redChestBounds, this.player.getCenter());
 
 		if (this.cursors.left.isDown) {
 			this.player.setVelocityX(-this.playerSpeed);
@@ -186,8 +209,25 @@ export default class niveau2 extends Phaser.Scene {
 			this.player.setVelocityY(this.jumpSpeed);
 		}
 
-		if (nearRedChest && !this.doorOpened && !this.isDoorAnimating && Phaser.Input.Keyboard.JustDown(this.enterKey)) {
-			this.openDoor();
+		if (Phaser.Input.Keyboard.JustDown(this.interactKey)) {
+			if (this.doorOpened) {
+				this.showMessage("La porte est déjà ouverte !", 1000);
+				return;
+			}
+
+			const chestTile = this.getOpenableChestTile();
+			if (chestTile) {
+				const tilesetName = chestTile.tileset?.name || "";
+				if (tilesetName.includes("coffre_rouge")) {
+					if (this.hasKey) {
+						this.openDoor();
+					} else {
+						this.showMessage("Il me faut une clé pour ouvrir ce coffre !");
+					}
+				} else if (/coffre_(bleu|vert|jaune)/.test(tilesetName)) {
+					this.dieAndRestart();
+				}
+			}
 		}
 
 		if (!isOnGround) {
@@ -200,6 +240,7 @@ export default class niveau2 extends Phaser.Scene {
 	}
 
 	openDoor() {
+		this.showMessage("BONNE REPONSE !", 1500);
 		this.isDoorAnimating = true;
 
 		this.doorFrames.forEach((frameSet, index) => {
@@ -212,8 +253,66 @@ export default class niveau2 extends Phaser.Scene {
 				if (index === this.doorFrames.length - 1) {
 					this.doorOpened = true;
 					this.isDoorAnimating = false;
+
+					// Créer une zone de sortie invisible au niveau de la porte
+					this.doorExit = this.physics.add.staticSprite(58 * 32, 35 * 32, null);
+					this.doorExit.setSize(32, 64);
+					this.doorExit.setVisible(false);
+					this.physics.add.overlap(this.player, this.doorExit, this.goToAccueil, null, this);
 				}
 			});
 		});
+	}
+
+	getOpenableChestTile() {
+		const center = this.player.getCenter();
+		const offsets = [
+			{ x: 0, y: 0 },
+			{ x: -16, y: 0 },
+			{ x: 16, y: 0 },
+			{ x: 0, y: 16 },
+			{ x: 0, y: -16 },
+			{ x: -16, y: -16 },
+			{ x: 16, y: -16 },
+			{ x: -16, y: 16 },
+			{ x: 16, y: 16 }
+		];
+
+		for (const offset of offsets) {
+			const tile = this.layerDecor.getTileAtWorldXY(center.x + offset.x, center.y + offset.y, false, this.cameras.main);
+			if (tile && tile.properties && tile.properties.ouvrircoffre) {
+				return tile;
+			}
+		}
+
+		return null;
+	}
+
+	dieAndRestart() {
+		this.showMessage("MAUVAISE REPONSE", 1500);
+		this.time.delayedCall(1500, () => {
+			this.scene.restart();
+		});
+	}
+
+	showMessage(text, duration = 2000) {
+		if (!this.messageText) return;
+		this.messageText.setText(text);
+		if (this.messageTimer) {
+			this.messageTimer.remove(false);
+		}
+		this.messageTimer = this.time.delayedCall(duration, () => {
+			this.messageText.setText("");
+		});
+	}
+
+	goToAccueil(player, door) {
+		this.scene.start("Accueil");
+	}
+
+	collectKey(player, key) {
+		this.hasKey = true;
+		key.destroy();
+		this.showMessage("Clé récupérée !");
 	}
 }
