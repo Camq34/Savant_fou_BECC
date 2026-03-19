@@ -95,7 +95,7 @@ export default class niveau7 extends Phaser.Scene {
             // En cas de map introuvable, on affiche un fond noir et un message d'erreur au centre de l'ecran.
             this.cameras.main.setBackgroundColor("#000000");
             this.add.text(960, 640, "ERREUR: map_niveau7 introuvable", {
-                fontFamily: "Courier New, monospace",
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "34px",
                 fontStyle: "bold",
                 color: "#ff6666"
@@ -125,7 +125,7 @@ export default class niveau7 extends Phaser.Scene {
         if (!layer1) {
             // Si le calque manque dans la map, on l'affiche clairement a l'ecran pour faciliter le debug.
             this.add.text(960, 640, "ERREUR: Tile Layer 1 introuvable", {
-                fontFamily: "Courier New, monospace",
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "32px",
                 fontStyle: "bold",
                 color: "#ff6666"
@@ -243,7 +243,7 @@ export default class niveau7 extends Phaser.Scene {
 
         // Titre fixe affiche en haut de l'ecran. Comme il a scrollFactor 0, il reste accroche a la camera.
         this.add.text(960, 95, "NIVEAU 7", {
-            fontFamily: "Courier New, monospace",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "72px",
             fontStyle: "bold",
             color: "#ff2a2a",
@@ -260,21 +260,21 @@ export default class niveau7 extends Phaser.Scene {
         }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
         texteCleRecuperee = this.add.text(960, 180, "vous avez récupéré la clé", {
-            fontFamily: "Courier New, monospace",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "36px",
             fontStyle: "bold",
             color: "#ffffff"
         }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000).setVisible(false);
 
         textePotionRecuperee = this.add.text(960, 180, "vous avez récupéré une potion", {
-            fontFamily: "Courier New, monospace",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "36px",
             fontStyle: "bold",
             color: "#ffffff"
         }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000).setVisible(false);
 
         texteFinNiveau = this.add.text(960, 180, "vous avez fini le dernier niveau", {
-            fontFamily: "Courier New, monospace",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "36px",
             fontStyle: "bold",
             color: "#ffffff"

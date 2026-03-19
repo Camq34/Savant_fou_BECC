@@ -61,7 +61,7 @@ export default class Intro extends Phaser.Scene {
 
     const boutonJouer = this.add
       .text(largeur * 0.5, hauteur - 90, "JOUER", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "40px",
         fontStyle: "bold",
         color: "#39ff14",

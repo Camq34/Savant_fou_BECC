@@ -104,7 +104,7 @@ export default class niveau2 extends Phaser.Scene {
 
 		// Texte d'information temporaire
 		this.messageText = this.add.text(960, 1030, "", {
-			fontFamily: "Arial",
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "32px",
 			color: "#FFFF00",
 			stroke: "#000000",
@@ -134,7 +134,7 @@ export default class niveau2 extends Phaser.Scene {
 		];
 
 		this.add.text(960, 95, "NIVEAU 2", {
-			fontFamily: "Courier New, monospace",
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "72px",
 			fontStyle: "bold",
 			color: "#5cff72",
@@ -152,7 +152,7 @@ export default class niveau2 extends Phaser.Scene {
 
 		// Texte gros au milieu
 		this.add.text(960, 440, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
-			fontFamily: "Arial",
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "64px",
 			fontStyle: "bold",
 			color: "#7dff8d",
@@ -178,7 +178,7 @@ export default class niveau2 extends Phaser.Scene {
 
 			// Ajouter le texte sur le carré
 			this.add.text(square.x, square.y, square.text, {
-				fontFamily: "Arial",
+				fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 				fontSize: "22px",
 				fontStyle: "bold",
 				color: square.textColor,
