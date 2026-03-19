@@ -11,6 +11,7 @@ var cle;
 var porteSortieVisible = false;
 var finNiveau4Declenchee = false;
 const SON_PORTE_NIVEAU4 = "son_porte_niveau4";
+const SON_COFFRE_NIVEAU4 = "son_coffre_niveau4";
 
 
 
@@ -23,6 +24,7 @@ export default class niveau4 extends Phaser.Scene {
     this.load.image('img_lasers', 'assets/lasers.png');
     this.load.tilemapTiledJSON('ma_map_4', 'assets/Map/map_niveau4.tmj');
     this.load.audio(SON_PORTE_NIVEAU4, 'assets/audio/porte_niveau6.mp3');
+    this.load.audio(SON_COFFRE_NIVEAU4, 'assets/audio/coffre_ouverture.mp3');
 
     this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 40,
@@ -263,6 +265,21 @@ terminerNiveau4() {
     });
 }
 
+jouerSonCoffre() {
+    if (!this.cache.audio.exists(SON_COFFRE_NIVEAU4)) {
+        return;
+    }
+
+    try {
+        this.sound.play(SON_COFFRE_NIVEAU4, {
+            loop: false,
+            volume: 0.7
+        });
+    } catch (error) {
+        console.warn("Niveau4: lecture du son de coffre impossible", error);
+    }
+}
+
 update() {
     if (gameOver) return;
 
@@ -330,6 +347,7 @@ update() {
 
         if (this.physics.overlap(player, coffre) && !cle) {
             if (!coffre.ouverte) {
+                this.jouerSonCoffre();
                 coffre.setTexture("coffre_ouvert");
                 coffre.ouverte = true;
                 // Créer la potion à côté du coffre

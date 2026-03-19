@@ -39,6 +39,7 @@ var texteFinNiveau;
 // Verrou pour ne declencher la fin du niveau qu'une seule fois.
 var finNiveau7Declenchee = false;
 const SON_PORTE_NIVEAU7 = "son_porte_niveau7";
+const SON_COFFRE_NIVEAU7 = "son_coffre_niveau7";
 // Vitesse horizontale du joueur quand on appuie a gauche ou a droite.
 var playerSpeed = 180;
 // Impulsion verticale du saut. Valeur negative = le joueur monte.
@@ -62,6 +63,8 @@ export default class niveau7 extends Phaser.Scene {
         this.load.audio("son_collision_donjon_n7", "assets/audio/rire_boule_niveau7.mp3");
         // Son joue quand le joueur utilise une porte.
         this.load.audio(SON_PORTE_NIVEAU7, "assets/audio/porte_niveau6.mp3");
+        // Son joue quand le joueur ouvre un coffre.
+        this.load.audio(SON_COFFRE_NIVEAU7, "assets/audio/coffre_ouverture.mp3");
         // Image des objets/decor utilises dans la map.
         this.load.image("img_decor", "assets/items.png");
         // Image du tileset donjonasset, conservee pour l'affichage normal de la map.
@@ -601,6 +604,17 @@ export default class niveau7 extends Phaser.Scene {
         ].forEach((tuile) => {
             layer1.removeTileAt(tuile.x, tuile.y, false, false);
         });
+
+        if (this.cache.audio.exists(SON_COFFRE_NIVEAU7)) {
+            try {
+                this.sound.play(SON_COFFRE_NIVEAU7, {
+                    loop: false,
+                    volume: 0.7
+                });
+            } catch (error) {
+                console.warn("Niveau7: lecture du son de coffre impossible", error);
+            }
+        }
 
         this.add
             .image(coffreCentreX, coffreCentreY, "img_coffre_ouvert")
