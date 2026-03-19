@@ -432,7 +432,7 @@ export default class Niveau1 extends Phaser.Scene {
 
     afficherMessageCle() {
         const message = this.add
-            .text(this.cameras.main.width * 0.22, 180, "Clef récupérée !", {
+            .text(this.cameras.main.width * 0.22, 180, "Clé récupérée !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "55px",
                 color: "#ffdf6e",
@@ -454,7 +454,7 @@ export default class Niveau1 extends Phaser.Scene {
 
     afficherMessageBesoinCle() {
         const message = this.add
-            .text(this.cameras.main.width * 0.22, 180, "Il me faut une clef pour ouvrir ce coffre !", {
+            .text(this.cameras.main.width * 0.22, 180, "Il me faut une clé pour ouvrir ce coffre !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "55px",
                 color: "#ffdf6e",
@@ -476,9 +476,9 @@ export default class Niveau1 extends Phaser.Scene {
 
     afficherMessagePotionJaune() {
         const message = this.add
-            .text(this.cameras.main.width * 0.22, 180, "Bravo vous avez récupéré la potion jaune !", {
+              .text(this.cameras.main.width * 0.22 + 96, 180, "Bravo vous avez récupéré une potion!", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "55px",
+                                fontSize: "35px",
                 color: "#ffd84d",
                 stroke: "#000000",
                 strokeThickness: 6
