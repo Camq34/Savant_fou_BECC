@@ -237,6 +237,7 @@ export default class niveau2 extends Phaser.Scene {
 	}
 
 	openDoor() {
+		this.showMessage("BONNE REPONSE !", 1500);
 		this.isDoorAnimating = true;
 
 		this.doorFrames.forEach((frameSet, index) => {
@@ -285,7 +286,7 @@ export default class niveau2 extends Phaser.Scene {
 	}
 
 	dieAndRestart() {
-		this.showMessage("Je suis mort… retour au début !", 1500);
+		this.showMessage("MAUVAISE REPONSE", 1500);
 		this.time.delayedCall(1500, () => {
 			this.scene.restart();
 		});
