@@ -410,6 +410,10 @@ export default class Niveau1 extends Phaser.Scene {
             return;
         }
 
+        if (objetCalque3Recupere) {
+            this.registry.set("inventaireNiveau1", [...inventaire]);
+        }
+
         this.finNiveau1Declenchee = true;
         gameOver = true;
         player.setVelocity(0, 0);

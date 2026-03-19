@@ -249,6 +249,20 @@ export default class Accueil extends Phaser.Scene {
     this.jumpsRemaining = 2;
     this.lastJumpKey = false;
     this.transitionPorteEnCours = false;
+
+    this.messageNiveauText = this.add
+      .text(960, 145, "", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "44px",
+        fontStyle: "bold",
+        color: "#ffd64d",
+        stroke: "#000000",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5, 0)
+      .setScrollFactor(0)
+      .setDepth(1200)
+      .setVisible(false);
   }
 
   jouerSonPorte() {
@@ -281,6 +295,45 @@ export default class Accueil extends Phaser.Scene {
     });
   }
 
+  niveauTermine(numeroNiveau) {
+    const inventaireNiveau = this.registry.get(`inventaireNiveau${numeroNiveau}`);
+    const potionFlagNiveau = this.registry.get(`potionNiveau${numeroNiveau}`);
+
+    return (Array.isArray(inventaireNiveau) && inventaireNiveau.length > 0) || potionFlagNiveau === true;
+  }
+
+  afficherMessageNiveauTermine(numeroNiveau) {
+    if (!this.messageNiveauText) {
+      return;
+    }
+
+    this.messageNiveauText.setText(`Niveau ${numeroNiveau} deja termine !`).setVisible(true);
+
+    if (this.messageNiveauTimer) {
+      this.messageNiveauTimer.remove(false);
+    }
+
+    this.messageNiveauTimer = this.time.delayedCall(1500, () => {
+      if (this.messageNiveauText) {
+        this.messageNiveauText.setVisible(false);
+      }
+    });
+  }
+
+  essayerEntrerNiveau(porte, numeroNiveau, sceneKey) {
+    if (!this.physics.overlap(this.player, porte)) {
+      return false;
+    }
+
+    if (this.niveauTermine(numeroNiveau)) {
+      this.afficherMessageNiveauTermine(numeroNiveau);
+      return true;
+    }
+
+    this.ouvrirPorteEtChangerScene(porte, sceneKey);
+    return true;
+  }
+
   /***********************************************************************/
   /** UPDATE */
   /***********************************************************************/
@@ -299,32 +352,25 @@ export default class Accueil extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
-      if (this.physics.overlap(this.player, this.porte1)) {
-        this.ouvrirPorteEtChangerScene(this.porte1, "niveau1");
+      if (this.essayerEntrerNiveau(this.porte1, 1, "niveau1")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte2)) {
-        this.ouvrirPorteEtChangerScene(this.porte2, "niveau2");
+      if (this.essayerEntrerNiveau(this.porte2, 2, "niveau2")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte3)) {
-        this.ouvrirPorteEtChangerScene(this.porte3, "niveau3");
+      if (this.essayerEntrerNiveau(this.porte3, 3, "niveau3")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte4)) {
-        this.ouvrirPorteEtChangerScene(this.porte4, "niveau4");
+      if (this.essayerEntrerNiveau(this.porte4, 4, "niveau4")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte5)) {
-        this.ouvrirPorteEtChangerScene(this.porte5, "niveau5");
+      if (this.essayerEntrerNiveau(this.porte5, 5, "niveau5")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte6)) {
-        this.ouvrirPorteEtChangerScene(this.porte6, "niveau6");
+      if (this.essayerEntrerNiveau(this.porte6, 6, "niveau6")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte7)) {
-        this.ouvrirPorteEtChangerScene(this.porte7, "niveau7");
+      if (this.essayerEntrerNiveau(this.porte7, 7, "niveau7")) {
         return;
       }
     }

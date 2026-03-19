@@ -347,6 +347,11 @@ export default class niveau2 extends Phaser.Scene {
 	}
 
 	goToAccueil() {
+		if (this.hasPotion) {
+			this.registry.set("inventaireNiveau2", ["objet_niveau2_potion"]);
+			this.registry.set("potionNiveau2", true);
+		}
+
 		if (this.cache.audio.exists("son_porte_niveau2")) {
 			try {
 				this.sound.play("son_porte_niveau2", {
@@ -372,8 +377,6 @@ export default class niveau2 extends Phaser.Scene {
 		}
 
 		this.hasPotion = true;
-		this.registry.set("inventaireNiveau2", ["objet_niveau2_potion"]);
-		this.registry.set("potionNiveau2", true);
 		potion.destroy();
 		this.showMessage("Potion récupérée !");
 	}

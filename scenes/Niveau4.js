@@ -244,6 +244,10 @@ terminerNiveau4() {
         return;
     }
 
+    if (!potion) {
+        this.registry.set("inventaireNiveau4", ["objet_niveau4_potion"]);
+    }
+
     finNiveau4Declenchee = true;
     gameOver = true;
     player.setVelocity(0, 0);
@@ -374,7 +378,6 @@ update() {
     if (potion && this.physics.overlap(player, potion)) {
         potion.destroy();
         potion = null;
-        this.registry.set("inventaireNiveau4", ["objet_niveau4_potion"]);
         this.faireApparaitrePorteSortie();
         this.afficherMessagePotion();
     }
