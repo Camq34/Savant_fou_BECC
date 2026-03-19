@@ -39,9 +39,9 @@ export default class Intro extends Phaser.Scene {
       .setDepth(0);
 
     const texteIntro = this.add
-      .text(largeur * 0.5, hauteur * 0.24, messageIntro.charAt(0), {
+      .text(largeur * 0.5, hauteur * 0.28, messageIntro.charAt(0), {
         fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-        fontSize: "52px",
+        fontSize: "60px",
         fontStyle: "bold",
         color: "#39ff14",
         stroke: "#000000",
