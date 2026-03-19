@@ -32,7 +32,7 @@ export default class niveau6 extends Phaser.Scene {
         this.load.image('img_laser', 'assets/lasers.png');
         this.load.image('img_coffre_ferme', 'assets/coffre_ferm\u00e9.png');
         this.load.image('img_coffre_ouvert', 'assets/coffre_ouvert.png');
-        this.load.image('img_porte_orange', 'assets/porteORANGE999.png');
+        this.load.image('img_porte_orange_tileset', 'assets/porteORANGE999.png');
         this.load.image('img_porte_sortie', 'assets/portesortiewallah.png');
         this.load.image('img_screenshot_6', 'assets/screenshot_6.jpg');
         this.load.image('img_items', 'assets/items.png');
@@ -46,7 +46,7 @@ export default class niveau6 extends Phaser.Scene {
             spacing: 1
         });
 
-        this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
+        this.load.spritesheet("img_porte_orange_anim", "assets/porteORANGE999.png", {
             frameWidth: 96,
             frameHeight: 120
         });
@@ -64,7 +64,7 @@ export default class niveau6 extends Phaser.Scene {
 
         const tilesetLaser = map.addTilesetImage('laser', 'img_laser');
         const tilesetCoffre = map.addTilesetImage('coffre_ferm\u00e9', 'img_coffre_ferme');
-        const tilesetPorteOrange = map.addTilesetImage('porteORANGE999', 'img_porte_orange');
+        const tilesetPorteOrange = map.addTilesetImage('porteORANGE999', 'img_porte_orange_tileset');
         const tilesetPorteSortie = map.addTilesetImage('portesortiewallah', 'img_porte_sortie');
         const tilesetScreenshot = map.addTilesetImage('screenshot_6', 'img_screenshot_6');
         const tilesetItems = map.addTilesetImage('items', 'img_items');
@@ -109,9 +109,8 @@ export default class niveau6 extends Phaser.Scene {
         player.body.setOffset(10, 6);
         player.setDepth(10);
 
-        this.porte = this.physics.add.staticSprite(1700, 550, "img_porte_orange");
-        
-        this.porteClef = this.physics.add.staticSprite(1700, 260, "img_porte_orange");
+        this.portevrai = this.physics.add.staticSprite(1700, 550, "img_porte_orange_anim");
+        this.porteClef = this.physics.add.staticSprite(1700, 260, "img_porte_orange_anim");
         this.portevrai.ouverte = false;
         this.porteClef.ouverte = false;
         porteSortieFinale = this.physics.add.staticSprite(PORTE_SORTIE_X, PORTE_SORTIE_Y, "img_porte_sortie_anim");
@@ -162,14 +161,14 @@ export default class niveau6 extends Phaser.Scene {
 
         this.anims.create({
             key: "anim_ouvreporte",
-            frames: this.anims.generateFrameNumbers("img_porte_orange", { start: 0, end: 5 }),
+            frames: this.anims.generateFrameNumbers("img_porte_orange_anim", { start: 0, end: 5 }),
             frameRate: 10,
             repeat: 0
         });
 
         this.anims.create({
             key: "anim_fermeporte",
-            frames: this.anims.generateFrameNumbers("img_porte_orange", { start: 5, end: 0 }),
+            frames: this.anims.generateFrameNumbers("img_porte_orange_anim", { start: 5, end: 0 }),
             frameRate: 10,
             repeat: 0
         });
