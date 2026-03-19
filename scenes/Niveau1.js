@@ -22,6 +22,8 @@ export default class Niveau1 extends Phaser.Scene {
         this.load.image('img_lasers', 'assets/lasers.png');
         this.load.image('img_items', 'assets/items.png');
         this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
+        this.load.audio('son_mort_niveau1', 'assets/audio/rire_boule_niveau7.mp3');
+        this.load.audio('son_interrupteur_niveau1', 'assets/audio/interrupteur_niveau1.mp3');
 
         this.load.spritesheet("img_perso", "assets/savant2.png", {
             frameWidth: 40,
@@ -87,6 +89,10 @@ export default class Niveau1 extends Phaser.Scene {
         const mourir = () => {
             if (this.isDying) return;
             this.isDying = true;
+            this.sound.play('son_mort_niveau1', {
+                loop: false,
+                volume: 1
+            });
             player.setTint(0xff0000);
             player.setVelocity(0, 0);
             this.time.delayedCall(500, () => {
@@ -286,6 +292,10 @@ export default class Niveau1 extends Phaser.Scene {
 
                     this.interrupteur.setScale(0.28);
                     this.interrupteurActive = !this.interrupteurActive;
+                    this.sound.play('son_interrupteur_niveau1', {
+                        loop: false,
+                        volume: 1
+                    });
                 } catch (error) {
                     console.error("Erreur toggle interrupteur Niveau1:", error);
                 }
