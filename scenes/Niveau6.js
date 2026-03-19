@@ -203,6 +203,7 @@ export default class niveau6 extends Phaser.Scene {
 
         clavier = this.input.keyboard.createCursorKeys();
         this.toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.toucheEsc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
     }
 
     initialiserCoffres(tilesetCoffre) {
@@ -546,6 +547,11 @@ export default class niveau6 extends Phaser.Scene {
 
     update() {
         if (gameOver) return;
+
+        if (Phaser.Input.Keyboard.JustDown(this.toucheEsc)) {
+            this.scene.start("Accueil");
+            return;
+        }
 
         const isOnGround = player.body.blocked.down || player.body.touching.down;
 

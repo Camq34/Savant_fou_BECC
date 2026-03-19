@@ -170,6 +170,7 @@ export default class Niveau1 extends Phaser.Scene {
 
         clavier = this.input.keyboard.createCursorKeys();
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.keyEsc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         porte = this.physics.add.staticSprite(96, 452, "img_porte");
         porte2 = this.physics.add.staticSprite(1800, 1093, "img_porte");
@@ -265,6 +266,11 @@ export default class Niveau1 extends Phaser.Scene {
 
     update() {
         if (gameOver) return;
+
+        if (Phaser.Input.Keyboard.JustDown(this.keyEsc)) {
+            this.scene.start("Accueil");
+            return;
+        }
 
         if (this.isDying) {
             player.setVelocity(0, 0);

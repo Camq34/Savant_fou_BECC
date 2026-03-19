@@ -103,6 +103,7 @@ export default class niveau2 extends Phaser.Scene {
 		this.physics.add.collider(this.player, this.layerDecor);
 		this.cursors = this.input.keyboard.createCursorKeys();
 		this.interactKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+		this.escapeKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 		this.playerSpeed = 180;
 		this.jumpSpeed = -360;
 		this.doorOpened = false;
@@ -195,6 +196,11 @@ export default class niveau2 extends Phaser.Scene {
 	}
 
 	update() {
+		if (Phaser.Input.Keyboard.JustDown(this.escapeKey)) {
+			this.scene.start("Accueil");
+			return;
+		}
+
 		if (this.isDying) {
 			this.player.setVelocity(0, 0);
 			this.player.play("savant2_idle", true);
