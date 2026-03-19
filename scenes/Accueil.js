@@ -14,6 +14,7 @@ export default class Accueil extends Phaser.Scene {
   /** FONCTION PRELOAD */
   /***********************************************************************/
   preload() {
+    this.load.image("img_foret", "assets/foret.png");
     this.load.image("img_materiaux", "assets/terrain_d2_70.jpg");
     this.load.image("img_items", "assets/items.png");
     this.load.tilemapTiledJSON("map_accueil", "assets/Map/map_accueil.tmj");
@@ -38,6 +39,12 @@ export default class Accueil extends Phaser.Scene {
     /* CREATION DE LA MAP */
     /*************************************/
     const map = this.make.tilemap({ key: "map_accueil" });
+
+    this.add
+      .image(map.widthInPixels * 0.5, map.heightInPixels * 0.5, "img_foret")
+      .setDisplaySize(map.widthInPixels, map.heightInPixels)
+      .setDepth(-10);
+
     const tilesetMateriaux = map.addTilesetImage("terrain_d2_70", "img_materiaux");
     const tilesetItems = map.addTilesetImage("items", "img_items");
 
