@@ -3,6 +3,7 @@
 /***********************************************************************/
 
 var clavier;
+const SON_PORTE_ACCUEIL = "son_porte_accueil";
 
 // définition de la classe "Accueil"
 export default class Accueil extends Phaser.Scene {
@@ -19,6 +20,7 @@ export default class Accueil extends Phaser.Scene {
     this.load.image("img_items", "assets/items.png");
     this.load.tilemapTiledJSON("map_accueil", "assets/Map/map_accueil.tmj");
     this.load.image("chaudron", "assets/chaudron.png");
+    this.load.audio(SON_PORTE_ACCUEIL, "assets/audio/porte_niveau6.mp3");
     this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
       frameWidth: 96,
       frameHeight: 120
@@ -246,6 +248,37 @@ export default class Accueil extends Phaser.Scene {
     this.maxJumps = 2;
     this.jumpsRemaining = 2;
     this.lastJumpKey = false;
+    this.transitionPorteEnCours = false;
+  }
+
+  jouerSonPorte() {
+    if (!this.cache.audio.exists(SON_PORTE_ACCUEIL)) {
+      return;
+    }
+
+    try {
+      this.sound.play(SON_PORTE_ACCUEIL, {
+        loop: false,
+        volume: 0.7
+      });
+    } catch (error) {
+      console.warn("Accueil: lecture du son de porte impossible", error);
+    }
+  }
+
+  ouvrirPorteEtChangerScene(porte, sceneKey) {
+    if (this.transitionPorteEnCours || !porte) {
+      return;
+    }
+
+    this.transitionPorteEnCours = true;
+    this.player.setVelocity(0, 0);
+    this.jouerSonPorte();
+    porte.anims.play("porte_ouvre");
+
+    this.time.delayedCall(180, () => {
+      this.scene.start(sceneKey);
+    });
   }
 
   /***********************************************************************/
@@ -261,34 +294,38 @@ export default class Accueil extends Phaser.Scene {
     /*************************************/
     /* OUVERTURE DES PORTES + CHANGEMENT DE SCENE */
     /*************************************/
+    if (this.transitionPorteEnCours) {
+      return;
+    }
+
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
       if (this.physics.overlap(this.player, this.porte1)) {
-        this.porte1.anims.play("porte_ouvre");
-        this.scene.start("niveau1");
+        this.ouvrirPorteEtChangerScene(this.porte1, "niveau1");
+        return;
       }
       if (this.physics.overlap(this.player, this.porte2)) {
-        this.porte2.anims.play("porte_ouvre");
-        this.scene.start("niveau2");
+        this.ouvrirPorteEtChangerScene(this.porte2, "niveau2");
+        return;
       }
       if (this.physics.overlap(this.player, this.porte3)) {
-        this.porte3.anims.play("porte_ouvre");
-        this.scene.start("niveau3");
+        this.ouvrirPorteEtChangerScene(this.porte3, "niveau3");
+        return;
       }
       if (this.physics.overlap(this.player, this.porte4)) {
-        this.porte4.anims.play("porte_ouvre");
-        this.scene.start("niveau4");
+        this.ouvrirPorteEtChangerScene(this.porte4, "niveau4");
+        return;
       }
       if (this.physics.overlap(this.player, this.porte5)) {
-        this.porte5.anims.play("porte_ouvre");
-        this.scene.start("niveau5");
+        this.ouvrirPorteEtChangerScene(this.porte5, "niveau5");
+        return;
       }
       if (this.physics.overlap(this.player, this.porte6)) {
-        this.porte6.anims.play("porte_ouvre");
-        this.scene.start("niveau6");
+        this.ouvrirPorteEtChangerScene(this.porte6, "niveau6");
+        return;
       }
       if (this.physics.overlap(this.player, this.porte7)) {
-        this.porte7.anims.play("porte_ouvre");
-        this.scene.start("niveau7");
+        this.ouvrirPorteEtChangerScene(this.porte7, "niveau7");
+        return;
       }
     }
 

@@ -12,6 +12,7 @@ var objetCalque3Recupere = false;
 const OBJET_CALQUE3_TILE_X = 25;
 const OBJET_CALQUE3_TILE_Y = 15;
 const NOM_OBJET_CALQUE3_NIVEAU1 = "objet_calque3_25_15";
+const SON_PORTE_NIVEAU1 = "son_porte_niveau1";
 
 export default class Niveau1 extends Phaser.Scene {
     constructor() {
@@ -24,6 +25,7 @@ export default class Niveau1 extends Phaser.Scene {
         this.load.tilemapTiledJSON('ma_map1', 'assets/Map/map_niveau1.tmj');
         this.load.audio('son_mort_niveau1', 'assets/audio/rire_boule_niveau7.mp3');
         this.load.audio('son_interrupteur_niveau1', 'assets/audio/interrupteur_niveau1.mp3');
+        this.load.audio(SON_PORTE_NIVEAU1, 'assets/audio/porte_niveau6.mp3');
 
         this.load.spritesheet("img_perso", "assets/savant2.png", {
             frameWidth: 40,
@@ -396,6 +398,7 @@ export default class Niveau1 extends Phaser.Scene {
         this.finNiveau1Declenchee = true;
         gameOver = true;
         player.setVelocity(0, 0);
+        this.jouerSonPorte();
 
         if (porteSortie && porteSortie.scene && this.anims.exists("anim_ouvreporte_sortie_n1")) {
             porteSortie.anims.play("anim_ouvreporte_sortie_n1");
@@ -500,6 +503,7 @@ export default class Niveau1 extends Phaser.Scene {
             return;
         }
 
+        this.jouerSonPorte();
         porteCible.anims.play("anim_ouvreporte");
         porteCible.ouverte = true;
 
@@ -510,6 +514,21 @@ export default class Niveau1 extends Phaser.Scene {
             porteCible.anims.play("anim_fermeporte");
             porteCible.ouverte = false;
         });
+    }
+
+    jouerSonPorte() {
+        if (!this.cache.audio.exists(SON_PORTE_NIVEAU1)) {
+            return;
+        }
+
+        try {
+            this.sound.play(SON_PORTE_NIVEAU1, {
+                loop: false,
+                volume: 0.7
+            });
+        } catch (error) {
+            console.warn("Niveau1: lecture du son de porte impossible", error);
+        }
     }
 
     desactiverTuilesTueInterrupteur() {

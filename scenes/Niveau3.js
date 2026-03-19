@@ -20,6 +20,7 @@ const OBJET_TILE_Y = 17;
 const NOM_OBJET_CALQUE3 = "objet_calque3_53_17";
 const PORTE3_X = 1840;
 const PORTE3_Y = 320;
+const SON_PORTE_NIVEAU3 = "son_porte_niveau3";
 
 
 
@@ -34,6 +35,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image('img_coffre_ferme', 'assets/coffre_ferm\u00e9.png');
     this.load.image('img_coffre_ouvert', 'assets/coffre_ouvert.png');
     this.load.tilemapTiledJSON('ma_map3', 'assets/Map/map_niveau3.tmj');
+    this.load.audio(SON_PORTE_NIVEAU3, 'assets/audio/porte_niveau6.mp3');
 
     this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 40,
@@ -221,6 +223,21 @@ teleporterPorte2VersPorte1() {
     }
 }
 
+jouerSonPorte() {
+    if (!this.cache.audio.exists(SON_PORTE_NIVEAU3)) {
+        return;
+    }
+
+    try {
+        this.sound.play(SON_PORTE_NIVEAU3, {
+            loop: false,
+            volume: 0.7
+        });
+    } catch (error) {
+        console.warn("Niveau3: lecture du son de porte impossible", error);
+    }
+}
+
 initialiserCoffres() {
     const tuilesInteractives = new Map();
     const visites = new Set();
@@ -368,6 +385,7 @@ terminerNiveau3() {
     finNiveau3Declenchee = true;
     gameOver = true;
     player.setVelocity(0, 0);
+    this.jouerSonPorte();
     porte3.anims.play("anim_ouvreporte_sortie_n3");
 
     const messageFin = this.add
@@ -431,6 +449,7 @@ update() {
         this.interagirAvecCoffre();
 
         if (this.physics.overlap(player, porte1)) {
+            this.jouerSonPorte();
             if (!porte1.ouverte) {
                 porte1.anims.play("anim_ouvreporte_n3");
                 porte1.ouverte = true;
@@ -441,6 +460,7 @@ update() {
         }
 
         if (this.physics.overlap(player, porte2)) {
+            this.jouerSonPorte();
             porte2.anims.play("anim_ouvreporte_n3");
             this.teleporterPorte2VersPorte1();
         }
