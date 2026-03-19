@@ -3,13 +3,22 @@ export default class Intro extends Phaser.Scene {
     super({ key: "Intro" });
   }
 
+  preload() {
+    this.load.image("img_monsieur_intro", "assets/monsieur.png");
+  }
+
   create() {
     this.cameras.main.setBackgroundColor("#000000");
     const largeur = this.cameras.main.width;
     const hauteur = this.cameras.main.height;
 
     this.add
-      .text(largeur * 0.5, hauteur * 0.5, "Bienvenue dans le jeu du savant. Il y a une potion à récupérer dans chaque niveau. Aidez ce savant à remplir son chaudron pour terminer sa potion !", {
+      .image(largeur * 0.5, hauteur * 0.26, "img_monsieur_intro")
+      .setScale(0.8)
+      .setDepth(10);
+
+    this.add
+      .text(largeur * 0.5, hauteur * 0.56, "Bienvenue dans le jeu du savant. Il y a une potion à récupérer dans chaque niveau. Aidez ce savant à remplir son chaudron pour terminer sa potion !", {
         fontFamily: "Courier New, monospace",
         fontSize: "52px",
         fontStyle: "bold",
