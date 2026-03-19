@@ -454,7 +454,6 @@ export default class niveau6 extends Phaser.Scene {
         }
 
         inventaire.push(NOM_OBJET_NIVEAU6);
-        this.registry.set("inventaireNiveau6", [...inventaire]);
         objet57_9Recupere = true;
         this.afficherMessageCle();
     }
@@ -489,7 +488,6 @@ export default class niveau6 extends Phaser.Scene {
         }
 
         inventaire.push(NOM_OBJET2_NIVEAU6);
-        this.registry.set("inventaireNiveau6", [...inventaire]);
         objet41_35Recupere = true;
         this.afficherMessagePotionRouge();
         this.faireApparaitrePorteSortie();
@@ -497,7 +495,7 @@ export default class niveau6 extends Phaser.Scene {
 
     afficherMessageCle() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 540, "Vous avez récupéré une clef !", {
+            .text(this.cameras.main.width * 0.5, 540, "Vous avez récupéré une clé !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "55px",
                 color: "#ffdf6e",
@@ -553,6 +551,10 @@ export default class niveau6 extends Phaser.Scene {
     terminerNiveau6() {
         if (finNiveau6Declenchee) {
             return;
+        }
+
+        if (objet41_35Recupere) {
+            this.registry.set("inventaireNiveau6", [...inventaire]);
         }
 
         finNiveau6Declenchee = true;

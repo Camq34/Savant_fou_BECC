@@ -4,6 +4,7 @@
 
 var clavier;
 const SON_PORTE_ACCUEIL = "son_porte_accueil";
+const SON_SIX_POTIONS_ACCUEIL = "son_six_potions_accueil";
 
 // définition de la classe "Accueil"
 export default class Accueil extends Phaser.Scene {
@@ -21,6 +22,7 @@ export default class Accueil extends Phaser.Scene {
     this.load.tilemapTiledJSON("map_accueil", "assets/Map/map_accueil.tmj");
     this.load.image("chaudron", "assets/chaudron.png");
     this.load.audio(SON_PORTE_ACCUEIL, "assets/audio/porte_niveau6.mp3");
+    this.load.audio(SON_SIX_POTIONS_ACCUEIL, "assets/audio/accueil_6_potions.mp3");
     this.load.spritesheet("img_porte_orange", "assets/porteORANGE999.png", {
       frameWidth: 96,
       frameHeight: 120
@@ -80,6 +82,7 @@ export default class Accueil extends Phaser.Scene {
     this.chaudron= this.physics.add.staticSprite(895, 487, "chaudron");
 
     this.nbPotionsTotal = 7;
+    this.sonSixPotionsJoue = false;
     this.compteurPotionsText = this.add
       .text(this.chaudron.x, this.chaudron.y - 100, "", {
         fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
@@ -91,6 +94,7 @@ export default class Accueil extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.mettreAJourCompteurPotions();
+    this.jouerSonSixPotionsSiPret();
 
     this.add
       .text(this.porte1.x, this.porte1.y - 90, "1", {
@@ -249,6 +253,20 @@ export default class Accueil extends Phaser.Scene {
     this.jumpsRemaining = 2;
     this.lastJumpKey = false;
     this.transitionPorteEnCours = false;
+
+    this.messageNiveauText = this.add
+      .text(960, 145, "", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "44px",
+        fontStyle: "bold",
+        color: "#ffd64d",
+        stroke: "#000000",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5, 0)
+      .setScrollFactor(0)
+      .setDepth(1200)
+      .setVisible(false);
   }
 
   jouerSonPorte() {
@@ -266,6 +284,31 @@ export default class Accueil extends Phaser.Scene {
     }
   }
 
+  jouerSonSixPotionsSiPret() {
+    if (this.sonSixPotionsJoue) {
+      return;
+    }
+
+    if (this.compterPotionsRecuperees() < 6) {
+      return;
+    }
+
+    if (!this.cache.audio.exists(SON_SIX_POTIONS_ACCUEIL)) {
+      return;
+    }
+
+    this.sonSixPotionsJoue = true;
+
+    try {
+      this.sound.play(SON_SIX_POTIONS_ACCUEIL, {
+        loop: false,
+        volume: 0.8
+      });
+    } catch (error) {
+      console.warn("Accueil: lecture du son des 6 potions impossible", error);
+    }
+  }
+
   ouvrirPorteEtChangerScene(porte, sceneKey) {
     if (this.transitionPorteEnCours || !porte) {
       return;
@@ -279,6 +322,45 @@ export default class Accueil extends Phaser.Scene {
     this.time.delayedCall(180, () => {
       this.scene.start(sceneKey);
     });
+  }
+
+  niveauTermine(numeroNiveau) {
+    const inventaireNiveau = this.registry.get(`inventaireNiveau${numeroNiveau}`);
+    const potionFlagNiveau = this.registry.get(`potionNiveau${numeroNiveau}`);
+
+    return (Array.isArray(inventaireNiveau) && inventaireNiveau.length > 0) || potionFlagNiveau === true;
+  }
+
+  afficherMessageNiveauTermine(numeroNiveau) {
+    if (!this.messageNiveauText) {
+      return;
+    }
+
+    this.messageNiveauText.setText(`Niveau ${numeroNiveau} deja termine !`).setVisible(true);
+
+    if (this.messageNiveauTimer) {
+      this.messageNiveauTimer.remove(false);
+    }
+
+    this.messageNiveauTimer = this.time.delayedCall(1500, () => {
+      if (this.messageNiveauText) {
+        this.messageNiveauText.setVisible(false);
+      }
+    });
+  }
+
+  essayerEntrerNiveau(porte, numeroNiveau, sceneKey) {
+    if (!this.physics.overlap(this.player, porte)) {
+      return false;
+    }
+
+    if (this.niveauTermine(numeroNiveau)) {
+      this.afficherMessageNiveauTermine(numeroNiveau);
+      return true;
+    }
+
+    this.ouvrirPorteEtChangerScene(porte, sceneKey);
+    return true;
   }
 
   /***********************************************************************/
@@ -299,32 +381,25 @@ export default class Accueil extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.toucheE)) {
-      if (this.physics.overlap(this.player, this.porte1)) {
-        this.ouvrirPorteEtChangerScene(this.porte1, "niveau1");
+      if (this.essayerEntrerNiveau(this.porte1, 1, "niveau1")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte2)) {
-        this.ouvrirPorteEtChangerScene(this.porte2, "niveau2");
+      if (this.essayerEntrerNiveau(this.porte2, 2, "niveau2")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte3)) {
-        this.ouvrirPorteEtChangerScene(this.porte3, "niveau3");
+      if (this.essayerEntrerNiveau(this.porte3, 3, "niveau3")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte4)) {
-        this.ouvrirPorteEtChangerScene(this.porte4, "niveau4");
+      if (this.essayerEntrerNiveau(this.porte4, 4, "niveau4")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte5)) {
-        this.ouvrirPorteEtChangerScene(this.porte5, "niveau5");
+      if (this.essayerEntrerNiveau(this.porte5, 5, "niveau5")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte6)) {
-        this.ouvrirPorteEtChangerScene(this.porte6, "niveau6");
+      if (this.essayerEntrerNiveau(this.porte6, 6, "niveau6")) {
         return;
       }
-      if (this.physics.overlap(this.player, this.porte7)) {
-        this.ouvrirPorteEtChangerScene(this.porte7, "niveau7");
+      if (this.essayerEntrerNiveau(this.porte7, 7, "niveau7")) {
         return;
       }
     }

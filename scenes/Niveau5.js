@@ -236,7 +236,7 @@ export default class niveau5 extends Phaser.Scene {
 			const chestTile = this.getOpenableChestTile();
 			if (chestTile) {
 				if (!this.hasKey) {
-					this.showMessage("Il me faut une clef pour ouvrir ce coffre !");
+					this.showMessage("Il me faut une clé pour ouvrir ce coffre !");
 					return;
 				}
 
@@ -347,6 +347,11 @@ export default class niveau5 extends Phaser.Scene {
 	}
 
 	goToAccueil() {
+		if (this.hasPotion) {
+			this.registry.set("inventaireNiveau5", ["objet_niveau5_potion"]);
+			this.registry.set("potionNiveau5", true);
+		}
+
 		if (this.cache.audio.exists("son_porte_niveau5")) {
 			try {
 				this.sound.play("son_porte_niveau5", {
@@ -363,7 +368,7 @@ export default class niveau5 extends Phaser.Scene {
 	collectKey(player, key) {
 		this.hasKey = true;
 		key.destroy();
-		this.showMessage("Clef récupérée !");
+		this.showMessage("Clé récupérée !");
 	}
 
 	collectPotion(player, potion) {
@@ -372,8 +377,6 @@ export default class niveau5 extends Phaser.Scene {
 		}
 
 		this.hasPotion = true;
-		this.registry.set("inventaireNiveau5", ["objet_niveau5_potion"]);
-		this.registry.set("potionNiveau5", true);
 		potion.destroy();
 		this.showMessage("Potion récupérée !");
 	}

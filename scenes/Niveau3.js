@@ -401,6 +401,10 @@ terminerNiveau3() {
         return;
     }
 
+    if (objetCalque3Recupere) {
+        this.registry.set("inventaireNiveau3", [...inventaire]);
+    }
+
     finNiveau3Declenchee = true;
     gameOver = true;
     player.setVelocity(0, 0);
