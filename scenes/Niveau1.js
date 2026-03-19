@@ -13,6 +13,7 @@ const OBJET_CALQUE3_TILE_X = 25;
 const OBJET_CALQUE3_TILE_Y = 15;
 const NOM_OBJET_CALQUE3_NIVEAU1 = "objet_calque3_25_15";
 const SON_PORTE_NIVEAU1 = "son_porte_niveau1";
+const SON_COFFRE_NIVEAU1 = "son_coffre_niveau1";
 
 export default class Niveau1 extends Phaser.Scene {
     constructor() {
@@ -26,6 +27,7 @@ export default class Niveau1 extends Phaser.Scene {
         this.load.audio('son_mort_niveau1', 'assets/audio/rire_boule_niveau7.mp3');
         this.load.audio('son_interrupteur_niveau1', 'assets/audio/interrupteur_niveau1.mp3');
         this.load.audio(SON_PORTE_NIVEAU1, 'assets/audio/porte_niveau6.mp3');
+        this.load.audio(SON_COFFRE_NIVEAU1, 'assets/audio/coffre_ouverture.mp3');
 
         this.load.spritesheet("img_perso", "assets/savant2.png", {
             frameWidth: 40,
@@ -625,6 +627,7 @@ export default class Niveau1 extends Phaser.Scene {
             return;
         }
 
+        this.jouerSonCoffre();
         this.coffre.setTexture("img_coffre_ouvert");
         this.coffre.setScale(0.8);
         this.coffreOuvert = true;
@@ -632,6 +635,21 @@ export default class Niveau1 extends Phaser.Scene {
         if (layer3) {
             layer3.setVisible(true);
             this.calque3Actif = true;
+        }
+    }
+
+    jouerSonCoffre() {
+        if (!this.cache.audio.exists(SON_COFFRE_NIVEAU1)) {
+            return;
+        }
+
+        try {
+            this.sound.play(SON_COFFRE_NIVEAU1, {
+                loop: false,
+                volume: 0.7
+            });
+        } catch (error) {
+            console.warn("Niveau1: lecture du son de coffre impossible", error);
         }
     }
 }

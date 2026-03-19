@@ -21,6 +21,7 @@ const NOM_OBJET_CALQUE3 = "objet_calque3_53_17";
 const PORTE3_X = 1840;
 const PORTE3_Y = 320;
 const SON_PORTE_NIVEAU3 = "son_porte_niveau3";
+const SON_COFFRE_NIVEAU3 = "son_coffre_niveau3";
 
 
 
@@ -36,6 +37,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image('img_coffre_ouvert', 'assets/coffre_ouvert.png');
     this.load.tilemapTiledJSON('ma_map3', 'assets/Map/map_niveau3.tmj');
     this.load.audio(SON_PORTE_NIVEAU3, 'assets/audio/porte_niveau6.mp3');
+    this.load.audio(SON_COFFRE_NIVEAU3, 'assets/audio/coffre_ouverture.mp3');
 
     this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 40,
@@ -238,6 +240,21 @@ jouerSonPorte() {
     }
 }
 
+jouerSonCoffre() {
+    if (!this.cache.audio.exists(SON_COFFRE_NIVEAU3)) {
+        return;
+    }
+
+    try {
+        this.sound.play(SON_COFFRE_NIVEAU3, {
+            loop: false,
+            volume: 0.7
+        });
+    } catch (error) {
+        console.warn("Niveau3: lecture du son de coffre impossible", error);
+    }
+}
+
 initialiserCoffres() {
     const tuilesInteractives = new Map();
     const visites = new Set();
@@ -311,6 +328,7 @@ interagirAvecCoffre() {
         const distance = Phaser.Math.Distance.Between(player.x, player.y, coffre.centreX, coffre.centreY);
 
         if (distance <= distanceInteraction) {
+            this.jouerSonCoffre();
             coffre.tuiles.forEach((tuile) => {
                 layer2.removeTileAt(tuile.x, tuile.y, false, false);
             });
