@@ -128,12 +128,12 @@ export default class niveau2 extends Phaser.Scene {
 
 		// Texte gros au milieu
 		this.add.text(960, 440, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
-			fontFamily: "Arial",
-			fontSize: "64px",
-			fontStyle: "bold",
-			color: "#FFFFFF",
-			stroke: "#000000",
-			strokeThickness: 4
+			fontFamily: "'Special Elite', Courier New, monospace",
+			fontSize: "58px",
+			color: "#5cff72",
+			stroke: "#0b2a12",
+			strokeThickness: 5,
+			shadow: { offsetX: 2, offsetY: 2, color: "#000", blur: 6, fill: true }
 		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1001);
 
 		// Configuration des 4 carrés colorés alignés en dessous

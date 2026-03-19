@@ -83,6 +83,7 @@ export default class niveau3 extends Phaser.Scene {
     player.setBounce(0);
     player.body.setSize(20, 44);
     player.body.setOffset(10, 6);
+    player.setDepth(10);
 
     this.physics.add.collider(player, layer2);
     this.physics.add.collider(player, layer1, undefined, () => calque1Actif, this);
@@ -152,6 +153,9 @@ export default class niveau3 extends Phaser.Scene {
     porte1 = this.physics.add.staticSprite(96, 1093, "img_porte");
     porte2 = this.physics.add.staticSprite(1800, 1093, "img_porte");
     porte3 = this.physics.add.staticSprite(1850, 416, "img_porte_sortie");
+    porte1.setDepth(2);
+    porte2.setDepth(2);
+    porte3.setDepth(2);
     porte3.setOrigin(0.5, 1);
     porte3.refreshBody();
     porte3.setVisible(false);
