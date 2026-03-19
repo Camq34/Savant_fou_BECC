@@ -88,6 +88,9 @@ export default class niveau2 extends Phaser.Scene {
 		this.player.body.setSize(20, 44);
 		this.player.body.setOffset(10, 6);
 		this.player.play("savant2_idle");
+		this.playerStartX = this.player.x;
+		this.playerStartY = this.player.y;
+		this.isDying = false;
 
 		this.cle = this.physics.add.staticSprite(220, map.heightInPixels - 130, "icons_prev", 9);
 		this.cle.setScale(1.5);
@@ -192,6 +195,12 @@ export default class niveau2 extends Phaser.Scene {
 	}
 
 	update() {
+		if (this.isDying) {
+			this.player.setVelocity(0, 0);
+			this.player.play("savant2_idle", true);
+			return;
+		}
+
 		const isOnGround = this.player.body.blocked.down || this.player.body.touching.down;
 
 		if (this.cursors.left.isDown) {
@@ -298,9 +307,25 @@ export default class niveau2 extends Phaser.Scene {
 	}
 
 	dieAndRestart() {
+		if (this.isDying) {
+			return;
+		}
+
+		this.isDying = true;
 		this.showMessage("MAUVAISE REPONSE", 1500);
-		this.time.delayedCall(1500, () => {
-			this.scene.restart();
+		this.player.setVelocity(0, 0);
+		this.player.setTint(0xff4d4d);
+		this.cameras.main.shake(180, 0.004);
+
+		this.time.delayedCall(850, () => {
+			if (!this.player || !this.player.scene) {
+				return;
+			}
+
+			this.player.clearTint();
+			this.player.setPosition(this.playerStartX, this.playerStartY);
+			this.player.setVelocity(0, 0);
+			this.isDying = false;
 		});
 	}
 

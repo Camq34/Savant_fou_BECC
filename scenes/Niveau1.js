@@ -99,6 +99,7 @@ export default class Niveau1 extends Phaser.Scene {
             });
             player.setTint(0xff0000);
             player.setVelocity(0, 0);
+            this.cameras.main.shake(180, 0.004);
             this.time.delayedCall(500, () => {
                 player.clearTint();
                 player.setPosition(this.playerStartX, this.playerStartY);
@@ -264,6 +265,12 @@ export default class Niveau1 extends Phaser.Scene {
 
     update() {
         if (gameOver) return;
+
+        if (this.isDying) {
+            player.setVelocity(0, 0);
+            player.anims.play("savant2_idle", true);
+            return;
+        }
 
         const isOnGround = player.body.blocked.down || player.body.touching.down;
 
