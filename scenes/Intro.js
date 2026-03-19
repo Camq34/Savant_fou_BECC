@@ -19,32 +19,29 @@ export default class Intro extends Phaser.Scene {
       .setDisplaySize(largeur, hauteur)
       .setDepth(0);
 
-    this.add
-      .rectangle(largeur * 0.5, hauteur * 0.24, 1600, 240, 0x000000, 0.6)
-      .setDepth(4);
-
     const texteIntro = this.add
       .text(largeur * 0.5, hauteur * 0.24, messageIntro.charAt(0), {
-        fontFamily: '"Arial Black", "Verdana", sans-serif',
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "52px",
         fontStyle: "bold",
         color: "#39ff14",
         stroke: "#000000",
-        strokeThickness: 8,
+        strokeThickness: 10,
         align: "center",
         wordWrap: { width: 1500 },
         lineSpacing: 30,
         shadow: {
           offsetX: 0,
-          offsetY: 6,
+          offsetY: 10,
           color: "#0a2400",
-          blur: 10,
+          blur: 14,
           stroke: true,
           fill: true
         }
       })
       .setOrigin(0.5)
-      .setDepth(10);
+      .setDepth(10)
+      .setScale(1, 1.08);
 
     let indexTexteIntro = 1;
     this.time.addEvent({
@@ -57,7 +54,7 @@ export default class Intro extends Phaser.Scene {
     });
 
     this.add
-      .image(largeur - 180, hauteur - 210, "img_monsieur_intro")
+      .image(largeur, hauteur - 20, "img_monsieur_intro")
       .setScale(0.6)
       .setOrigin(1, 1)
       .setDepth(5);
