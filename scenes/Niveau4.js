@@ -71,7 +71,7 @@ export default class niveau4 extends Phaser.Scene {
     layer1.setCollisionByProperty({ collision: true });
     layer2.setCollisionByProperty({ collision: true });
 
-    this.porte = this.physics.add.staticSprite(1850, 1092, "img_porte_sortie_anim_n4");
+    this.porte = this.physics.add.staticSprite(1850, 1150, "img_porte_sortie_anim_n4");
     this.porte.setOrigin(0.5, 1);
     this.porte.refreshBody();
     this.porte.setVisible(false);
