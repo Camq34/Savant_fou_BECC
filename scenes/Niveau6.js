@@ -142,6 +142,23 @@ export default class niveau6 extends Phaser.Scene {
         const mapZoom = Math.min(gameWidth / map.widthInPixels, gameHeight / map.heightInPixels, 1);
         this.cameras.main.setZoom(mapZoom);
 
+        this.add.text(960, 400, "NIVEAU 6", {
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+            fontSize: "72px",
+            fontStyle: "bold",
+            color: "#5cff72",
+            stroke: "#0b2a12",
+            strokeThickness: 8,
+            shadow: {
+                offsetX: 0,
+                offsetY: 0,
+                color: "#7dff8d",
+                blur: 12,
+                stroke: true,
+                fill: true
+            }
+        }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
+
         this.anims.create({
             key: "savant2_idle",
             frames: [{ key: "img_perso", frame: 5 }],
@@ -438,6 +455,7 @@ export default class niveau6 extends Phaser.Scene {
 
         inventaire.push(NOM_OBJET_NIVEAU6);
         objet57_9Recupere = true;
+        this.afficherMessageCle();
     }
 
     recupererObjet41_35() {
@@ -475,14 +493,36 @@ export default class niveau6 extends Phaser.Scene {
         this.faireApparaitrePorteSortie();
     }
 
+    afficherMessageCle() {
+        const message = this.add
+            .text(this.cameras.main.width * 0.5, 540, "Vous avez récupéré une clé !", {
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+                fontSize: "55px",
+                color: "#ffdf6e",
+                stroke: "#000000",
+                strokeThickness: 8
+            })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(1000);
+
+        this.tweens.add({
+            targets: message,
+            alpha: 0,
+            duration: 1800,
+            delay: 700,
+            onComplete: () => message.destroy()
+        });
+    }
+
     afficherMessagePotionRouge() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 80, "Vous avez récupéré une potion !", {
+            .text(this.cameras.main.width * 0.5, 540, "Vous avez récupéré une potion !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "36px",
-                color: "#ff6b6b",
+                fontSize: "55px",
+                color: "#ffdf6e",
                 stroke: "#000000",
-                strokeThickness: 6
+                strokeThickness: 8
             })
             .setOrigin(0.5)
             .setScrollFactor(0)

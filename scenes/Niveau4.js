@@ -303,7 +303,7 @@ jouerSonCoffre() {
 }
 
 afficherMessageCle() {
-    const message = this.add.text(this.cameras.main.width * 0.5, 250, "Clef récupérée !", {
+    const message = this.add.text(this.cameras.main.width * 0.5, 250, "Clé récupérée !", {
         fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "55px",
         color: "#ffdf6e",
