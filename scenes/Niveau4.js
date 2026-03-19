@@ -287,6 +287,7 @@ update() {
         // Afficher le message
         potion.destroy();
         potion = null;
+        this.registry.set("inventaireNiveau4", ["objet_niveau4_potion"]);
         this.faireApparaitrePorteSortie();
         messagePotion = this.add.text(760, 95, "POTION RÉCUPÉRÉE!", {
             fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
