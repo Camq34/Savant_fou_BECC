@@ -159,33 +159,41 @@ export default class niveau6 extends Phaser.Scene {
             repeat: -1
         });
 
-        this.anims.create({
-            key: "anim_ouvreporte",
-            frames: this.anims.generateFrameNumbers("img_porte_orange_anim", { start: 0, end: 5 }),
-            frameRate: 10,
-            repeat: 0
-        });
+        if (!this.anims.exists("anim_ouvreporte_n6")) {
+            this.anims.create({
+                key: "anim_ouvreporte_n6",
+                frames: this.anims.generateFrameNumbers("img_porte_orange_anim", { start: 0, end: 5 }),
+                frameRate: 10,
+                repeat: 0
+            });
+        }
 
-        this.anims.create({
-            key: "anim_fermeporte",
-            frames: this.anims.generateFrameNumbers("img_porte_orange_anim", { start: 5, end: 0 }),
-            frameRate: 10,
-            repeat: 0
-        });
+        if (!this.anims.exists("anim_fermeporte_n6")) {
+            this.anims.create({
+                key: "anim_fermeporte_n6",
+                frames: this.anims.generateFrameNumbers("img_porte_orange_anim", { start: 5, end: 0 }),
+                frameRate: 10,
+                repeat: 0
+            });
+        }
 
-        this.anims.create({
-            key: "anim_ouvreporte_sortie",
-            frames: this.anims.generateFrameNumbers("img_porte_sortie_anim", { start: 0, end: 5 }),
-            frameRate: 10,
-            repeat: 0
-        });
+        if (!this.anims.exists("anim_ouvreporte_sortie_n6")) {
+            this.anims.create({
+                key: "anim_ouvreporte_sortie_n6",
+                frames: this.anims.generateFrameNumbers("img_porte_sortie_anim", { start: 0, end: 5 }),
+                frameRate: 10,
+                repeat: 0
+            });
+        }
 
-        this.anims.create({
-            key: "anim_fermeporte_sortie",
-            frames: this.anims.generateFrameNumbers("img_porte_sortie_anim", { start: 5, end: 0 }),
-            frameRate: 10,
-            repeat: 0
-        });
+        if (!this.anims.exists("anim_fermeporte_sortie_n6")) {
+            this.anims.create({
+                key: "anim_fermeporte_sortie_n6",
+                frames: this.anims.generateFrameNumbers("img_porte_sortie_anim", { start: 5, end: 0 }),
+                frameRate: 10,
+                repeat: 0
+            });
+        }
 
         player.play("savant2_idle");
 
@@ -312,14 +320,14 @@ export default class niveau6 extends Phaser.Scene {
             return;
         }
 
-        porte.anims.play("anim_ouvreporte");
+        porte.anims.play("anim_ouvreporte_n6");
         porte.ouverte = true;
 
         this.time.delayedCall(450, () => {
             if (!porte.scene) {
                 return;
             }
-            porte.anims.play("anim_fermeporte");
+            porte.anims.play("anim_fermeporte_n6");
             porte.ouverte = false;
         });
     }
@@ -473,7 +481,7 @@ export default class niveau6 extends Phaser.Scene {
         finNiveau6Declenchee = true;
         gameOver = true;
         player.setVelocity(0, 0);
-        porteSortieFinale.anims.play("anim_ouvreporte_sortie");
+        porteSortieFinale.anims.play("anim_ouvreporte_sortie_n6");
 
         const messageFin = this.add
             .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez fini le niveau 6 !", {

@@ -46,7 +46,7 @@ export default class niveau3 extends Phaser.Scene {
         frameHeight: 120
     }); 
 
-    this.load.spritesheet("img_porte_sortie", "assets/portesortiewallah.png", {
+    this.load.spritesheet("img_porte_sortie_n3", "assets/portesortiewallah.png", {
         frameWidth: 96,
         frameHeight: 120
     }); 
@@ -117,33 +117,41 @@ export default class niveau3 extends Phaser.Scene {
         repeat: -1
     });
 
-    this.anims.create({
-        key: "anim_ouvreporte",
-        frames: this.anims.generateFrameNumbers("img_porte", { start: 0, end: 5 }),
-        frameRate: 10,
-        repeat: 0
-    });
+    if (!this.anims.exists("anim_ouvreporte_n3")) {
+        this.anims.create({
+            key: "anim_ouvreporte_n3",
+            frames: this.anims.generateFrameNumbers("img_porte", { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: 0
+        });
+    }
 
-    this.anims.create({
-        key: "anim_fermeporte",
-        frames: this.anims.generateFrameNumbers("img_porte", { start: 5, end: 0 }),
-        frameRate: 10,
-        repeat: 0
-    });
+    if (!this.anims.exists("anim_fermeporte_n3")) {
+        this.anims.create({
+            key: "anim_fermeporte_n3",
+            frames: this.anims.generateFrameNumbers("img_porte", { start: 5, end: 0 }),
+            frameRate: 10,
+            repeat: 0
+        });
+    }
 
-    this.anims.create({
-        key: "anim_ouvreporte_sortie",
-        frames: this.anims.generateFrameNumbers("img_porte_sortie", { start: 0, end: 5 }),
-        frameRate: 10,
-        repeat: 0
-    });
+    if (!this.anims.exists("anim_ouvreporte_sortie_n3")) {
+        this.anims.create({
+            key: "anim_ouvreporte_sortie_n3",
+            frames: this.anims.generateFrameNumbers("img_porte_sortie_n3", { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: 0
+        });
+    }
 
-    this.anims.create({
-        key: "anim_fermeporte_sortie",
-        frames: this.anims.generateFrameNumbers("img_porte_sortie", { start: 5, end: 0 }),
-        frameRate: 10,
-        repeat: 0
-    });
+    if (!this.anims.exists("anim_fermeporte_sortie_n3")) {
+        this.anims.create({
+            key: "anim_fermeporte_sortie_n3",
+            frames: this.anims.generateFrameNumbers("img_porte_sortie_n3", { start: 5, end: 0 }),
+            frameRate: 10,
+            repeat: 0
+        });
+    }
 
     player.play("savant2_idle");
 
@@ -152,7 +160,7 @@ export default class niveau3 extends Phaser.Scene {
 
     porte1 = this.physics.add.staticSprite(96, 1093, "img_porte");
     porte2 = this.physics.add.staticSprite(1800, 1093, "img_porte");
-    porte3 = this.physics.add.staticSprite(1850, 416, "img_porte_sortie");
+    porte3 = this.physics.add.staticSprite(1850, 416, "img_porte_sortie_n3");
     porte1.setDepth(2);
     porte2.setDepth(2);
     porte3.setDepth(2);
@@ -343,7 +351,7 @@ terminerNiveau3() {
     finNiveau3Declenchee = true;
     gameOver = true;
     player.setVelocity(0, 0);
-    porte3.anims.play("anim_ouvreporte_sortie");
+    porte3.anims.play("anim_ouvreporte_sortie_n3");
 
     const messageFin = this.add
         .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez finis le niveau 3 !", {
@@ -407,16 +415,16 @@ update() {
 
         if (this.physics.overlap(player, porte1)) {
             if (!porte1.ouverte) {
-                porte1.anims.play("anim_ouvreporte");
+                porte1.anims.play("anim_ouvreporte_n3");
                 porte1.ouverte = true;
             } else {
-                porte1.anims.play("anim_fermeporte");
+                porte1.anims.play("anim_fermeporte_n3");
                 porte1.ouverte = false;
             }
         }
 
         if (this.physics.overlap(player, porte2)) {
-            porte2.anims.play("anim_ouvreporte");
+            porte2.anims.play("anim_ouvreporte_n3");
             this.teleporterPorte2VersPorte1();
         }
 
