@@ -96,6 +96,23 @@ export default class niveau3 extends Phaser.Scene {
     const mapZoom = Math.min(gameWidth / map.widthInPixels, gameHeight / map.heightInPixels, 1);
     this.cameras.main.setZoom(mapZoom);
 
+    this.add.text(960, 95, "NIVEAU 3", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "72px",
+        fontStyle: "bold",
+        color: "#5cff72",
+        stroke: "#0b2a12",
+        strokeThickness: 8,
+        shadow: {
+            offsetX: 0,
+            offsetY: 0,
+            color: "#7dff8d",
+            blur: 12,
+            stroke: true,
+            fill: true
+        }
+    }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
+
     this.anims.create({
         key: "savant2_idle",
         frames: [{ key: "img_perso", frame: 5 }],
@@ -323,9 +340,9 @@ faireApparaitrePorte3() {
 
 afficherMessagePotion() {
     const message = this.add
-        .text(this.cameras.main.width * 0.5, 80, "Vous avez récupéré une potion !", {
+        .text(this.cameras.main.width * 0.5, 140, "Vous avez récupéré une potion !", {
             fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-            fontSize: "36px",
+            fontSize: "52px",
             color: "#ffffff",
             stroke: "#000000",
             strokeThickness: 6

@@ -220,7 +220,7 @@ export default class niveau5 extends Phaser.Scene {
 			const chestTile = this.getOpenableChestTile();
 			if (chestTile) {
 				if (!this.hasKey) {
-					this.showMessage("Il me faut une clé pour ouvrir ce coffre !");
+					this.showMessage("Il me faut une clef pour ouvrir ce coffre !");
 					return;
 				}
 
@@ -321,7 +321,7 @@ export default class niveau5 extends Phaser.Scene {
 	collectKey(player, key) {
 		this.hasKey = true;
 		key.destroy();
-		this.showMessage("Clé récupérée !");
+		this.showMessage("Clef récupérée !");
 	}
 
 	collectPotion(player, potion) {
