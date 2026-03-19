@@ -338,7 +338,8 @@ export default class Accueil extends Phaser.Scene {
 
     for (let niveau = 1; niveau <= this.nbPotionsTotal; niveau += 1) {
       const inventaireNiveau = this.registry.get(`inventaireNiveau${niveau}`);
-      if (Array.isArray(inventaireNiveau) && inventaireNiveau.length > 0) {
+      const potionFlagNiveau = this.registry.get(`potionNiveau${niveau}`);
+      if ((Array.isArray(inventaireNiveau) && inventaireNiveau.length > 0) || potionFlagNiveau === true) {
         total += 1;
       }
     }

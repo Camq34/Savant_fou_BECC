@@ -627,6 +627,7 @@ export default class niveau7 extends Phaser.Scene {
 
         layer1.removeTileAt(0, 0, true, false);
         potionRecuperee = true;
+        this.registry.set("inventaireNiveau7", ["objet_niveau7_potion"]);
 
         if (textePotionRecuperee) {
             textePotionRecuperee.setVisible(true);

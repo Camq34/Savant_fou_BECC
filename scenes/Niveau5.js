@@ -330,6 +330,7 @@ export default class niveau5 extends Phaser.Scene {
 		}
 
 		this.hasPotion = true;
+		this.registry.set("inventaireNiveau5", ["objet_niveau5_potion"]);
 		this.registry.set("potionNiveau5", true);
 		potion.destroy();
 		this.showMessage("Potion récupérée !");
