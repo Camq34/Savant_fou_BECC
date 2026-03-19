@@ -44,6 +44,17 @@ export default class Accueil extends Phaser.Scene {
     this.layer = map.createLayer("Calque de Tuiles 1", [tilesetMateriaux, tilesetItems], 0, 0);
     this.layer.setCollisionByProperty({ collision: true });
 
+    this.add
+      .text(960, 70, "Bienvenue à l'Accueil !", {
+        fontFamily: "Courier New, monospace",
+        fontSize: "58px",
+        fontStyle: "bold",
+        color: "#39ff14",
+        stroke: "#103000",
+        strokeThickness: 6
+      })
+      .setOrigin(0.5, 0);
+
     
 
     /*************************************/
