@@ -161,7 +161,7 @@ export default class niveau5 extends Phaser.Scene {
 			}
 		}).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
-		this.add.text(960, 350, "Comment appelle-t-on le passsage d'un corp de l'etait liquide a l'etat gaz ?", {
+		this.add.text(960, 350, "Comment appelle-t-on le passage d'un corps de l'état liquide à l'état gazeux ?", {
 			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "60px",
 			fontStyle: "bold",
