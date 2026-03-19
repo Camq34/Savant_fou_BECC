@@ -13,7 +13,7 @@ export default class Intro extends Phaser.Scene {
     this.cameras.main.setBackgroundColor("#000000");
     const largeur = this.cameras.main.width;
     const hauteur = this.cameras.main.height;
-    const messageIntro = "Bienvenue dans le jeu du savant. Il y a une potion à récupérer dans chaque niveau. Aidez le à remplir son chaudron pour terminer sa potion !\nPour avancer bougez avec les flèches directionnelles, pour interagir appuyez sur E.\nBonne chance !";
+    const messageIntro = "Bienvenue dans le jeu du savant. Il y a une potion à récupérer dans chaque niveau. Aidez le à remplir son chaudron pour terminer sa potion !\nPour avancer bougez avec les flèches directionnelles, pour interagir appuyez sur E.\nSi vous voulez revenir a l'accueil, appuyez sur echap.\nBonne chance !";
     let musiqueFond = this.sound.get("musique_fond");
 
     if (!musiqueFond) {
