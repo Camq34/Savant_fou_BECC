@@ -1,4 +1,5 @@
 // chargement des librairies
+import Intro from "/scenes/Intro.js";
 import Accueil from "/scenes/Accueil.js";
 import niveau1 from "/scenes/Niveau1.js";
 import niveau2 from "/scenes/Niveau2.js";
@@ -28,9 +29,9 @@ var config = {
       debug: false // permet de voir les hitbox et les vecteurs d'acceleration quand mis à true
     }
   },
-  scene: [Accueil, niveau1, niveau2, niveau3, niveau4, niveau5, niveau6, niveau7] // liste des scènes du jeu
+  scene: [Intro, Accueil, niveau1, niveau2, niveau3, niveau4, niveau5, niveau6, niveau7] // liste des scènes du jeu
 };
 
 // création et lancement du jeu
 var game = new Phaser.Game(config);
-game.scene.start("Accueil"); // lancement de la scène d'accueil");
+game.scene.start("Intro"); // lancement de la scène d'introduction
