@@ -22,6 +22,7 @@ const OBJET2_TILE_Y = 35;
 const NOM_OBJET2_NIVEAU6 = "objet_niveau6_41_35";
 const PORTE_SORTIE_X = 1800;
 const PORTE_SORTIE_Y = 1153;
+const SON_PORTE_NIVEAU6 = "son_porte_niveau6";
 
 export default class niveau6 extends Phaser.Scene {
     constructor() {
@@ -38,6 +39,7 @@ export default class niveau6 extends Phaser.Scene {
         this.load.image('img_items', 'assets/items.png');
         this.load.image('tuilesJeu', 'assets/tuilesJeu.png');
         this.load.image('img_icons_prev_comp', 'assets/icons_prev_comp-removebg-preview.png');
+        this.load.audio(SON_PORTE_NIVEAU6, 'assets/audio/porte_niveau6.mp3');
 
         this.load.tilemapTiledJSON('ma_map_6', 'assets/Map/map_niveau6.tmj');
         this.load.spritesheet("img_perso", "assets/savant2.png", {
@@ -315,11 +317,27 @@ export default class niveau6 extends Phaser.Scene {
         player.setVelocity(0, 0);
     }
 
+    jouerSonPorte() {
+        if (!this.cache.audio.exists(SON_PORTE_NIVEAU6)) {
+            return;
+        }
+
+        try {
+            this.sound.play(SON_PORTE_NIVEAU6, {
+                loop: false,
+                volume: 0.7
+            });
+        } catch (error) {
+            console.warn("Niveau6: lecture du son de porte impossible", error);
+        }
+    }
+
     animerPorteOrange(porte) {
         if (!porte) {
             return;
         }
 
+        this.jouerSonPorte();
         porte.anims.play("anim_ouvreporte_n6");
         porte.ouverte = true;
 
@@ -481,6 +499,7 @@ export default class niveau6 extends Phaser.Scene {
         finNiveau6Declenchee = true;
         gameOver = true;
         player.setVelocity(0, 0);
+        this.jouerSonPorte();
         porteSortieFinale.anims.play("anim_ouvreporte_sortie_n6");
 
         const messageFin = this.add
@@ -568,6 +587,7 @@ export default class niveau6 extends Phaser.Scene {
 
             const tileDoor = this.levelMap.getTileAtWorldXY(player.x, player.y, false, this.cameras.main, layer2);
             if (tileDoor && tileDoor.index > 0) {
+                this.jouerSonPorte();
                 const tileX = this.levelMap.worldToTileX(player.x);
                 const tileY = this.levelMap.worldToTileY(player.y);
 
