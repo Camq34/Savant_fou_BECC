@@ -104,7 +104,7 @@ export default class niveau2 extends Phaser.Scene {
 
 		// Texte d'information temporaire
 		this.messageText = this.add.text(960, 1030, "", {
-			fontFamily: "Arial",
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "32px",
 			color: "#FFFF00",
 			stroke: "#000000",
@@ -134,7 +134,7 @@ export default class niveau2 extends Phaser.Scene {
 		];
 
 		this.add.text(960, 95, "NIVEAU 2", {
-			fontFamily: "Courier New, monospace",
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "72px",
 			fontStyle: "bold",
 			color: "#5cff72",
@@ -151,9 +151,9 @@ export default class niveau2 extends Phaser.Scene {
 		}).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
 		// Texte gros au milieu
-		this.add.text(960, 360, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
+		this.add.text(960, 440, "Pour créer une potion d'invisibilité,\nje dois mélanger un acide et une base.\nComment appelle-t-on cette réaction\nchimique qui dégage souvent de la chaleur ?", {
 			fontFamily: "Arial",
-			fontSize: "50px",
+			fontSize: "64px",
 			fontStyle: "bold",
 			color: "#7dff8d",
 			stroke: "#000000",
@@ -172,7 +172,7 @@ export default class niveau2 extends Phaser.Scene {
 		squares.forEach(square => {
 			this.add.text(square.x, square.y, square.text, {
 				fontFamily: "Arial",
-				fontSize: "34px",
+				fontSize: "22px",
 				fontStyle: "bold",
 				color: square.color,
 				wordWrap: { width: 200 },

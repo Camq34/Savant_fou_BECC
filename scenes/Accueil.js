@@ -46,7 +46,7 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(960, 70, "Bienvenue à l'Accueil !", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "58px",
         fontStyle: "bold",
         color: "#39ff14",
@@ -72,7 +72,7 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte1.x, this.porte1.y - 90, "1", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "56px",
         fontStyle: "bold",
         color: "#5cff72",
@@ -83,7 +83,7 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte2.x, this.porte2.y - 90, "2", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "56px",
         fontStyle: "bold",
         color: "#5cff72",
@@ -94,7 +94,7 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte3.x, this.porte3.y - 90, "3", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "56px",
         fontStyle: "bold",
         color: "#5cff72",
@@ -105,7 +105,7 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte4.x, this.porte4.y - 90, "4", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "56px",
         fontStyle: "bold",
         color: "#5cff72",
@@ -116,7 +116,7 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte5.x, this.porte5.y - 90, "5", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "56px",
         fontStyle: "bold",
         color: "#5cff72",
@@ -127,7 +127,7 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte6.x, this.porte6.y - 90, "6", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "56px",
         fontStyle: "bold",
         color: "#5cff72",
@@ -138,20 +138,12 @@ export default class Accueil extends Phaser.Scene {
 
     this.add
       .text(this.porte7.x, this.porte7.y - 90, "7", {
-        fontFamily: "Courier New, monospace",
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "56px",
         fontStyle: "bold",
         color: "#ff2a2a",
         stroke: "#4d0000",
         strokeThickness: 8,
-        shadow: {
-          offsetX: 0,
-          offsetY: 0,
-          color: "#ff3b00",
-          blur: 14,
-          stroke: true,
-          fill: true
-        }
       })
       .setOrigin(0.5);
 

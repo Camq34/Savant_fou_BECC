@@ -131,7 +131,7 @@ export default class niveau5 extends Phaser.Scene {
 		];
 
 		this.add.text(960, 95, "NIVEAU 5", {
-			fontFamily: "Courier New, monospace",
+			fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
 			fontSize: "72px",
 			fontStyle: "bold",
 			color: "#5cff72",

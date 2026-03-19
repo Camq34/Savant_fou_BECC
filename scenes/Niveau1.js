@@ -376,7 +376,7 @@ export default class Niveau1 extends Phaser.Scene {
 
         const messageFin = this.add
             .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez fini le niveau 1 !", {
-                fontFamily: "Arial",
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "42px",
                 color: "#ffd64d",
                 stroke: "#000000",
@@ -401,7 +401,7 @@ export default class Niveau1 extends Phaser.Scene {
     afficherMessageCle() {
         const message = this.add
             .text(this.cameras.main.width * 0.5, 80, "Clef recuperee !", {
-                fontFamily: "Arial",
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "32px",
                 color: "#ffffff",
                 stroke: "#000000",
@@ -423,7 +423,7 @@ export default class Niveau1 extends Phaser.Scene {
     afficherMessagePotionJaune() {
         const message = this.add
             .text(this.cameras.main.width * 0.5, 80, "Bravo vous avez recupere la potion jaune !", {
-                fontFamily: "Arial",
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "36px",
                 color: "#ffd84d",
                 stroke: "#000000",

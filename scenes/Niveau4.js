@@ -229,7 +229,7 @@ terminerNiveau4() {
 
     const messageFin = this.add
         .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez fini le niveau 4 !", {
-            fontFamily: "Arial",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "42px",
             color: "#ffd64d",
             stroke: "#000000",
@@ -289,7 +289,7 @@ update() {
         potion = null;
         this.faireApparaitrePorteSortie();
         messagePotion = this.add.text(760, 95, "POTION RÉCUPÉRÉE!", {
-            fontFamily: "Courier New, monospace",
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
             fontSize: "72px",
             fontStyle: "bold",
             color: "#00ff00",
