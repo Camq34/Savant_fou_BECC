@@ -9,8 +9,9 @@ export default class Niveau1 extends Phaser.Scene {
         this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
 
         this.load.spritesheet("img_perso", "assets/savant2.png", {
-            frameWidth: 41,
-            frameHeight: 50
+            frameWidth: 40,
+            frameHeight: 50,
+            spacing: 1
         });
 
         this.load.spritesheet("img_porte", "assets/porteORANGE999.png", {
@@ -20,6 +21,10 @@ export default class Niveau1 extends Phaser.Scene {
         this.load.spritesheet("img_clef", "assets/icons_prev_comp-removebg-preview.png", {
             frameWidth: 32,
             frameHeight: 32
+        });
+        this.load.spritesheet("img_interrupteurs", "assets/interrupTeurs.png", {
+            frameWidth: 257,
+            frameHeight: 156
         });
         this.load.image("img_coffre", "assets/coffre_fermé.png");
     }
@@ -43,11 +48,13 @@ export default class Niveau1 extends Phaser.Scene {
         this.playerStartX = playerStartX;
         this.playerStartY = playerStartY;
         player = this.physics.add.sprite(playerStartX, playerStartY, 'img_perso');
-        player.setBounce(0.2);
+        player.setBounce(0);
         player.setCollideWorldBounds(true);
         player.setDepth(10); // dessiné au-dessus des portes
         player.setScale(1.6);
         player.setVisible(true);
+        player.body.setSize(20, 44);
+        player.body.setOffset(10, 6);
 
         this.isDying = false;
         const mourir = () => {
@@ -79,21 +86,22 @@ export default class Niveau1 extends Phaser.Scene {
         this.cameras.main.setZoom(mapZoom);
 
         this.anims.create({
-            key: "anim_tourne_gauche",
+            key: "savant2_idle",
+            frames: [{ key: "img_perso", frame: 5 }],
+            frameRate: 1,
+            repeat: -1
+        });
+        this.anims.create({
+            key: "savant2_walk",
             frames: this.anims.generateFrameNumbers("img_perso", { start: 0, end: 4 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
-            key: "anim_tourne_droite",
-            frames: this.anims.generateFrameNumbers("img_perso", { start: 5, end: 8 }),
+            key: "savant2_jump",
+            frames: this.anims.generateFrameNumbers("img_perso", { start: 6, end: 10 }),
             frameRate: 10,
             repeat: -1
-        });
-        this.anims.create({
-            key: "anim_face",
-            frames: [{ key: "img_perso", frame: 5 }],
-            frameRate: 20
         });
 
         clavier = this.input.keyboard.createCursorKeys();
@@ -120,6 +128,16 @@ export default class Niveau1 extends Phaser.Scene {
         this.clefText = this.add.text(16, 16, '', { fontSize: '20px', fill: '#ffffff', backgroundColor: '#000000' });
         this.clefText.setScrollFactor(0);
 
+        this.interrupteur = this.physics.add.staticSprite(
+            this.map.tileToWorldX(57) + this.map.tileWidth * 0.5,
+            this.map.tileToWorldY(23) + this.map.tileHeight * 0.5,
+            "img_interrupteurs",
+            1
+        );
+        this.interrupteur.setScale(0.28);
+        this.interrupteur.setDepth(6);
+        this.interrupteurActive = false;
+
         this.physics.add.overlap(player, this.clef, () => {
             if (!this.clefCollected) {
                 this.clefCollected = true;
@@ -127,6 +145,8 @@ export default class Niveau1 extends Phaser.Scene {
                 this.clefText.setText('Clé récupérée !');
             }
         });
+
+        player.play("savant2_idle");
 
         this.anims.create({
             key: "anim_ouvreporte",
@@ -147,22 +167,45 @@ export default class Niveau1 extends Phaser.Scene {
     update() {
         if (gameOver) return;
 
+        const isOnGround = player.body.blocked.down || player.body.touching.down;
+
         if (clavier.left.isDown) {
             player.setVelocityX(-160);
-            player.anims.play('anim_tourne_gauche', true);
+            player.setFlipX(true);
         } else if (clavier.right.isDown) {
             player.setVelocityX(160);
-            player.anims.play('anim_tourne_droite', true);
+            player.setFlipX(false);
         } else {
             player.setVelocityX(0);
-            player.anims.play('anim_face');
         }
 
-        if ((clavier.up.isDown || clavier.space.isDown) && player.body.blocked.down) {
+        if ((clavier.up.isDown || clavier.space.isDown) && isOnGround) {
             player.setVelocityY(-400);
         }
 
+        if (!isOnGround) {
+            player.anims.play("savant2_jump", true);
+        } else if (player.body.velocity.x !== 0) {
+            player.anims.play("savant2_walk", true);
+        } else {
+            player.anims.play("savant2_idle", true);
+        }
+
         if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+            const procheInterrupteur = Phaser.Math.Distance.Between(
+                player.x,
+                player.y,
+                this.interrupteur.x,
+                this.interrupteur.y
+            ) <= 110;
+
+            if (procheInterrupteur && !this.interrupteurActive) {
+                this.interrupteur.setFrame(0);
+                this.interrupteur.setScale(0.28);
+                this.interrupteurActive = true;
+                return;
+            }
+
             if (this.physics.overlap(player, porte)) {
                 if (!porte.ouverte) {
                     porte.anims.play("anim_ouvreporte");

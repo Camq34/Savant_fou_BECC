@@ -3,6 +3,8 @@
 var player;
 // Objet clavier Phaser pour lire les fleches du clavier.
 var clavier;
+// Touche d'interaction pour utiliser la porte de sortie.
+var toucheE;
 // Reference vers la map Tiled du niveau 7 une fois chargee.
 var mapNiveau7;
 // Calque principal de tuiles. Il affiche le decor et porte aussi les collisions.
@@ -28,12 +30,14 @@ var potionCacheeGid = 380;
 var potionRecuperee = false;
 // Etat de la porte bleue de sortie apres l'ouverture.
 var porteBleueOuverte = false;
-// Verrou pour ne lancer le retour a l'accueil qu'une seule fois.
-var retourAccueilDeclenche = false;
 // Texte temporaire affiche quand la cle est recuperee.
 var texteCleRecuperee;
 // Texte temporaire affiche quand la potion est recuperee.
 var textePotionRecuperee;
+// Texte affiche pendant la transition de fin du niveau.
+var texteFinNiveau;
+// Verrou pour ne declencher la fin du niveau qu'une seule fois.
+var finNiveau7Declenchee = false;
 // Vitesse horizontale du joueur quand on appuie a gauche ou a droite.
 var playerSpeed = 180;
 // Impulsion verticale du saut. Valeur negative = le joueur monte.
@@ -195,12 +199,13 @@ export default class niveau7 extends Phaser.Scene {
         coffreOuvert = false;
         potionRecuperee = false;
         porteBleueOuverte = false;
-        retourAccueilDeclenche = false;
+        finNiveau7Declenchee = false;
 
         // Cree le personnage physique visible a l'ecran.
         // C'est ce sprite qui entre en collision avec le decor.
         player = this.physics.add.sprite(spawnX, spawnY, "savant2", 5);
         player.setScale(1.5);
+        player.setDepth(10);
         player.setCollideWorldBounds(true);
         player.setBounce(0);
         player.body.setSize(20, 44);
@@ -234,6 +239,7 @@ export default class niveau7 extends Phaser.Scene {
 
         // Recupere les fleches du clavier pour piloter le joueur.
         clavier = this.input.keyboard.createCursorKeys();
+        toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
         // Titre fixe affiche en haut de l'ecran. Comme il a scrollFactor 0, il reste accroche a la camera.
         this.add.text(960, 95, "NIVEAU 7", {
@@ -267,6 +273,13 @@ export default class niveau7 extends Phaser.Scene {
             color: "#ffffff"
         }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000).setVisible(false);
 
+        texteFinNiveau = this.add.text(960, 180, "vous avez fini le dernier niveau", {
+            fontFamily: "Courier New, monospace",
+            fontSize: "36px",
+            fontStyle: "bold",
+            color: "#ffffff"
+        }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000).setVisible(false);
+
         // Reglages camera: fond noir, limites de deplacement sur toute la map, puis suivi doux du joueur.
         this.cameras.main.setBackgroundColor("#000000");
         this.cameras.main.setBounds(0, 0, mapNiveau7.widthInPixels, mapNiveau7.heightInPixels);
@@ -288,6 +301,12 @@ export default class niveau7 extends Phaser.Scene {
         // Protection equivalente pour le clavier Phaser.
         if (this.input && this.input.keyboard && !this.input.keyboard.enabled) {
             this.input.keyboard.enabled = true;
+        }
+
+        if (finNiveau7Declenchee) {
+            player.setVelocity(0, 0);
+            player.play("savant2_idle", true);
+            return;
         }
 
         // Quand le joueur a touche un element donjonasset, il reste rouge et immobile jusqu'au respawn.
@@ -323,8 +342,10 @@ export default class niveau7 extends Phaser.Scene {
         this.ouvrirCoffreAvecCle();
         // Si la potion reapparue en (0,0) est recuperee, elle ouvre la porte bleue.
         this.recupererPotionEtOuvrirPorte();
-        // Si le joueur atteint le bloc en (0,11) avec la potion, il retourne a l'accueil.
-        this.retournerAccueilDepuisSortie();
+
+        if (toucheE && Phaser.Input.Keyboard.JustDown(toucheE)) {
+            this.retournerAccueilParPorte();
+        }
 
         // Choix de l'animation affichee a l'ecran selon l'etat physique du joueur.
         if (!isOnGround) {
@@ -628,9 +649,9 @@ export default class niveau7 extends Phaser.Scene {
         porteBleueOuverte = true;
     }
 
-    // Renvoie le joueur vers l'accueil quand il atteint le bloc de sortie en (0,11), mais seulement apres avoir recupere la potion.
-    retournerAccueilDepuisSortie() {
-        if (!player || !player.body || !mapNiveau7 || !potionRecuperee || !porteBleueOuverte || retourAccueilDeclenche) {
+    // Renvoie le joueur a l'accueil s'il appuie sur E devant la porte de sortie, apres recuperation de la potion.
+    retournerAccueilParPorte() {
+        if (!player || !player.body || !mapNiveau7 || !potionRecuperee || !porteBleueOuverte || finNiveau7Declenchee) {
             return;
         }
 
@@ -639,13 +660,22 @@ export default class niveau7 extends Phaser.Scene {
         const rightTile = mapNiveau7.worldToTileX(body.right);
         const topTile = mapNiveau7.worldToTileY(body.top);
         const bottomTile = mapNiveau7.worldToTileY(body.bottom);
+        const surPorteSortie = rightTile >= 0 && leftTile <= 2 && bottomTile >= 7 && topTile <= 11;
 
-        if (!(0 >= leftTile && 0 <= rightTile && 11 >= topTile && 11 <= bottomTile)) {
+        if (!surPorteSortie) {
             return;
         }
 
-        retourAccueilDeclenche = true;
-        this.scene.start("Accueil", { messageFinNiveau: "Bravo vous avez fini le niveau 7 !" });
+        finNiveau7Declenchee = true;
+        player.setVelocity(0, 0);
+
+        if (texteFinNiveau) {
+            texteFinNiveau.setVisible(true);
+        }
+
+        this.time.delayedCall(2000, () => {
+            this.scene.start("Accueil", { messageFinNiveau: "Bravo vous avez fini le niveau 7 !" });
+        });
     }
 
     // Replace instantanement le joueur sur le point de spawn quand il touche un element donjonasset.
