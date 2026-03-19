@@ -33,7 +33,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image('img_items', 'assets/items.png');
     this.load.image('img_coffre_ferme', 'assets/coffre_ferm\u00e9.png');
     this.load.image('img_coffre_ouvert', 'assets/coffre_ouvert.png');
-    this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau3.tmj');
+    this.load.tilemapTiledJSON('ma_map3', 'assets/Map/map_niveau3.tmj');
 
     this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 40,
@@ -53,7 +53,7 @@ export default class niveau3 extends Phaser.Scene {
 
 }
     create() {
-    const map = this.make.tilemap({ key: 'ma_map' });
+    const map = this.make.tilemap({ key: 'ma_map3' });
     const tilesetLasers = map.addTilesetImage('lasers', 'img_lasers');
     const tilesetDecor = map.addTilesetImage('d\u00e9cor2.1', 'img_decor2_1');
     const tilesetItems = map.addTilesetImage('tiles_tiny_sample_2', 'img_items');

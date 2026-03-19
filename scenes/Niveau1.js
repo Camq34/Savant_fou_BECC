@@ -21,7 +21,7 @@ export default class Niveau1 extends Phaser.Scene {
     preload() {
         this.load.image('img_lasers', 'assets/lasers.png');
         this.load.image('img_items', 'assets/items.png');
-        this.load.tilemapTiledJSON('ma_map', 'assets/Map/map_niveau1.tmj');
+        this.load.tilemapTiledJSON('ma_map1', 'assets/Map/map_niveau1.tmj');
         this.load.audio('son_mort_niveau1', 'assets/audio/rire_boule_niveau7.mp3');
         this.load.audio('son_interrupteur_niveau1', 'assets/audio/interrupteur_niveau1.mp3');
 
@@ -54,7 +54,7 @@ export default class Niveau1 extends Phaser.Scene {
 
     create() {
         gameOver = false;
-        this.map = this.make.tilemap({ key: 'ma_map' });
+        this.map = this.make.tilemap({ key: 'ma_map1' });
         const tilesetLasers = this.map.addTilesetImage('lasers', 'img_lasers');
         const tilesetItems = this.map.addTilesetImage('tiles_tiny_sample_2', 'img_items');
         const tilesetPreview = this.map.addTilesetImage('preview_122', 'img_lasers');
