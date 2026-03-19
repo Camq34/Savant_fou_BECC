@@ -12,6 +12,7 @@ var objetCalque3Recupere = false;
 const OBJET_CALQUE3_TILE_X = 25;
 const OBJET_CALQUE3_TILE_Y = 15;
 const NOM_OBJET_CALQUE3_NIVEAU1 = "objet_calque3_25_15";
+const SON_PORTE_NIVEAU1 = "son_porte_niveau1";
 
 export default class Niveau1 extends Phaser.Scene {
     constructor() {
@@ -24,6 +25,7 @@ export default class Niveau1 extends Phaser.Scene {
         this.load.tilemapTiledJSON('ma_map1', 'assets/Map/map_niveau1.tmj');
         this.load.audio('son_mort_niveau1', 'assets/audio/rire_boule_niveau7.mp3');
         this.load.audio('son_interrupteur_niveau1', 'assets/audio/interrupteur_niveau1.mp3');
+        this.load.audio(SON_PORTE_NIVEAU1, 'assets/audio/porte_niveau6.mp3');
 
         this.load.spritesheet("img_perso", "assets/savant2.png", {
             frameWidth: 40,
@@ -120,6 +122,23 @@ export default class Niveau1 extends Phaser.Scene {
         const gameHeight = this.sys.game.config.height;
         const mapZoom = Math.min(gameWidth / this.map.widthInPixels, gameHeight / this.map.heightInPixels, 1);
         this.cameras.main.setZoom(mapZoom);
+
+        this.add.text(this.cameras.main.width * 0.7, 95, "NIVEAU 1", {
+            fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+            fontSize: "72px",
+            fontStyle: "bold",
+            color: "#5cff72",
+            stroke: "#0b2a12",
+            strokeThickness: 8,
+            shadow: {
+                offsetX: 0,
+                offsetY: 0,
+                color: "#7dff8d",
+                blur: 12,
+                stroke: true,
+                fill: true
+            }
+        }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(1000);
 
         if (!this.anims.exists("savant2_idle")) {
             this.anims.create({
@@ -379,18 +398,19 @@ export default class Niveau1 extends Phaser.Scene {
         this.finNiveau1Declenchee = true;
         gameOver = true;
         player.setVelocity(0, 0);
+        this.jouerSonPorte();
 
         if (porteSortie && porteSortie.scene && this.anims.exists("anim_ouvreporte_sortie_n1")) {
             porteSortie.anims.play("anim_ouvreporte_sortie_n1");
         }
 
         const messageFin = this.add
-            .text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.25, "Bravo vous avez fini le niveau 1 !", {
+            .text(this.cameras.main.width * 0.22, 180, "Bravo vous avez fini le niveau 1 !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "42px",
-                color: "#ffd64d",
+                fontSize: "55px",
+                color: "#ffd84d",
                 stroke: "#000000",
-                strokeThickness: 8
+                strokeThickness: 6
             })
             .setOrigin(0.5)
             .setScrollFactor(0)
@@ -410,10 +430,32 @@ export default class Niveau1 extends Phaser.Scene {
 
     afficherMessageCle() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 80, "Clef recuperee !", {
+            .text(this.cameras.main.width * 0.22, 180, "Clef récupérée !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "32px",
-                color: "#ffffff",
+                fontSize: "55px",
+                color: "#ffdf6e",
+                stroke: "#000000",
+                strokeThickness: 6
+            })
+            .setOrigin(0.5)
+            .setScrollFactor(0)
+            .setDepth(1000);
+
+        this.tweens.add({
+            targets: message,
+            alpha: 0,
+            duration: 1300,
+            delay: 500,
+            onComplete: () => message.destroy()
+        });
+    }
+
+    afficherMessageBesoinCle() {
+        const message = this.add
+            .text(this.cameras.main.width * 0.22, 180, "Il me faut une clef pour ouvrir ce coffre !", {
+                fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+                fontSize: "55px",
+                color: "#ffdf6e",
                 stroke: "#000000",
                 strokeThickness: 6
             })
@@ -432,9 +474,9 @@ export default class Niveau1 extends Phaser.Scene {
 
     afficherMessagePotionJaune() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 80, "Bravo vous avez recupere la potion jaune !", {
+            .text(this.cameras.main.width * 0.22, 180, "Bravo vous avez récupéré la potion jaune !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
-                fontSize: "36px",
+                fontSize: "55px",
                 color: "#ffd84d",
                 stroke: "#000000",
                 strokeThickness: 6
@@ -461,6 +503,7 @@ export default class Niveau1 extends Phaser.Scene {
             return;
         }
 
+        this.jouerSonPorte();
         porteCible.anims.play("anim_ouvreporte");
         porteCible.ouverte = true;
 
@@ -471,6 +514,21 @@ export default class Niveau1 extends Phaser.Scene {
             porteCible.anims.play("anim_fermeporte");
             porteCible.ouverte = false;
         });
+    }
+
+    jouerSonPorte() {
+        if (!this.cache.audio.exists(SON_PORTE_NIVEAU1)) {
+            return;
+        }
+
+        try {
+            this.sound.play(SON_PORTE_NIVEAU1, {
+                loop: false,
+                volume: 0.7
+            });
+        } catch (error) {
+            console.warn("Niveau1: lecture du son de porte impossible", error);
+        }
     }
 
     desactiverTuilesTueInterrupteur() {
@@ -547,7 +605,7 @@ export default class Niveau1 extends Phaser.Scene {
     }
 
     ouvrirCoffreAvecCle() {
-        if (!this.clefCollected || this.coffreOuvert || !this.coffre) {
+        if (this.coffreOuvert || !this.coffre) {
             return;
         }
 
@@ -559,6 +617,11 @@ export default class Niveau1 extends Phaser.Scene {
         );
 
         if (distance > 110) {
+            return;
+        }
+
+        if (!this.clefCollected) {
+            this.afficherMessageBesoinCle();
             return;
         }
 

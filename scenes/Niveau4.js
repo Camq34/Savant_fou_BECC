@@ -10,6 +10,7 @@ var messagePotion;
 var cle;
 var porteSortieVisible = false;
 var finNiveau4Declenchee = false;
+const SON_PORTE_NIVEAU4 = "son_porte_niveau4";
 
 
 
@@ -21,6 +22,7 @@ export default class niveau4 extends Phaser.Scene {
     this.load.image('img_brique', 'assets/brique.png');
     this.load.image('img_lasers', 'assets/lasers.png');
     this.load.tilemapTiledJSON('ma_map_4', 'assets/Map/map_niveau4.tmj');
+    this.load.audio(SON_PORTE_NIVEAU4, 'assets/audio/porte_niveau6.mp3');
 
     this.load.spritesheet("img_perso", "assets/savant2.png", {
         frameWidth: 40,
@@ -225,6 +227,16 @@ terminerNiveau4() {
     finNiveau4Declenchee = true;
     gameOver = true;
     player.setVelocity(0, 0);
+    if (this.cache.audio.exists(SON_PORTE_NIVEAU4)) {
+        try {
+            this.sound.play(SON_PORTE_NIVEAU4, {
+                loop: false,
+                volume: 0.7
+            });
+        } catch (error) {
+            console.warn("Niveau4: lecture du son de porte impossible", error);
+        }
+    }
     this.porte.anims.play("anim_ouvreporte_n4");
 
     const messageFin = this.add

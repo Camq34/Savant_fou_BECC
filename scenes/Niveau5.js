@@ -5,6 +5,7 @@ export default class niveau5 extends Phaser.Scene {
 
 	preload() {
 		this.load.tilemapTiledJSON("map_niveau5", "assets/Map/mapniveau2_5.tmj");
+		this.load.audio("son_porte_niveau5", "assets/audio/porte_niveau6.mp3");
 		this.load.image("img_terrain", "assets/terrain_d2_70.jpg");
 		this.load.image("img_donjonasset", "assets/donjonasset.png");
 		this.load.image("img_brique", "assets/brique.png");
@@ -315,6 +316,16 @@ export default class niveau5 extends Phaser.Scene {
 	}
 
 	goToAccueil() {
+		if (this.cache.audio.exists("son_porte_niveau5")) {
+			try {
+				this.sound.play("son_porte_niveau5", {
+					loop: false,
+					volume: 0.7
+				});
+			} catch (error) {
+				console.warn("Niveau5: lecture du son de porte impossible", error);
+			}
+		}
 		this.scene.start("Accueil");
 	}
 
