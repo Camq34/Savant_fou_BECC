@@ -5,6 +5,8 @@ var player;
 var clavier;
 // Touche d'interaction pour utiliser la porte de sortie.
 var toucheE;
+// Touche pour revenir a l'accueil a tout moment.
+var toucheEsc;
 // Reference vers la map Tiled du niveau 7 une fois chargee.
 var mapNiveau7;
 // Calque principal de tuiles. Il affiche le decor et porte aussi les collisions.
@@ -265,6 +267,7 @@ export default class niveau7 extends Phaser.Scene {
         // Recupere les fleches du clavier pour piloter le joueur.
         clavier = this.input.keyboard.createCursorKeys();
         toucheE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        toucheEsc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         // Titre fixe affiche en haut de l'ecran. Comme il a scrollFactor 0, il reste accroche a la camera.
         this.add.text(960, 95, "NIVEAU 7", {
@@ -315,6 +318,11 @@ export default class niveau7 extends Phaser.Scene {
     update() {
         // Si le joueur ou le clavier n'existent pas encore, on ne fait rien pour eviter une erreur JS.
         if (!player || !clavier) {
+            return;
+        }
+
+        if (toucheEsc && Phaser.Input.Keyboard.JustDown(toucheEsc)) {
+            this.scene.start("Accueil");
             return;
         }
 
