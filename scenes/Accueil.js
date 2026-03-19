@@ -14,6 +14,7 @@ export default class Accueil extends Phaser.Scene {
   /** FONCTION PRELOAD */
   /***********************************************************************/
   preload() {
+    this.load.image("img_foret", "assets/foret.png");
     this.load.image("img_materiaux", "assets/terrain_d2_70.jpg");
     this.load.image("img_items", "assets/items.png");
     this.load.tilemapTiledJSON("map_accueil", "assets/Map/map_accueil.tmj");
@@ -38,6 +39,12 @@ export default class Accueil extends Phaser.Scene {
     /* CREATION DE LA MAP */
     /*************************************/
     const map = this.make.tilemap({ key: "map_accueil" });
+
+    this.add
+      .image(map.widthInPixels * 0.5, map.heightInPixels * 0.5, "img_foret")
+      .setDisplaySize(map.widthInPixels, map.heightInPixels)
+      .setDepth(-10);
+
     const tilesetMateriaux = map.addTilesetImage("terrain_d2_70", "img_materiaux");
     const tilesetItems = map.addTilesetImage("items", "img_items");
 
@@ -45,7 +52,7 @@ export default class Accueil extends Phaser.Scene {
     this.layer.setCollisionByProperty({ collision: true });
 
     this.add
-      .text(960, 70, "Bienvenue à l'Accueil !", {
+      .text(960, 70, "Bienvenue à l'Accueil ", {
         fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
         fontSize: "58px",
         fontStyle: "bold",
@@ -69,6 +76,19 @@ export default class Accueil extends Phaser.Scene {
     this.porte6 = this.physics.add.staticSprite(895, 740, "img_porte_orange");
     this.porte7 = this.physics.add.staticSprite(1277, 355, "img_porte_orange");
     this.chaudron= this.physics.add.staticSprite(895, 487, "chaudron");
+
+    this.nbPotionsTotal = 7;
+    this.compteurPotionsText = this.add
+      .text(this.chaudron.x, this.chaudron.y - 100, "", {
+        fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
+        fontSize: "44px",
+        fontStyle: "bold",
+        color: "#ffd64d",
+        stroke: "#3b2100",
+        strokeThickness: 7
+      })
+      .setOrigin(0.5);
+    this.mettreAJourCompteurPotions();
 
     this.add
       .text(this.porte1.x, this.porte1.y - 90, "1", {
@@ -311,5 +331,23 @@ export default class Accueil extends Phaser.Scene {
     } else {
       this.player.play("savant2_idle", true);
     }
+  }
+
+  compterPotionsRecuperees() {
+    let total = 0;
+
+    for (let niveau = 1; niveau <= this.nbPotionsTotal; niveau += 1) {
+      const inventaireNiveau = this.registry.get(`inventaireNiveau${niveau}`);
+      if (Array.isArray(inventaireNiveau) && inventaireNiveau.length > 0) {
+        total += 1;
+      }
+    }
+
+    return total;
+  }
+
+  mettreAJourCompteurPotions() {
+    const potionsRecuperees = this.compterPotionsRecuperees();
+    this.compteurPotionsText.setText(`${potionsRecuperees}/${this.nbPotionsTotal}`);
   }
 }

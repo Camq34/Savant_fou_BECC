@@ -6,6 +6,7 @@ export default class Intro extends Phaser.Scene {
   preload() {
     this.load.image("img_grotte_intro", "assets/grotte.png");
     this.load.image("img_monsieur_intro", "assets/monsieur.png");
+    this.load.audio("musique_fond", "assets/audio/musique_fond.mp3");
   }
 
   create() {
@@ -13,6 +14,24 @@ export default class Intro extends Phaser.Scene {
     const largeur = this.cameras.main.width;
     const hauteur = this.cameras.main.height;
     const messageIntro = "Bienvenue dans le jeu du savant. Il y a une potion à récupérer dans chaque niveau. Aidez ce savant à remplir son chaudron pour terminer sa potion !";
+    let musiqueFond = this.sound.get("musique_fond");
+
+    if (!musiqueFond) {
+      musiqueFond = this.sound.add("musique_fond", {
+        loop: true,
+        volume: 0.35
+      });
+    }
+
+    if (!musiqueFond.isPlaying) {
+      musiqueFond.play();
+    }
+
+    this.sound.once("unlocked", () => {
+      if (!musiqueFond.isPlaying) {
+        musiqueFond.play();
+      }
+    });
 
     this.add
       .image(largeur * 0.5, hauteur * 0.5, "img_grotte_intro")
@@ -80,6 +99,10 @@ export default class Intro extends Phaser.Scene {
     });
 
     boutonJouer.on("pointerdown", () => {
+      if (!musiqueFond.isPlaying) {
+        musiqueFond.play();
+      }
+
       this.scene.start("Accueil");
     });
   }

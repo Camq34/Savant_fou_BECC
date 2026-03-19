@@ -55,6 +55,8 @@ export default class niveau7 extends Phaser.Scene {
     preload() {
         // Fichier Tiled du niveau 7: structure de la map, calques, tilesets, gid, etc.
         this.load.tilemapTiledJSON("map_niveau7", "assets/Map/map_niveau7.tmj");
+        // Son joue a l'entree du niveau 7.
+        this.load.audio("son_entree_niveau7", "assets/audio/rire_niveau7.mp3");
         // Image des objets/decor utilises dans la map.
         this.load.image("img_decor", "assets/items.png");
         // Image du tileset donjonasset, conservee pour l'affichage normal de la map.
@@ -89,6 +91,20 @@ export default class niveau7 extends Phaser.Scene {
 
     // Create construit tout ce qu'on voit quand le niveau commence: map, joueur, camera et titre.
     create() {
+        const jouerRireNiveau7 = () => {
+            this.sound.play("son_entree_niveau7", {
+                loop: false,
+                volume: 0.7
+            });
+        };
+
+        jouerRireNiveau7();
+        this.time.addEvent({
+            delay: 30000,
+            loop: true,
+            callback: jouerRireNiveau7
+        });
+
         // Instancie la map Tiled en memoire a partir de la ressource chargee dans preload.
         mapNiveau7 = this.make.tilemap({ key: "map_niveau7" });
         if (!mapNiveau7) {
@@ -173,7 +189,8 @@ export default class niveau7 extends Phaser.Scene {
             repeat: -1
         });
 
-        // Animation de saut: affiche les frames aeriennes tant que le joueur n'est pas au sol.
+        // Animation de s
+        // aut: affiche les frames aeriennes tant que le joueur n'est pas au sol.
         this.anims.create({
             key: "savant2_jump",
             frames: this.anims.generateFrameNumbers("savant2", { start: 6, end: 10 }),
