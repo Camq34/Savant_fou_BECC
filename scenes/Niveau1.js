@@ -22,6 +22,10 @@ export default class Niveau1 extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         });
+        this.load.spritesheet("img_interrupteurs", "assets/interrupTeurs.png", {
+            frameWidth: 257,
+            frameHeight: 156
+        });
         this.load.image("img_coffre", "assets/coffre_fermé.png");
     }
     
@@ -124,6 +128,16 @@ export default class Niveau1 extends Phaser.Scene {
         this.clefText = this.add.text(16, 16, '', { fontSize: '20px', fill: '#ffffff', backgroundColor: '#000000' });
         this.clefText.setScrollFactor(0);
 
+        this.interrupteur = this.physics.add.staticSprite(
+            this.map.tileToWorldX(57) + this.map.tileWidth * 0.5,
+            this.map.tileToWorldY(23) + this.map.tileHeight * 0.5,
+            "img_interrupteurs",
+            1
+        );
+        this.interrupteur.setScale(0.28);
+        this.interrupteur.setDepth(6);
+        this.interrupteurActive = false;
+
         this.physics.add.overlap(player, this.clef, () => {
             if (!this.clefCollected) {
                 this.clefCollected = true;
@@ -178,6 +192,20 @@ export default class Niveau1 extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+            const procheInterrupteur = Phaser.Math.Distance.Between(
+                player.x,
+                player.y,
+                this.interrupteur.x,
+                this.interrupteur.y
+            ) <= 110;
+
+            if (procheInterrupteur && !this.interrupteurActive) {
+                this.interrupteur.setFrame(0);
+                this.interrupteur.setScale(0.28);
+                this.interrupteurActive = true;
+                return;
+            }
+
             if (this.physics.overlap(player, porte)) {
                 if (!porte.ouverte) {
                     porte.anims.play("anim_ouvreporte");
