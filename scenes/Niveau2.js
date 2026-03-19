@@ -18,6 +18,10 @@ export default class niveau2 extends Phaser.Scene {
 			frameHeight: 50,
 			spacing: 1
 		});
+		this.load.spritesheet("icons_prev", "assets/icons_prev_comp-removebg-preview.png", {
+			frameWidth: 32,
+			frameHeight: 32
+		});
 	}
 
 	create() {
@@ -78,6 +82,9 @@ export default class niveau2 extends Phaser.Scene {
 		this.player.body.setSize(20, 44);
 		this.player.body.setOffset(10, 6);
 		this.player.play("savant2_idle");
+
+		this.cle = this.physics.add.staticSprite(220, map.heightInPixels - 130, "icons_prev", 9);
+		this.cle.setScale(1.5);
 
 		this.physics.add.collider(this.player, this.layerDecor);
 		this.cursors = this.input.keyboard.createCursorKeys();
