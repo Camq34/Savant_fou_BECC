@@ -155,16 +155,16 @@ export default class niveau2 extends Phaser.Scene {
 			fontFamily: "Arial",
 			fontSize: "64px",
 			fontStyle: "bold",
-			color: "#FFFFFF",
+			color: "#7dff8d",
 			stroke: "#000000",
 			strokeThickness: 4
 		}).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(1001);
 
 		// Configuration des 4 carrés colorés alignés en dessous
 		const squares = [
-			{ x: 300, y: 680, color: 0x0000FF, text: "Une lévitation", textColor: "#FFFFFF" },
+			{ x: 300, y: 680, color: 0x0000FF, text: "Une lévitation", textColor: "#000000" },
 			{ x: 720, y: 680, color: 0xFF0000, text: "Une neutralisation", textColor: "#000000" },
-			{ x: 1140, y: 680, color: 0x00FF00, text: "Une combustion", textColor: "#FFFFFF" },
+		{ x: 1140, y: 680, color: 0x00FF00, text: "Une combustion", textColor: "#000000" },
 			{ x: 1560, y: 680, color: 0xFFFF00, text: "Une précipitation", textColor: "#000000" }
 		];
 
