@@ -442,7 +442,7 @@ export default class niveau6 extends Phaser.Scene {
 
     afficherMessagePotionRouge() {
         const message = this.add
-            .text(this.cameras.main.width * 0.5, 80, "Vous avez récupéré la potion rouge !", {
+            .text(this.cameras.main.width * 0.5, 80, "Vous avez récupéré une potion !", {
                 fontFamily: '"Chiller", "Creepster", "Papyrus", fantasy',
                 fontSize: "36px",
                 color: "#ff6b6b",
