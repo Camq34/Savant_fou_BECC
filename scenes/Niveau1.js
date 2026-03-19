@@ -86,7 +86,7 @@ export default class Niveau1 extends Phaser.Scene {
         });
         this.anims.create({
             key: "anim_tourne_droite",
-            frames: this.anims.generateFrameNumbers("img_perso", { start: 5, end: 8 }),
+            frames: this.anims.generateFrameNumbers("img_perso", { start: 6, end: 10 }),
             frameRate: 10,
             repeat: -1
         });
