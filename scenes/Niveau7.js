@@ -57,6 +57,8 @@ export default class niveau7 extends Phaser.Scene {
         this.load.tilemapTiledJSON("map_niveau7", "assets/Map/map_niveau7.tmj");
         // Son joue a l'entree du niveau 7.
         this.load.audio("son_entree_niveau7", "assets/audio/rire_niveau7.mp3");
+        // Son joue quand le joueur touche une boule de feu.
+        this.load.audio("son_boule_feu_niveau7", "assets/audio/rire_boule_niveau7.mp3");
         // Image des objets/decor utilises dans la map.
         this.load.image("img_decor", "assets/items.png");
         // Image du tileset donjonasset, conservee pour l'affichage normal de la map.
@@ -389,6 +391,7 @@ export default class niveau7 extends Phaser.Scene {
             115
         );
 
+        boule.setData("estBouleFeu", true);
         boule.setDepth(20);
         boule.body.setAllowGravity(false);
         boule.body.setImmovable(true);
@@ -436,6 +439,7 @@ export default class niveau7 extends Phaser.Scene {
             115
         );
 
+        lanceur.setData("estBouleFeu", false);
         lanceur.setDepth(20);
         lanceur.body.setAllowGravity(false);
         lanceur.body.setImmovable(true);
@@ -470,6 +474,7 @@ export default class niveau7 extends Phaser.Scene {
             115
         );
 
+        boule.setData("estBouleFeu", true);
         boule.setDepth(19);
         boule.body.setAllowGravity(false);
         boule.body.setImmovable(true);
@@ -513,6 +518,7 @@ export default class niveau7 extends Phaser.Scene {
                 tile.index - firstgid
             );
 
+            sprite.setData("estBouleFeu", false);
             sprite.setDepth(20);
             sprite.body.setAllowGravity(false);
             sprite.body.setImmovable(true);
@@ -696,9 +702,16 @@ export default class niveau7 extends Phaser.Scene {
     }
 
     // Replace instantanement le joueur sur le point de spawn quand il touche un element donjonasset.
-    renvoyerAuSpawn() {
+    renvoyerAuSpawn(_playerSprite, danger) {
         if (!player || joueurTouche || this.time.now < prochainRespawnAutorise) {
             return;
+        }
+
+        if (danger && danger.getData && danger.getData("estBouleFeu")) {
+            this.sound.play("son_boule_feu_niveau7", {
+                loop: false,
+                volume: 0.8
+            });
         }
 
         player.setVelocity(0, 0);
