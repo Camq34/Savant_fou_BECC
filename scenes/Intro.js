@@ -65,7 +65,6 @@ export default class Intro extends Phaser.Scene {
         fontSize: "40px",
         fontStyle: "bold",
         color: "#39ff14",
-        backgroundColor: "#103000",
         padding: { left: 22, right: 22, top: 12, bottom: 12 }
       })
       .setOrigin(0.5, 1)
@@ -73,11 +72,11 @@ export default class Intro extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
 
     boutonJouer.on("pointerover", () => {
-      boutonJouer.setStyle({ color: "#000000", backgroundColor: "#39ff14" });
+      boutonJouer.setStyle({ color: "#ffffff" });
     });
 
     boutonJouer.on("pointerout", () => {
-      boutonJouer.setStyle({ color: "#39ff14", backgroundColor: "#103000" });
+      boutonJouer.setStyle({ color: "#39ff14" });
     });
 
     boutonJouer.on("pointerdown", () => {
